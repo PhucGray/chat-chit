@@ -3,12 +3,12 @@ import { Icon } from '@iconify/react';
 
 const Home = () => {
     return (
-        <div className='px-[20px]'>
+        <div className='container'>
             <div className='text-[30px] px-[20px] py-[5px]'>
                 <span>Logo</span>
             </div>
 
-            <div className='flex'>
+            <div className='flex px-[20px]'>
                 <div className='flex-1'>
                     <h1 className='text-[50px] text-center lg:text-[55px]'>
                         Chat chit
@@ -19,7 +19,7 @@ const Home = () => {
                         mãi mãi là như thế.
                     </p>
 
-                    <div className='text-[20px] mx-auto mt-[10px] max-w-[50%] md:max-w-[30%] lg:max-w-[50%] lg:text-[25px]'>
+                    <div className='text-[20px] mx-auto mt-[10px] max-w-[50%] md:max-w-[30%] lg:max-w-[35%] lg:text-[25px]'>
                         <div className='flex items-center space-x-2'>
                             <TickIcon />
                             <p>Miễn phí</p>
@@ -50,7 +50,7 @@ const Home = () => {
                 </div>
 
                 <img
-                    className='flex-1 max-w-[46vw] hidden lg:block'
+                    className='flex-1 max-w-[46vw] hidden xl:block'
                     src={HomeImg}
                     alt='Home'
                 />
