@@ -1,7 +1,18 @@
 import HomeImg from '../images/home.png';
 import { Icon } from '@iconify/react';
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
+    const navigate = useNavigate();
+
+    const handleSignInClick = () => {
+        navigate('/sign-in');
+    };
+
+    const handleSignUpClick = () => {
+        navigate('/sign-up');
+    };
+
     return (
         <div className='container'>
             <div className='text-[30px] px-[20px] py-[5px]'>
@@ -35,7 +46,9 @@ const Home = () => {
                     </div>
 
                     <div className='flex flex-col items-center justify-center mt-[25px] space-y-2'>
-                        <button className='btn min-w-[300px] py-[10px] text-[20px]'>
+                        <button
+                            className='btn min-w-[300px] py-[10px] text-[20px]'
+                            onClick={handleSignInClick}>
                             Đăng nhập
                         </button>
 
@@ -43,7 +56,9 @@ const Home = () => {
                             hoặc chưa có tài khoản
                         </p>
 
-                        <button className='btn-outlined min-w-[300px] py-[10px] text-[20px]'>
+                        <button
+                            className='btn-outlined min-w-[300px] py-[10px] text-[20px]'
+                            onClick={handleSignUpClick}>
                             Đăng ký
                         </button>
                     </div>

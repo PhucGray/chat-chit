@@ -10,7 +10,34 @@
     .btn-outlined {
         @apply bg-white text-gray-600 rounded-[17px] ring-2 ring-teal-500 ring-opacity-75 hover:bg-teal-500 hover:text-white;
     }
+
     .input-text {
         @apply min-w-[300px] pr-[40px] border-gray-300 rounded-[10px] focus:ring-teal-500 focus:border-teal-500;
+    }
+
+    .select {
+        @apply flex items-center space-x-2 border w-max py-[5px] px-[15px] cursor-pointer rounded-[10px] relative hover:border-teal-500;
+    }
+
+    .radio {
+        @apply cursor-pointer text-black focus:ring-black focus:text-black active:text-black;
+    }
+
+    .sidebar-icon {
+        @apply cursor-pointer hover:text-teal-500;
+    }
+
+    /* online (active) */
+    .circle-primary {
+        @apply h-[11px] w-[11px] rounded-full bg-teal-500;
+    }
+
+    /* message */
+    .sent-msg {
+        @apply w-max max-w-[300px] rounded-[7px] py-[15px] px-[20px] bg-gray-200 break-all ml-auto;
+    }
+
+    .received-msg {
+        @apply w-max max-w-[300px] rounded-[7px] py-[15px] px-[20px] border break-all;
     }
 }

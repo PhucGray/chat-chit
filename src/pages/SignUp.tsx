@@ -1,7 +1,14 @@
 import SignUpImg from '../images/sign-up.png';
 import { Icon } from '@iconify/react';
+import { Link, useNavigate } from 'react-router-dom';
 
 const SignUp = () => {
+    const navigate = useNavigate();
+
+    const handleSignUpClick = () => {
+        navigate('/sign-in');
+    };
+
     return (
         <div className='flex px-[20px] py-[40px] container'>
             <div className='flex-1 max-w-[350px] mx-auto space-y-5'>
@@ -38,7 +45,11 @@ const SignUp = () => {
                 </div>
 
                 <div className='space-y-2'>
-                    <button className='btn py-[13px] w-full'>Đăng ký</button>
+                    <button
+                        className='btn py-[13px] w-full'
+                        onClick={handleSignUpClick}>
+                        Đăng ký
+                    </button>
 
                     <p className='text-[18px] italic text-gray-500 text-center'>
                         hoặc
@@ -52,7 +63,11 @@ const SignUp = () => {
 
                 <div className='flex justify-center space-x-2'>
                     <p>Đã có tài khoản ?</p>
-                    <p className='font-bold text-teal-500'>Đăng nhập</p>
+                    <Link to='/sign-in'>
+                        <p className='font-bold text-teal-500 hover:underline'>
+                            Đăng nhập
+                        </p>
+                    </Link>
                 </div>
             </div>
 
