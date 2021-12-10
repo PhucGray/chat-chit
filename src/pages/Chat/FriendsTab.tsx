@@ -3,7 +3,7 @@ import { Icon } from '@iconify/react';
 
 const FriendsTab = () => {
     return (
-        <div className='px-[40px] pt-[20px] pb-[40px] max-h-screen overflow-auto flex flex-col space-y-4'>
+        <div className='px-[10px] lg:px-[40px] pt-[20px] pb-[40px] max-h-screen overflow-auto flex flex-col space-y-4'>
             <FriendRequest />
             <Online />
             <Search />
@@ -17,7 +17,7 @@ const FriendRequest = () => {
         <div>
             <p className='font-semibold text-[23px]'>Lời mời kết bạn</p>
 
-            <div className='bg-white rounded-[10px] ml-[15px] mt-[10px] px-[20px] py-[10px] flex items-center justify-between space-x-2'>
+            <div className='bg-white rounded-[10px] ml-[15px] mt-[10px] px-[20px] py-[10px] space-y-2 lg:flex items-center justify-between space-x-2'>
                 <div className='flex items-center space-x-2'>
                     <img
                         className='h-[60px] w-[60px] rounded-full border'
@@ -128,7 +128,7 @@ const ListFriend = () => {
         <div>
             <p className='font-semibold text-[23px]'>Danh sách bạn bè</p>
 
-            <div className='grid grid-cols-2 gap-x-[50px] gap-y-[20px] ml-[15px] mt-[10px] px-[30px]'>
+            <div className='grid gap-x-[50px] gap-y-[20px] ml-[15px] mt-[10px] lg:grid-cols-2 lg:px-[30px]'>
                 <div className='flex items-center justify-between'>
                     <div className='flex items-center space-x-4'>
                         <img

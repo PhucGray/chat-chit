@@ -1,20 +1,72 @@
 import { Icon } from '@iconify/react';
+import { Dispatch, FC, SetStateAction } from 'react';
 import { Link } from 'react-router-dom';
+import { TabType } from '../../types';
 
-const Sidebar = () => {
+interface SidebarProps {
+    currentTab: TabType;
+    setTab: Dispatch<SetStateAction<TabType>>;
+}
+
+type SideBarIconType = {
+    icon: string;
+    activeIcon: string;
+    tab: TabType;
+};
+
+const Sidebar: FC<SidebarProps> = ({ currentTab, setTab }) => {
+    const icons = [
+        {
+            icon: 'bi:chat-text',
+            activeIcon: 'bi:chat-text-fill',
+            tab: 'chat',
+        },
+        {
+            icon: 'teenyicons:users-outline',
+            activeIcon: 'teenyicons:users-solid',
+            tab: 'friend',
+        },
+        {
+            icon: 'healthicons:ui-user-profile-outline',
+            activeIcon: 'healthicons:ui-user-profile',
+            tab: 'profile',
+        },
+        {
+            icon: 'ant-design:setting-outlined',
+            activeIcon: 'ant-design:setting-filled',
+            tab: 'setting',
+        },
+    ] as SideBarIconType[];
     return (
-        <div className='w-[75px] h-screen bg-gray-800 text-[30px] text-[#B1B1B1] flex flex-col items-center justify-between py-[25px] space-y-7'>
+        <div className='min-w-[75px] h-screen bg-gray-800 text-[30px] text-[#B1B1B1] flex flex-col items-center justify-between py-[25px] space-y-7'>
             <div className='space-y-10'>
-                <Icon className='sidebar-icon' icon='bi:chat-text-fill' />
-                <Icon
+                {icons &&
+                    icons.map(({ icon, activeIcon, tab }) => (
+                        <Icon
+                            key={icon}
+                            className={`sidebar-icon ${
+                                currentTab === tab && 'text-teal-500'
+                            }`}
+                            icon={currentTab === tab ? activeIcon : icon}
+                            onClick={() => setTab(tab)}
+                        />
+                    ))}
+
+                {/* <Icon
                     className='sidebar-icon'
                     icon='healthicons:ui-user-profile'
+                    onClick={() => setTab('profile')}
                 />
-                <Icon className='sidebar-icon' icon='fa-solid:user-friends' />
+                <Icon
+                    className='sidebar-icon'
+                    icon='fa-solid:user-friends'
+                    onClick={() => setTab('friend')}
+                />
                 <Icon
                     className='sidebar-icon'
                     icon='ant-design:setting-filled'
-                />
+                    onClick={() => setTab('setting')}
+                /> */}
             </div>
 
             <Link to='/sign-in'>

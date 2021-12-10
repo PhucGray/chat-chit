@@ -40,4 +40,8 @@
     .received-msg {
         @apply w-max max-w-[300px] rounded-[7px] py-[15px] px-[20px] border break-all;
     }
+
+    .exit-zone {
+        @apply fixed left-0 top-0 h-screen w-screen;
+    }
 }
