@@ -11,14 +11,14 @@ const App = () => {
             {/* <Home /> */}
             {/* <SignIn /> */}
             {/* <SignUp /> */}
-            {/* <Chat /> */}
+            <Chat />
 
-            <Routes>
+            {/* <Routes>
                 <Route path='/' element={<Home />} />
                 <Route path='sign-in' element={<SignIn />} />
                 <Route path='sign-up' element={<SignUp />} />
                 <Route path='chat' element={<Chat />} />
-            </Routes>
+            </Routes> */}
         </div>
     );
 };

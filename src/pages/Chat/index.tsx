@@ -1,5 +1,6 @@
-
-import ChatTab from './Chat-Tab';
+import ChatTab from './ChatTab';
+import FriendsTab from './FriendsTab';
+import ProfileTab from './ProfileTab';
 import SettingTab from './SettingTab';
 import Sidebar from './Sidebar';
 
@@ -10,7 +11,9 @@ const Chat = () => {
 
             <div className='flex-1'>
                 {/* <ChatTab /> */}
-                <SettingTab />
+                {/* <SettingTab /> */}
+                {/* <FriendsTab /> */}
+                <ProfileTab />
             </div>
         </div>
     );
