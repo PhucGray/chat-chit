@@ -15,6 +15,10 @@
         @apply min-w-[300px] pr-[40px] border-gray-300 rounded-[10px] focus:ring-teal-500 focus:border-teal-500;
     }
 
+    .error {
+        @apply pl-[10px] italic text-sm text-red-500;
+    }
+
     .select {
         @apply flex items-center space-x-2 border w-max py-[5px] px-[15px] cursor-pointer rounded-[10px] relative hover:border-teal-500;
     }

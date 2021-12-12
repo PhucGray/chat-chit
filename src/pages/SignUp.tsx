@@ -1,16 +1,52 @@
 import SignUpImg from '../images/sign-up.png';
 import { Icon } from '@iconify/react';
 import { Link, useNavigate } from 'react-router-dom';
+import { validateEmail, validatePassword } from '../utils/validateAuth';
+import { SubmitFormType } from '../types';
+import { MutableRefObject, useRef, useState } from 'react';
 
 const SignUp = () => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [isVisible, setIsVisible] = useState(false);
+
+    const [emailError, setEmailError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
+
+    const emailRef = useRef() as MutableRefObject<HTMLInputElement>;
+    const passwordRef = useRef() as MutableRefObject<HTMLInputElement>;
+
     const navigate = useNavigate();
 
-    const handleSignUpClick = () => {
-        navigate('/sign-in');
+    const handleSubmit = (e: SubmitFormType) => {
+        e.preventDefault();
+
+        const validateEmailMsg = validateEmail(email);
+        const validatePasswordMsg = validatePassword(password);
+
+        let isValid = true;
+
+        if (validateEmailMsg) {
+            setEmailError(validateEmailMsg);
+            emailRef.current.focus();
+            isValid = false;
+        }
+
+        if (validatePasswordMsg) {
+            setPasswordError(validatePasswordMsg);
+            passwordRef.current.focus();
+            isValid = false;
+        }
+
+        if (isValid) {
+            navigate('/sign-in');
+        }
     };
 
     return (
-        <div className='flex px-[20px] py-[40px] container'>
+        <form
+            onSubmit={handleSubmit}
+            className='flex px-[20px] py-[40px] container'>
             <div className='flex-1 max-w-[350px] mx-auto space-y-5'>
                 <div className='text-center'>
                     <h1 className='text-[40px] font-bold'>Tham gia với</h1>
@@ -21,33 +57,50 @@ const SignUp = () => {
                 <div className='space-y-2'>
                     <p className='font-semibold'>Email</p>
                     <input
+                        ref={emailRef}
+                        value={email}
+                        onChange={(e) => {
+                            setEmail(e.target.value);
+                            setEmailError('');
+                        }}
+                        onClick={() => setEmailError('')}
                         className='input-text w-full'
                         type='text'
                         placeholder='Nhập email của bạn'
                     />
+                    <p className='error'>{emailError}</p>
 
                     <p className='font-semibold'>Mật khẩu</p>
                     <div className='relative'>
                         <input
+                            ref={passwordRef}
+                            value={password}
+                            onChange={(e) => {
+                                setPassword(e.target.value);
+                                setPasswordError('');
+                            }}
+                            onClick={() => setPasswordError('')}
                             className='input-text w-full'
-                            type='password'
+                            type={isVisible ? 'text' : 'password'}
                             placeholder='Nhập mật khẩu của bạn'
                         />
 
                         <Icon
-                            icon='gridicons:not-visible'
+                            icon={
+                                isVisible
+                                    ? 'gridicons:visible'
+                                    : 'gridicons:not-visible'
+                            }
                             fontSize={23}
                             className='absolute right-[10px] top-[25%] cursor-pointer'
+                            onClick={() => setIsVisible(!isVisible)}
                         />
-
-                        {/* <Icon icon='gridicons:visible' /> */}
                     </div>
+                    <p className='error'>{passwordError}</p>
                 </div>
 
                 <div className='space-y-2'>
-                    <button
-                        className='btn py-[13px] w-full'
-                        onClick={handleSignUpClick}>
+                    <button type='submit' className='btn py-[13px] w-full'>
                         Đăng ký
                     </button>
 
@@ -76,7 +129,7 @@ const SignUp = () => {
                 src={SignUpImg}
                 alt='Sign in'
             />
-        </div>
+        </form>
     );
 };
 
