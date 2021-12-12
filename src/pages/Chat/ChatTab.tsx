@@ -165,7 +165,7 @@ const MainChat: FC<MainChatProps> = ({ setIsInfoOpen }) => {
                 <div className='relative'>
                     {isPickerOpen && (
                         <div
-                            className='exit-zone'
+                            className='exit-zone bg-red-100'
                             onClick={() => setIsPickerOpen(false)}></div>
                     )}
 

@@ -42,7 +42,7 @@ const Sidebar: FC<SidebarProps> = ({ currentTab, setTab }) => {
 
     const navigate = useNavigate();
     return (
-        <div className='min-w-[75px] h-screen bg-gray-800 text-[30px] text-[#B1B1B1] flex flex-col items-center justify-between py-[25px] space-y-7'>
+        <div className='min-w-[75px] h-screen bg-gray-800 text-[30px] text-[#B1B1B1] flex flex-col items-center justify-between py-[15px]'>
             <div className='space-y-10'>
                 {icons &&
                     icons.map(({ icon, activeIcon, tab }) => (
@@ -60,6 +60,7 @@ const Sidebar: FC<SidebarProps> = ({ currentTab, setTab }) => {
             <Icon
                 onClick={async () => {
                     signOut(auth);
+                    localStorage.removeItem('auth');
                     navigate('/sign-in');
                 }}
                 className='sidebar-icon'
