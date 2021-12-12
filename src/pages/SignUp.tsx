@@ -4,6 +4,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { validateEmail, validatePassword } from '../utils/validateAuth';
 import { SubmitFormType } from '../types';
 import { MutableRefObject, useRef, useState } from 'react';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../firebase';
 
 const SignUp = () => {
     const [email, setEmail] = useState('');
@@ -18,7 +20,7 @@ const SignUp = () => {
 
     const navigate = useNavigate();
 
-    const handleSubmit = (e: SubmitFormType) => {
+    const handleSubmit = async (e: SubmitFormType) => {
         e.preventDefault();
 
         const validateEmailMsg = validateEmail(email);
@@ -39,7 +41,13 @@ const SignUp = () => {
         }
 
         if (isValid) {
-            navigate('/sign-in');
+            try {
+                await createUserWithEmailAndPassword(auth, email, password);
+                navigate('/sign-in');
+            } catch (error) {
+                console.log(error);
+                setEmailError('Email đã tồn tại');
+            }
         }
     };
 

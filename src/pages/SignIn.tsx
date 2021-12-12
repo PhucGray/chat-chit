@@ -1,7 +1,9 @@
-import SignInImg from '../images/sign-in.png';
 import { Icon } from '@iconify/react';
-import { Link, useNavigate } from 'react-router-dom';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import { MutableRefObject, useRef, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { auth } from '../firebase';
+import SignInImg from '../images/sign-in.png';
 import { SubmitFormType } from '../types';
 import { validateEmail, validatePassword } from '../utils/validateAuth';
 
@@ -13,12 +15,27 @@ const SignIn = () => {
     const [emailError, setEmailError] = useState('');
     const [passwordError, setPasswordError] = useState('');
 
+    // const [isRemember, setIsRemember] = useState(
+    //     !!localStorage.getItem('remember'),
+    // );
+
+    // useEffect(() => {
+    //     if (isRemember) {
+    //         const user = JSON.parse(localStorage.getItem('remember') || '');
+
+    //         if (user) {
+    //             setEmail(user.email);
+    //             setPassword(user.password);
+    //         }
+    //     }
+    // }, []);
+
     const emailRef = useRef() as MutableRefObject<HTMLInputElement>;
     const passwordRef = useRef() as MutableRefObject<HTMLInputElement>;
 
     const navigate = useNavigate();
 
-    const handleSubmit = (e: SubmitFormType) => {
+    const handleSubmit = async (e: SubmitFormType) => {
         e.preventDefault();
 
         const validateEmailMsg = validateEmail(email);
@@ -39,7 +56,25 @@ const SignIn = () => {
         }
 
         if (isValid) {
-            navigate('/chat');
+            try {
+                const user = await signInWithEmailAndPassword(
+                    auth,
+                    email,
+                    password,
+                );
+
+                if (user) {
+                    // isRemember
+                    //     ? localStorage.setItem(
+                    //           'remember',
+                    //           JSON.stringify({ email, password }),
+                    //       )
+                    //     : localStorage.removeItem('remember');
+                    navigate('/chat');
+                }
+            } catch (error) {
+                setPasswordError('Email hoặc mật khẩu không chính xác');
+            }
         }
     };
 
@@ -106,6 +141,8 @@ const SignIn = () => {
                 <div className='flex justify-between'>
                     <div className='flex items-center space-x-2'>
                         <input
+                            // checked={isRemember}
+                            // onChange={() => setIsRemember(!isRemember)}
                             type='checkbox'
                             className='rounded text-teal-500 cursor-pointer focus:outline-none focus:ring-offset-0 focus:border-none'
                         />

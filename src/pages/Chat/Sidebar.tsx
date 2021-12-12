@@ -1,7 +1,9 @@
 import { Icon } from '@iconify/react';
 import { Dispatch, FC, SetStateAction } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { TabType } from '../../types';
+import { signOut } from 'firebase/auth';
+import { auth } from '../../firebase';
 
 interface SidebarProps {
     currentTab: TabType;
@@ -37,6 +39,8 @@ const Sidebar: FC<SidebarProps> = ({ currentTab, setTab }) => {
             tab: 'setting',
         },
     ] as SideBarIconType[];
+
+    const navigate = useNavigate();
     return (
         <div className='min-w-[75px] h-screen bg-gray-800 text-[30px] text-[#B1B1B1] flex flex-col items-center justify-between py-[25px] space-y-7'>
             <div className='space-y-10'>
@@ -51,27 +55,16 @@ const Sidebar: FC<SidebarProps> = ({ currentTab, setTab }) => {
                             onClick={() => setTab(tab)}
                         />
                     ))}
-
-                {/* <Icon
-                    className='sidebar-icon'
-                    icon='healthicons:ui-user-profile'
-                    onClick={() => setTab('profile')}
-                />
-                <Icon
-                    className='sidebar-icon'
-                    icon='fa-solid:user-friends'
-                    onClick={() => setTab('friend')}
-                />
-                <Icon
-                    className='sidebar-icon'
-                    icon='ant-design:setting-filled'
-                    onClick={() => setTab('setting')}
-                /> */}
             </div>
 
-            <Link to='/sign-in'>
-                <Icon className='sidebar-icon' icon='carbon:logout' />
-            </Link>
+            <Icon
+                onClick={async () => {
+                    signOut(auth);
+                    navigate('/sign-in');
+                }}
+                className='sidebar-icon'
+                icon='carbon:logout'
+            />
         </div>
     );
 };
