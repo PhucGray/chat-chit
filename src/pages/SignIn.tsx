@@ -1,10 +1,10 @@
 import { Icon } from '@iconify/react';
-import { signInWithEmailAndPassword } from 'firebase/auth';
 import { MutableRefObject, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../app/hooks';
+import { setLoading } from '../features/loading/loadingSlide';
 import { setUser } from '../features/user/userSlice';
-import { auth } from '../firebase';
+import { signIn } from '../firebase';
 import SignInImg from '../images/sign-in.png';
 import { SubmitFormType } from '../types';
 import { validateEmail, validatePassword } from '../utils/validateAuth';
@@ -16,21 +16,6 @@ const SignIn = () => {
 
     const [emailError, setEmailError] = useState('');
     const [passwordError, setPasswordError] = useState('');
-
-    // const [isRemember, setIsRemember] = useState(
-    //     !!localStorage.getItem('remember'),
-    // );
-
-    // useEffect(() => {
-    //     if (isRemember) {
-    //         const user = JSON.parse(localStorage.getItem('remember') || '');
-
-    //         if (user) {
-    //             setEmail(user.email);
-    //             setPassword(user.password);
-    //         }
-    //     }
-    // }, []);
 
     const emailRef = useRef() as MutableRefObject<HTMLInputElement>;
     const passwordRef = useRef() as MutableRefObject<HTMLInputElement>;
@@ -60,25 +45,24 @@ const SignIn = () => {
 
         if (isValid) {
             try {
-                const user = await signInWithEmailAndPassword(
-                    auth,
-                    email,
-                    password,
-                );
+                dispatch(setLoading(true));
+
+                const user = await signIn(email, password);
 
                 if (user) {
-                    // isRemember
-                    //     ? localStorage.setItem(
-                    //           'remember',
-                    //           JSON.stringify({ email, password }),
-                    //       )
-                    //     : localStorage.removeItem('remember');
-                    // navigate('/chat');
-                    dispatch(setUser({ email: user.user.email || '' }));
-                    localStorage.setItem('auth', '1');
-                    navigate('/chat');
+                    dispatch(
+                        setUser({
+                            uid: user.user.uid || '',
+                            email: email || '',
+                        }),
+                    );
+
+                    dispatch(setLoading(false));
+
+                    navigate('/chat', { replace: true });
                 }
             } catch (error) {
+                dispatch(setLoading(false));
                 setPasswordError('Email hoặc mật khẩu không chính xác');
             }
         }
@@ -145,19 +129,7 @@ const SignIn = () => {
                         <p className='error'>{passwordError}</p>
                     </div>
 
-                    <div className='flex justify-between'>
-                        <div className='flex items-center space-x-2'>
-                            <input
-                                // checked={isRemember}
-                                // onChange={() => setIsRemember(!isRemember)}
-                                type='checkbox'
-                                className='rounded text-teal-500 cursor-pointer focus:outline-none focus:ring-offset-0 focus:border-none'
-                            />
-                            <p>Ghi nhớ tài khoản</p>
-                        </div>
-
-                        <p>Quên mật khẩu ?</p>
-                    </div>
+                    <p className='text-right'>Quên mật khẩu ?</p>
 
                     <div className='space-y-2'>
                         <button type='submit' className='btn py-[13px] w-full'>

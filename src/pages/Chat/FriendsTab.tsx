@@ -36,10 +36,10 @@ const FriendRequest = () => {
                 </div>
 
                 <div className='flex items-center space-x-4'>
-                    <button className='btn w-[120px] py-[7px] rounded-[7px]'>
+                    <button className='btn w-[120px] py-[7px]'>
                         Đồng ý
                     </button>
-                    <button className='btn-outlined w-[120px] py-[7px] rounded-[7px]'>
+                    <button className='btn-outlined w-[120px] py-[7px]'>
                         Xoá
                     </button>
                 </div>

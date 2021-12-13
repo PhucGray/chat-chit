@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import UserReducer from '../features/user/userSlice';
+import LoadingReducer from '../features/loading/loadingSlide';
 
 export const store = configureStore({
     reducer: {
         user: UserReducer,
+        loading: LoadingReducer,
     },
 });
 

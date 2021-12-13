@@ -1,9 +1,10 @@
 import { Icon } from '@iconify/react';
 import { Dispatch, FC, SetStateAction } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAppDispatch } from '../../app/hooks';
+import { setLoading } from '../../features/loading/loadingSlide';
+import { logout } from '../../firebase';
 import { TabType } from '../../types';
-import { signOut } from 'firebase/auth';
-import { auth } from '../../firebase';
 
 interface SidebarProps {
     currentTab: TabType;
@@ -41,6 +42,7 @@ const Sidebar: FC<SidebarProps> = ({ currentTab, setTab }) => {
     ] as SideBarIconType[];
 
     const navigate = useNavigate();
+    const dispatch = useAppDispatch();
     return (
         <div className='min-w-[75px] h-screen bg-gray-800 text-[30px] text-[#B1B1B1] flex flex-col items-center justify-between py-[15px]'>
             <div className='space-y-10'>
@@ -52,16 +54,21 @@ const Sidebar: FC<SidebarProps> = ({ currentTab, setTab }) => {
                                 currentTab === tab && 'text-teal-500'
                             }`}
                             icon={currentTab === tab ? activeIcon : icon}
-                            onClick={() => setTab(tab)}
+                            onClick={() => {
+                                setTab(tab);
+                                sessionStorage.setItem('currentTab', tab);
+                            }}
                         />
                     ))}
             </div>
 
             <Icon
                 onClick={async () => {
-                    signOut(auth);
-                    localStorage.removeItem('auth');
-                    navigate('/sign-in');
+                    dispatch(setLoading(true));
+                    await logout();
+                    dispatch(setLoading(false));
+
+                    navigate('/sign-in', { replace: true });
                 }}
                 className='sidebar-icon'
                 icon='carbon:logout'

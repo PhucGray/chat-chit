@@ -1,35 +1,79 @@
+import { onAuthStateChanged } from 'firebase/auth';
+import { collection, getDocs, query, where } from 'firebase/firestore';
+import { useEffect } from 'react';
+import { Navigate, Route, Routes } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from './app/hooks';
+import Loading from './components/Loading';
+import { selectLoading } from './features/loading/loadingSlide';
+import { selectUser, setUser } from './features/user/userSlice';
+import { auth, db } from './firebase';
 import Chat from './pages/Chat';
 import Home from './pages/Home';
 import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
-import { Routes, Route, Navigate } from 'react-router-dom';
-import { useAppSelector } from './app/hooks';
-import { selectUser } from './features/user/userSlice';
+import { UserType } from './types';
 
 const App = () => {
     const user = useAppSelector(selectUser);
+    const loading = useAppSelector(selectLoading);
+    const isAuth = localStorage.getItem('uid') || user.uid;
 
-    const isAuth = localStorage.getItem('auth') || user;
+    const dispatch = useAppDispatch();
+    useEffect(() => {
+        onAuthStateChanged(auth, async (currentUser) => {
+            const q = query(
+                collection(db, 'users'),
+                where('email', '==', currentUser?.email || ''),
+            );
+
+            const data = await getDocs(q);
+
+            data.forEach((doc) => {
+                const { email, phoneNumber, location, birth } =
+                    doc.data() as UserType;
+
+                dispatch(
+                    setUser(
+                        currentUser
+                            ? {
+                                  uid: doc.id,
+                                  email: email || '',
+                                  phoneNumber: phoneNumber,
+                                  location: location,
+                                  birth,
+                              }
+                            : null,
+                    ),
+                );
+            });
+        });
+    }, []);
 
     return (
         <>
-            {/* className='h-screen overflow-hidden w-full flex flex-col bg-red-50' */}
-            {/* <Home /> */}
-            {/* <SignIn /> */}
-            {/* <SignUp /> */}
-            {/* <Chat /> */}
             <Routes>
                 <Route
                     path='/'
-                    element={isAuth ? <Navigate to='/chat' /> : <Home />}
+                    element={
+                        isAuth ? <Navigate to='/chat' replace /> : <Home />
+                    }
                 />
                 <Route path='sign-in' element={<SignIn />} />
                 <Route path='sign-up' element={<SignUp />} />
                 <Route
                     path='chat'
-                    element={isAuth ? <Chat /> : <Navigate to='/sign-in' />}
+                    element={
+                        isAuth ? <Chat /> : <Navigate to='/sign-in' replace />
+                    }
                 />
             </Routes>
+
+            {loading && (
+                <>
+                    <div className='black-shadow bg-black opacity-70'></div>
+                    <Loading />
+                </>
+            )}
         </>
     );
 };

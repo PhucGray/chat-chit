@@ -74,7 +74,7 @@ const MainChat: FC<MainChatProps> = ({ setIsInfoOpen }) => {
 
     const handleSendMessage = () => {
         setMessages([...messages, { msg: currentMessage, from: 'me' }]);
-        msgRef.current.innerHTML = '';
+        msgRef.current.innerText = '';
     };
 
     useEffect(() => {
@@ -84,7 +84,7 @@ const MainChat: FC<MainChatProps> = ({ setIsInfoOpen }) => {
     const [isPickerOpen, setIsPickerOpen] = useState(false);
 
     const handleEmojiClick = (event: any, { emoji }: any) => {
-        msgRef.current.innerHTML += emoji;
+        msgRef.current.innerText += emoji;
         setCurrentMessage((prev) => (prev += emoji));
     };
 
@@ -156,16 +156,17 @@ const MainChat: FC<MainChatProps> = ({ setIsInfoOpen }) => {
                     onKeyDown={(e) => {
                         if (e.key === 'Enter') {
                             e.preventDefault();
-                            setCurrentMessage('');
+                            if (!currentMessage.trim()) return;
 
+                            setCurrentMessage('');
                             handleSendMessage();
-                        } else setCurrentMessage(msgRef.current.innerHTML);
+                        } else setCurrentMessage(msgRef.current.innerText);
                     }}></div>
 
                 <div className='relative'>
                     {isPickerOpen && (
                         <div
-                            className='exit-zone bg-red-100'
+                            className='exit-zone'
                             onClick={() => setIsPickerOpen(false)}></div>
                     )}
 
@@ -189,7 +190,7 @@ const MainChat: FC<MainChatProps> = ({ setIsInfoOpen }) => {
                 </div>
 
                 <button
-                    className='btn px-[30px] py-[10px] rounded-[7px] flex items-center space-x-3 text-[18px]'
+                    className='btn px-[30px] py-[10px] flex items-center space-x-3 text-[18px]'
                     onClick={handleSendMessage}>
                     <span>Gửi</span> <Icon icon='fluent:send-28-filled' />
                 </button>
