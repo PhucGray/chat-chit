@@ -45,34 +45,39 @@ const Sidebar: FC<SidebarProps> = ({ currentTab, setTab }) => {
     const dispatch = useAppDispatch();
     return (
         <div className='min-w-[75px] h-screen bg-gray-800 text-[30px] text-[#B1B1B1] flex flex-col items-center justify-between py-[15px]'>
-            <div className='space-y-10'>
+            <div className='space-y-10 flex flex-col'>
                 {icons &&
                     icons.map(({ icon, activeIcon, tab }) => (
-                        <Icon
+                        <button
                             key={icon}
-                            className={`sidebar-icon ${
-                                currentTab === tab && 'text-teal-500'
-                            }`}
-                            icon={currentTab === tab ? activeIcon : icon}
-                            onClick={() => {
-                                setTab(tab);
-                                sessionStorage.setItem('currentTab', tab);
-                            }}
-                        />
+                            className={`p-[8px] rounded-[15px] ${
+                                currentTab === tab
+                                    ? 'text-white bg-teal-500'
+                                    : 'text-gray-400'
+                            } hover:bg-teal-500 hover:text-white`}>
+                            <Icon
+                                icon={currentTab === tab ? activeIcon : icon}
+                                onClick={() => {
+                                    setTab(tab);
+                                    sessionStorage.setItem('currentTab', tab);
+                                }}
+                            />
+                        </button>
                     ))}
             </div>
 
-            <Icon
-                onClick={async () => {
-                    dispatch(setLoading(true));
-                    await logout();
-                    dispatch(setLoading(false));
+            <button className='p-[8px] rounded-[15px] bg-gray-600 text-teal-500 hover:bg-teal-500 hover:text-white'>
+                <Icon
+                    onClick={async () => {
+                        dispatch(setLoading(true));
+                        await logout();
+                        dispatch(setLoading(false));
 
-                    navigate('/sign-in', { replace: true });
-                }}
-                className='sidebar-icon'
-                icon='carbon:logout'
-            />
+                        navigate('/sign-in', { replace: true });
+                    }}
+                    icon='carbon:logout'
+                />
+            </button>
         </div>
     );
 };

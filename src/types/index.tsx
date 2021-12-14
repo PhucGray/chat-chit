@@ -1,5 +1,6 @@
-import { FormEvent } from 'react';
+import { ChangeEvent, FormEvent } from 'react';
 
+export type ChangeSelectType = ChangeEvent<HTMLSelectElement>;
 export type SubmitFormType = FormEvent<HTMLFormElement>;
 //
 export type TabType = 'chat' | 'profile' | 'friend' | 'setting';
