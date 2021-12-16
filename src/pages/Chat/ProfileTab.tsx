@@ -101,10 +101,9 @@ const Info = ({ field, title, data, user, icon }: InfoProps) => {
                 await updateDoc(userDoc, { [field]: value }).then(() => {
                     setHasData(true);
                 });
-            } else {
-                setIsAdd(false);
-                setValue(prevValue);
-            }
+            } else setValue(prevValue);
+
+            setIsAdd(false);
         }
 
         isEdit && setIsEdit(false);
@@ -166,7 +165,7 @@ const Info = ({ field, title, data, user, icon }: InfoProps) => {
                                     Huỷ
                                 </button>
                                 <button
-                                    className='btn rounded-[10px] px-[40px] py-[5px]'
+                                    className='btn px-[40px] py-[5px]'
                                     type='submit'>
                                     Lưu
                                 </button>
@@ -237,6 +236,7 @@ const Info = ({ field, title, data, user, icon }: InfoProps) => {
 
                     {isAdd && (
                         <>
+                            {/* Birth Field */}
                             {isBirthField && (
                                 <div className='space-y-3'>
                                     <DateTimePicker
@@ -266,8 +266,9 @@ const Info = ({ field, title, data, user, icon }: InfoProps) => {
                                 </div>
                             )}
 
+                            {/* Phonenumber, locaiton Field */}
                             {!isBirthField && (
-                                <div className='space-y-2 grid place-items-center'>
+                                <div className='space-y-2 grid place-items-center justify-center'>
                                     <input
                                         value={value}
                                         onChange={(e) =>
@@ -277,15 +278,16 @@ const Info = ({ field, title, data, user, icon }: InfoProps) => {
                                         autoFocus
                                         type='text'
                                     />
-                                    <div className='flex items-center space-x-2'>
+
+                                    <div className='flex items-center space-x-2 text-[18px] ml-auto'>
                                         <button
                                             onClick={() => setIsAdd(false)}
-                                            className='btn-outlined px-[50px] py-[7px]'
+                                            className='btn-outlined ml-auto px-[40px] py-[5px]'
                                             type='button'>
                                             Huỷ
                                         </button>
                                         <button
-                                            className='btn rounded-[10px] px-[50px] py-[7px]'
+                                            className='btn rounded-[10px] px-[40px] py-[5px]'
                                             type='submit'>
                                             Lưu
                                         </button>

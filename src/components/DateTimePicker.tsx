@@ -1,11 +1,4 @@
-import {
-    Dispatch,
-    MutableRefObject,
-    SetStateAction,
-    useEffect,
-    useRef,
-    useState,
-} from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { ChangeSelectType } from '../types';
 
 interface DateTimePickerProps {
@@ -71,8 +64,7 @@ const DateTimePicker = ({
         const year = Number(e.target.value);
         const selectedMonth = Number(month);
 
-
-        setYear(year.toString())
+        setYear(year.toString());
 
         if (year === currentYear) {
             setMonths(getMonths(currentMonth));

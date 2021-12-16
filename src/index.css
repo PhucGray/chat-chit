@@ -31,7 +31,7 @@
         @apply cursor-pointer text-black focus:ring-black focus:text-black active:text-black;
     }
 
-    .sidebar-icon {
+    .icon {
         @apply cursor-pointer hover:text-teal-500;
     }
 

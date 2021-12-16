@@ -44,7 +44,7 @@ const Sidebar: FC<SidebarProps> = ({ currentTab, setTab }) => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     return (
-        <div className='min-w-[75px] h-screen bg-gray-800 text-[30px] text-[#B1B1B1] flex flex-col items-center justify-between py-[15px]'>
+        <div className='w-[65px] md:w-[70px] xl:w-[75px] h-screen py-[10px] md:py-[10px] xl:py-[15px] bg-gray-800 text-[25px] md:text-[27px] xl:text-[30px] text-[#B1B1B1] flex flex-col items-center justify-between'>
             <div className='space-y-10 flex flex-col'>
                 {icons &&
                     icons.map(({ icon, activeIcon, tab }) => (
