@@ -4,8 +4,19 @@ import {
     getAuth,
     signInWithEmailAndPassword,
     signOut,
+    GoogleAuthProvider,
+    signInWithPopup,
+    UserCredential,
 } from 'firebase/auth';
-import { addDoc, collection, getFirestore } from 'firebase/firestore';
+import {
+    addDoc,
+    collection,
+    getDocs,
+    getFirestore,
+    query,
+    where,
+} from 'firebase/firestore';
+import { useAppDispatch } from './app/hooks';
 
 const firebaseConfig = {
     apiKey: 'AIzaSyD1Ikv6fFV-S2cqkmXc8P5Nlhd9oRwvfik',
@@ -21,6 +32,8 @@ const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
 export const auth = getAuth(app);
 export const usersCollectionRef = collection(db, 'users');
+
+export const googleProvider = new GoogleAuthProvider();
 
 // FUNCTIONS
 export const logout = async () => {
@@ -40,3 +53,4 @@ export const signIn = async (email: string, password: string) => {
 
     return user;
 };
+

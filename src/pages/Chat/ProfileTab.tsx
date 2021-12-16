@@ -24,15 +24,15 @@ const ProfileTab = () => {
 
     return (
         <>
-            <div className='min-h-screen w-max mx-auto flex flex-col items-center justify-center space-y-5'>
+            <div className='min-h-screen mx-auto flex flex-col items-center justify-center space-y-5'>
                 <img
                     className='h-[100px] w-[100px] rounded-[10px]'
                     src={HomeImg}
                     alt='Home'
                 />
 
-                <div className='w-screen max-w-[450px] px-[40px] py-[20px] rounded-[10px] space-y-3 bg-white text-[25px]'>
-                    <div className='flex items-center justify-between text-[25px]'>
+                <div className='w-full max-w-[400px] px-[20px] sm:px-[40px] py-[20px] rounded-[10px] space-y-3 bg-white text-[18px] sm:text-[23px]'>
+                    <div className='flex items-center justify-between'>
                         <div className='flex items-center space-x-3'>
                             <Icon icon='si-glyph:badge-name' />
                             <p className='truncate'>{user.email}</p>
@@ -125,14 +125,14 @@ const Info = ({ field, title, data, user, icon }: InfoProps) => {
 
     return (
         <form onSubmit={handleSubmit}>
-            {hasData ? (
+            {hasData && (
                 <>
-                    {isEdit ? (
+                    {isEdit && (
                         <div className='space-y-2'>
                             <div className='flex items-center space-x-2'>
                                 <Icon icon={icon} />
 
-                                {isBirthField ? (
+                                {isBirthField && (
                                     <DateTimePicker
                                         day={day}
                                         month={month}
@@ -141,7 +141,9 @@ const Info = ({ field, title, data, user, icon }: InfoProps) => {
                                         setMonth={setMonth}
                                         setYear={setYear}
                                     />
-                                ) : (
+                                )}
+
+                                {!isBirthField && (
                                     <input
                                         value={value}
                                         onChange={(e) =>
@@ -154,7 +156,7 @@ const Info = ({ field, title, data, user, icon }: InfoProps) => {
                                 )}
                             </div>
 
-                            <div className='flex items-center space-x-2 text-[18px]'>
+                            <div className='flex items-center space-x-2'>
                                 <button
                                     onClick={() => {
                                         setValue(prevValue);
@@ -171,18 +173,22 @@ const Info = ({ field, title, data, user, icon }: InfoProps) => {
                                 </button>
                             </div>
                         </div>
-                    ) : (
+                    )}
+
+                    {!isEdit && (
                         <div className='flex items-center justify-between relative group'>
-                            <div className='flex items-center space-x-3'>
+                            <div className='max-w-[80%] flex items-center space-x-3'>
                                 <Icon icon={icon} />
-                                <p>{value}</p>
+                                <p className='truncate'>{value}</p>
                             </div>
+
                             <Icon
-                                className='rounded-full cursor-pointer hover:bg-gray-100 hidden group-hover:block'
+                                className='rounded-full cursor-pointer hover:bg-gray-100 invisible group-hover:visible'
                                 icon='akar-icons:more-horizontal'
                                 fontSize={35}
                                 onClick={() => setIsOptionOpen(true)}
                             />
+
                             {isOptionOpen && (
                                 <>
                                     <div
@@ -225,7 +231,9 @@ const Info = ({ field, title, data, user, icon }: InfoProps) => {
                         </div>
                     )}
                 </>
-            ) : (
+            )}
+
+            {!hasData && (
                 <>
                     <div
                         onClick={() => setIsAdd(!isAdd)}
@@ -247,7 +255,7 @@ const Info = ({ field, title, data, user, icon }: InfoProps) => {
                                         setMonth={setMonth}
                                         setYear={setYear}
                                     />
-                                    <div className='flex items-center space-x-2 text-[18px]'>
+                                    <div className='flex items-center space-x-2'>
                                         <button
                                             onClick={() => {
                                                 setValue(prevValue);
@@ -279,7 +287,7 @@ const Info = ({ field, title, data, user, icon }: InfoProps) => {
                                         type='text'
                                     />
 
-                                    <div className='flex items-center space-x-2 text-[18px] ml-auto'>
+                                    <div className='flex items-center space-x-2 ml-auto'>
                                         <button
                                             onClick={() => setIsAdd(false)}
                                             className='btn-outlined ml-auto px-[40px] py-[5px]'

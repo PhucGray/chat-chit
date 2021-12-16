@@ -21,31 +21,31 @@ const App = () => {
     const dispatch = useAppDispatch();
     useEffect(() => {
         onAuthStateChanged(auth, async (currentUser) => {
-            const q = query(
-                collection(db, 'users'),
-                where('email', '==', currentUser?.email || ''),
-            );
-
-            const data = await getDocs(q);
-
-            data.forEach((doc) => {
-                const { email, phoneNumber, location, birth } =
-                    doc.data() as UserType;
-
-                dispatch(
-                    setUser(
-                        currentUser
-                            ? {
-                                  uid: doc.id,
-                                  email: email || '',
-                                  phoneNumber: phoneNumber,
-                                  location: location,
-                                  birth,
-                              }
-                            : null,
-                    ),
+            if (currentUser) {
+                const q = query(
+                    collection(db, 'users'),
+                    where('email', '==', currentUser.email || ''),
                 );
-            });
+
+                const data = await getDocs(q);
+
+                data.forEach((doc) => {
+                    const { email, phoneNumber, location, birth } =
+                        doc.data() as UserType;
+
+                    dispatch(
+                        setUser({
+                            uid: doc.id,
+                            email: email || '',
+                            phoneNumber: phoneNumber,
+                            location: location,
+                            birth,
+                        }),
+                    );
+                });
+            }
+
+            if (!currentUser) dispatch(setUser(null));
         });
     }, []);
 

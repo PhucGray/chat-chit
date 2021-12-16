@@ -66,14 +66,42 @@ const RecentMessages: FC<RecentMessagesProps> = ({
         {
             name: 'CR7',
             msg: 'Hôm nay bạn thế nào ajkfba a f w n a w f o a aofw aj k w',
+            from: 'friend',
         },
         {
             name: 'Stephen',
             msg: 'Mới trúng vé số được 100 ngàn',
+            from: 'me',
         },
         {
             name: 'Nadal',
             msg: 'Hút cần không pro ????',
+            from: 'friend',
+        },
+        {
+            name: 'Nadal',
+            msg: 'Hút cần không pro ????',
+            from: 'friend',
+        },
+        {
+            name: 'Nadal',
+            msg: 'Hút cần không pro ????',
+            from: 'me',
+        },
+        {
+            name: 'Nadal',
+            msg: 'Hút cần không pro ????',
+            from: 'friend',
+        },
+        {
+            name: 'Nadal',
+            msg: 'Hút cần không pro ????',
+            from: 'me',
+        },
+        {
+            name: 'Nadal',
+            msg: 'Hút cần không pro ????',
+            from: 'me',
         },
     ];
     return (
@@ -87,7 +115,7 @@ const RecentMessages: FC<RecentMessagesProps> = ({
             <div
                 className={`${
                     isRecentMessagesOpen ? 'flex' : 'hidden'
-                } w-[270px] h-full py-[20px] z-10 fixed left-0 top-0 border bg-white lg:flex flex-col lg:static lg:bg-transparent`}>
+                } w-[270px] h-full max-h-screen py-[20px] z-10 fixed left-0 top-0 border-r bg-white lg:flex flex-col lg:static lg:bg-transparent`}>
                 <div className='flex items-center space-x-2 px-[15px]'>
                     <Icon
                         className='text-gray-500 cursor-pointer transform hover:scale-[1.2] hover:text-teal-500'
@@ -103,20 +131,20 @@ const RecentMessages: FC<RecentMessagesProps> = ({
                     Tin nhắn gần đây
                 </p>
 
-                <>
+                <div className='flex-1 overflow-auto'>
                     {rencentMessages &&
-                        rencentMessages.map(({ name, msg }) => (
+                        rencentMessages.map(({ name, msg, from }, index) => (
                             <div
-                                key={name}
+                                key={index}
                                 className='w-full overflow-hidden px-[10px] py-[10px] bg-white border-b-[1px] cursor-pointer hover:bg-teal-50'>
                                 <p className='font-semibold'>{name}</p>
 
                                 <p className='text-sm text-gray-400 truncate'>
-                                    {msg}
+                                    {from === 'me' && 'Bạn:'} {msg}
                                 </p>
                             </div>
                         ))}
-                </>
+                </div>
             </div>
         </>
     );

@@ -17,7 +17,7 @@ const FriendRequest = () => {
         <div>
             <p className='font-semibold text-[23px]'>Lời mời kết bạn</p>
 
-            <div className='bg-white rounded-[10px] ml-[15px] mt-[10px] px-[20px] py-[10px] space-y-2 lg:flex items-center justify-between space-x-2'>
+            <div className='bg-white rounded-[10px] ml-[15px] mt-[10px] px-[20px] py-[10px] space-y-2 sm:flex items-center justify-between space-x-2'>
                 <div className='flex items-center space-x-2'>
                     <img
                         className='h-[60px] w-[60px] rounded-full border'
@@ -36,10 +36,10 @@ const FriendRequest = () => {
                 </div>
 
                 <div className='flex items-center space-x-4'>
-                    <button className='btn w-[120px] py-[7px]'>
+                    <button className='btn w-[80px] sm:w-[120px] py-[7px]'>
                         Đồng ý
                     </button>
-                    <button className='btn-outlined w-[120px] py-[7px]'>
+                    <button className='btn-outlined w-[80px] sm:w-[120px] py-[7px]'>
                         Xoá
                     </button>
                 </div>
@@ -124,146 +124,34 @@ const Search = () => {
 };
 
 const ListFriend = () => {
+    const friends = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     return (
         <div>
             <p className='font-semibold text-[23px]'>Danh sách bạn bè</p>
 
             <div className='grid gap-x-[50px] gap-y-[20px] ml-[15px] mt-[10px] lg:grid-cols-2 lg:px-[30px]'>
-                <div className='flex items-center justify-between'>
-                    <div className='flex items-center space-x-4'>
-                        <img
-                            className='h-[75px] w-[75px] rounded-[10px] border'
-                            src={HomeImg}
-                            alt='Home'
-                        />
-                        <p className='font-semibold text-[22px]'>Friend 1</p>
-                    </div>
+                {friends &&
+                    friends.map((friend) => (
+                        <div
+                            key={friend}
+                            className='flex items-center justify-between'>
+                            <div className='flex items-center space-x-4'>
+                                <img
+                                    className='h-[60px] w-[60px] sm:h-[75px] sm:w-[75px] rounded-[10px] border'
+                                    src={HomeImg}
+                                    alt='Home'
+                                />
+                                <p className='font-semibold text-[18px] sm:text-[22px]'>
+                                    Friend {friend}
+                                </p>
+                            </div>
 
-                    <Icon
-                        className='rounded-full cursor-pointer hover:bg-gray-300'
-                        icon='akar-icons:more-horizontal'
-                        fontSize={35}
-                    />
-                </div>
-
-                <div className='flex items-center justify-between'>
-                    <div className='flex items-center space-x-4'>
-                        <img
-                            className='h-[75px] w-[75px] rounded-[10px] border'
-                            src={HomeImg}
-                            alt='Home'
-                        />
-                        <p className='font-semibold text-[22px]'>Friend 2</p>
-                    </div>
-
-                    <Icon
-                        className='rounded-full cursor-pointer hover:bg-gray-300'
-                        icon='akar-icons:more-horizontal'
-                        fontSize={35}
-                    />
-                </div>
-
-                <div className='flex items-center justify-between'>
-                    <div className='flex items-center space-x-4'>
-                        <img
-                            className='h-[75px] w-[75px] rounded-[10px] border'
-                            src={HomeImg}
-                            alt='Home'
-                        />
-                        <p className='font-semibold text-[22px]'>Friend 3</p>
-                    </div>
-
-                    <Icon
-                        className='rounded-full cursor-pointer hover:bg-gray-300'
-                        icon='akar-icons:more-horizontal'
-                        fontSize={35}
-                    />
-                </div>
-
-                <div className='flex items-center justify-between'>
-                    <div className='flex items-center space-x-4'>
-                        <img
-                            className='h-[75px] w-[75px] rounded-[10px] border'
-                            src={HomeImg}
-                            alt='Home'
-                        />
-                        <p className='font-semibold text-[22px]'>Friend 4</p>
-                    </div>
-
-                    <Icon
-                        className='rounded-full cursor-pointer hover:bg-gray-300'
-                        icon='akar-icons:more-horizontal'
-                        fontSize={35}
-                    />
-                </div>
-
-                <div className='flex items-center justify-between'>
-                    <div className='flex items-center space-x-4'>
-                        <img
-                            className='h-[75px] w-[75px] rounded-[10px] border'
-                            src={HomeImg}
-                            alt='Home'
-                        />
-                        <p className='font-semibold text-[22px]'>Friend 3</p>
-                    </div>
-
-                    <Icon
-                        className='rounded-full cursor-pointer hover:bg-gray-300'
-                        icon='akar-icons:more-horizontal'
-                        fontSize={35}
-                    />
-                </div>
-
-                <div className='flex items-center justify-between'>
-                    <div className='flex items-center space-x-4'>
-                        <img
-                            className='h-[75px] w-[75px] rounded-[10px] border'
-                            src={HomeImg}
-                            alt='Home'
-                        />
-                        <p className='font-semibold text-[22px]'>Friend 4</p>
-                    </div>
-
-                    <Icon
-                        className='rounded-full cursor-pointer hover:bg-gray-300'
-                        icon='akar-icons:more-horizontal'
-                        fontSize={35}
-                    />
-                </div>
-
-                <div className='flex items-center justify-between'>
-                    <div className='flex items-center space-x-4'>
-                        <img
-                            className='h-[75px] w-[75px] rounded-[10px] border'
-                            src={HomeImg}
-                            alt='Home'
-                        />
-                        <p className='font-semibold text-[22px]'>Friend 3</p>
-                    </div>
-
-                    <Icon
-                        className='rounded-full cursor-pointer hover:bg-gray-300'
-                        icon='akar-icons:more-horizontal'
-                        fontSize={35}
-                    />
-                </div>
-
-                <div className='flex items-center justify-between'>
-                    <div className='flex items-center space-x-4'>
-                        <img
-                            className='h-[75px] w-[75px] rounded-[10px] border'
-                            src={HomeImg}
-                            alt='Home'
-                        />
-                        <p className='font-semibold text-[22px]'>Friend 4</p>
-                    </div>
-
-                    <Icon
-                        className='rounded-full cursor-pointer hover:bg-gray-300'
-                        icon='akar-icons:more-horizontal'
-                        fontSize={35}
-                    />
-                </div>
+                            <Icon
+                                className='text-[30px] sm:text-[35px] rounded-full cursor-pointer hover:bg-gray-300'
+                                icon='akar-icons:more-horizontal'
+                            />
+                        </div>
+                    ))}
             </div>
         </div>
     );

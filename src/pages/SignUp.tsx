@@ -1,9 +1,18 @@
 import { Icon } from '@iconify/react';
+import { signInWithPopup, UserCredential } from 'firebase/auth';
+import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
 import { MutableRefObject, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../app/hooks';
 import { setLoading } from '../features/loading/loadingSlide';
-import { signup } from '../firebase';
+import { setUser } from '../features/user/userSlice';
+import {
+    auth,
+    db,
+    googleProvider,
+    signup,
+    usersCollectionRef,
+} from '../firebase';
 import SignUpImg from '../images/sign-up.png';
 import { SubmitFormType } from '../types';
 import { validateEmail, validatePassword } from '../utils/validateAuth';
@@ -68,6 +77,28 @@ const SignUp = () => {
                 setEmailError('Email đã tồn tại');
             }
         }
+    };
+
+    const handleGoogleClick = async () => {
+        signInWithPopup(auth, googleProvider)
+            .then(async (res: UserCredential) => {
+                const { email, phoneNumber, photoURL, displayName, uid } =
+                    res.user;
+
+                const q = query(
+                    collection(db, 'users'),
+                    where('email', '==', email),
+                );
+
+                const data = await getDocs(q);
+
+                if (data.empty) {
+                    await addDoc(usersCollectionRef, { email });
+                }
+
+                navigate('/sign-in');
+            })
+            .catch((err) => console.log(err));
     };
 
     return (

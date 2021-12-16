@@ -1,10 +1,18 @@
 import { Icon } from '@iconify/react';
+import { signInWithPopup, UserCredential } from 'firebase/auth';
+import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
 import { MutableRefObject, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../app/hooks';
 import { setLoading } from '../features/loading/loadingSlide';
 import { setUser } from '../features/user/userSlice';
-import { signIn } from '../firebase';
+import {
+    auth,
+    db,
+    googleProvider,
+    signIn,
+    usersCollectionRef,
+} from '../firebase';
 import SignInImg from '../images/sign-in.png';
 import { SubmitFormType } from '../types';
 import { validateEmail, validatePassword } from '../utils/validateAuth';
@@ -66,6 +74,38 @@ const SignIn = () => {
                 setPasswordError('Email hoặc mật khẩu không chính xác');
             }
         }
+    };
+
+    const handleGoogleClick = async () => {
+        signInWithPopup(auth, googleProvider)
+            .then(async (res: UserCredential) => {
+                const { email, phoneNumber, photoURL, displayName, uid } =
+                    res.user;
+
+                const q = query(
+                    collection(db, 'users'),
+                    where('email', '==', email),
+                );
+
+                const data = await getDocs(q);
+
+                if (data.empty) {
+                    await addDoc(usersCollectionRef, { email });
+                }
+
+                localStorage.setItem('uid', uid);
+
+                dispatch(
+                    setUser({
+                        uid,
+                        email: email || '',
+                    }),
+                );
+
+                dispatch(setLoading(false));
+                navigate('/chat', { replace: true });
+            })
+            .catch((err) => console.log(err));
     };
 
     return (
@@ -140,7 +180,10 @@ const SignIn = () => {
                             hoặc
                         </p>
 
-                        <button className='btn-outlined w-full py-[10px] flex items-center justify-center space-x-3'>
+                        <button
+                            className='btn-outlined w-full py-[10px] flex items-center justify-center space-x-3'
+                            onClick={handleGoogleClick}
+                            type='button'>
                             <Icon
                                 icon='flat-color-icons:google'
                                 fontSize={30}
