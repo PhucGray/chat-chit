@@ -1,15 +1,14 @@
-import { async } from '@firebase/util';
 import { Icon } from '@iconify/react';
 import { doc, updateDoc } from 'firebase/firestore';
-import { MutableRefObject, useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAppSelector } from '../../app/hooks';
 import DateTimePicker from '../../components/DateTimePicker';
 import { selectUser } from '../../features/user/userSlice';
 import { db } from '../../firebase';
-import HomeImg from '../../images/home.png';
+import AvatarImg from '../../images/defaultAvatar.png';
 import { SubmitFormType, UserType } from '../../types';
 
-type InfoField = 'phoneNumber' | 'location' | 'birth';
+type InfoField = 'phoneNumber' | 'birth';
 
 interface InfoProps {
     field: InfoField;
@@ -27,15 +26,22 @@ const ProfileTab = () => {
             <div className='min-h-screen mx-auto flex flex-col items-center justify-center space-y-5'>
                 <img
                     className='h-[100px] w-[100px] rounded-[10px]'
-                    src={HomeImg}
+                    src={user.photoURL || AvatarImg}
                     alt='Home'
                 />
 
                 <div className='w-full max-w-[400px] px-[20px] sm:px-[40px] py-[20px] rounded-[10px] space-y-3 bg-white text-[18px] sm:text-[23px]'>
                     <div className='flex items-center justify-between'>
                         <div className='flex items-center space-x-3'>
-                            <Icon icon='si-glyph:badge-name' />
+                            <Icon icon='carbon:email' />
                             <p className='truncate'>{user.email}</p>
+                        </div>
+                    </div>
+
+                    <div className='flex items-center justify-between'>
+                        <div className='flex items-center space-x-3'>
+                            <Icon icon='si-glyph:badge-name' />
+                            <p className='truncate'>{user.displayName}</p>
                         </div>
                     </div>
 
@@ -45,14 +51,6 @@ const ProfileTab = () => {
                         data={user.phoneNumber}
                         user={user}
                         icon='akar-icons:phone'
-                    />
-
-                    <Info
-                        field='location'
-                        title='địa chỉ'
-                        data={user.location}
-                        user={user}
-                        icon='akar-icons:location'
                     />
 
                     <Info

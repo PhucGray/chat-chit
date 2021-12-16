@@ -16,7 +16,7 @@ import { UserType } from './types';
 const App = () => {
     const user = useAppSelector(selectUser);
     const loading = useAppSelector(selectLoading);
-    const isAuth = localStorage.getItem('uid') || user.uid;
+    const isAuth = localStorage.getItem('uid') || user?.uid;
 
     const dispatch = useAppDispatch();
     useEffect(() => {
@@ -30,22 +30,33 @@ const App = () => {
                 const data = await getDocs(q);
 
                 data.forEach((doc) => {
-                    const { email, phoneNumber, location, birth } =
-                        doc.data() as UserType;
+                    const {
+                        uid,
+                        email,
+                        displayName,
+                        photoURL,
+                        phoneNumber,
+                        birth,
+                    } = doc.data() as UserType;
+
+                    localStorage.setItem('uid', uid || '');
 
                     dispatch(
                         setUser({
                             uid: doc.id,
+                            displayName,
+                            photoURL,
                             email: email || '',
                             phoneNumber: phoneNumber,
-                            location: location,
                             birth,
                         }),
                     );
                 });
             }
 
-            if (!currentUser) dispatch(setUser(null));
+            if (!currentUser) {
+                dispatch(setUser(null));
+            }
         });
     }, []);
 

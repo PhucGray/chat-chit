@@ -3,6 +3,7 @@ import { Dispatch, FC, SetStateAction } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../app/hooks';
 import { setLoading } from '../../features/loading/loadingSlide';
+import { setUser } from '../../features/user/userSlice';
 import { logout } from '../../firebase';
 import { TabType } from '../../types';
 
@@ -54,29 +55,29 @@ const Sidebar: FC<SidebarProps> = ({ currentTab, setTab }) => {
                                 currentTab === tab
                                     ? 'text-white bg-teal-500'
                                     : 'text-gray-400'
-                            } hover:bg-teal-500 hover:text-white`}>
+                            } hover:bg-teal-500 hover:text-white`}
+                            onClick={() => {
+                                setTab(tab);
+                                sessionStorage.setItem('currentTab', tab);
+                            }}>
                             <Icon
                                 icon={currentTab === tab ? activeIcon : icon}
-                                onClick={() => {
-                                    setTab(tab);
-                                    sessionStorage.setItem('currentTab', tab);
-                                }}
                             />
                         </button>
                     ))}
             </div>
 
-            <button className='p-[8px] rounded-[15px] bg-gray-600 text-teal-500 hover:bg-teal-500 hover:text-white'>
-                <Icon
-                    onClick={async () => {
-                        dispatch(setLoading(true));
-                        await logout();
-                        dispatch(setLoading(false));
+            <button
+                className='p-[8px] rounded-[15px] bg-gray-600 text-teal-500 hover:bg-teal-500 hover:text-white'
+                onClick={async () => {
+                    dispatch(setLoading(true));
+                    dispatch(setUser(null));
+                    await logout();
+                    dispatch(setLoading(false));
 
-                        navigate('/sign-in', { replace: true });
-                    }}
-                    icon='carbon:logout'
-                />
+                    navigate('/sign-in', { replace: true });
+                }}>
+                <Icon icon='carbon:logout' />
             </button>
         </div>
     );

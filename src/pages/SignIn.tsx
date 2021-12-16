@@ -1,5 +1,5 @@
 import { Icon } from '@iconify/react';
-import { signInWithPopup, UserCredential } from 'firebase/auth';
+import { reload, signInWithPopup, UserCredential } from 'firebase/auth';
 import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
 import { MutableRefObject, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -55,20 +55,11 @@ const SignIn = () => {
             try {
                 dispatch(setLoading(true));
 
-                const user = await signIn(email, password);
+                await signIn(email, password);
 
-                if (user) {
-                    dispatch(
-                        setUser({
-                            uid: user.user.uid || '',
-                            email: email || '',
-                        }),
-                    );
+                dispatch(setLoading(false));
 
-                    dispatch(setLoading(false));
-
-                    navigate('/chat', { replace: true });
-                }
+                navigate('/chat', { replace: true });
             } catch (error) {
                 dispatch(setLoading(false));
                 setPasswordError('Email hoặc mật khẩu không chính xác');
@@ -90,7 +81,13 @@ const SignIn = () => {
                 const data = await getDocs(q);
 
                 if (data.empty) {
-                    await addDoc(usersCollectionRef, { email });
+                    await addDoc(usersCollectionRef, {
+                        uid,
+                        email,
+                        displayName,
+                        photoURL,
+                        phoneNumber,
+                    });
                 }
 
                 localStorage.setItem('uid', uid);
@@ -99,13 +96,18 @@ const SignIn = () => {
                     setUser({
                         uid,
                         email: email || '',
+                        displayName: displayName || '',
+                        photoURL: photoURL || '',
+                        phoneNumber: phoneNumber || '',
                     }),
                 );
-
-                dispatch(setLoading(false));
-                navigate('/chat', { replace: true });
             })
-            .catch((err) => console.log(err));
+            .catch((err) => console.log(err))
+            .finally(() => {
+                dispatch(setLoading(false));
+
+                navigate('/chat', { replace: true });
+            });
     };
 
     return (

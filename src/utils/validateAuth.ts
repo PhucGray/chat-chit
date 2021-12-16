@@ -1,3 +1,12 @@
+export const validateUsername = (username: string) => {
+    if (!username.trim()) return 'Vui lòng nhập tên người dùng';
+
+    if (username.length < 3)
+        return 'Vui lòng nhập tên người dùng ít nhất 3 ký tự';
+
+    return '';
+};
+
 export const validateEmail = (email: string) => {
     if (!email.trim()) return 'Vui lòng nhập email';
 

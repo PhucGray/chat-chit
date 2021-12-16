@@ -14,35 +14,45 @@ import {
     usersCollectionRef,
 } from '../firebase';
 import SignUpImg from '../images/sign-up.png';
-import { SubmitFormType } from '../types';
-import { validateEmail, validatePassword } from '../utils/validateAuth';
+import { SubmitFormType, UserType } from '../types';
+import {
+    validateEmail,
+    validatePassword,
+    validateUsername,
+} from '../utils/validateAuth';
 
 const SignUp = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
+    const [username, setUsername] = useState('');
     const [isVisible, setIsVisible] = useState(false);
 
     const [emailError, setEmailError] = useState('');
     const [passwordError, setPasswordError] = useState('');
-    const [confirmPasswordError, setConfirmPasswordError] = useState('');
+    const [usernameError, setUsernameError] = useState('');
 
     const dispatch = useAppDispatch();
 
     const emailRef = useRef() as MutableRefObject<HTMLInputElement>;
     const passwordRef = useRef() as MutableRefObject<HTMLInputElement>;
-    const confirmPasswordRef = useRef() as MutableRefObject<HTMLInputElement>;
+    const usernameRef = useRef() as MutableRefObject<HTMLInputElement>;
 
     const navigate = useNavigate();
 
-    const handleSubmit = async (e: SubmitFormType) => {
+    const handleSignUpSubmit = async (e: SubmitFormType) => {
         e.preventDefault();
 
+        const validateUsernameMsg = validateUsername(username);
         const validateEmailMsg = validateEmail(email);
         const validatePasswordMsg = validatePassword(password);
-        const validateConfirmPasswordMsg = validatePassword(confirmPassword);
 
         let isValid = true;
+
+        if (validateUsernameMsg) {
+            setUsernameError(validateUsernameMsg);
+            usernameRef.current.focus();
+            isValid = false;
+        }
 
         if (validateEmailMsg) {
             setEmailError(validateEmailMsg);
@@ -56,25 +66,46 @@ const SignUp = () => {
             isValid = false;
         }
 
-        if (validateConfirmPasswordMsg) {
-            setConfirmPasswordError(validateConfirmPasswordMsg);
-            confirmPasswordRef.current.focus();
-        } else if (password !== confirmPassword) {
-            setConfirmPasswordError('Mật khẩu không khớp');
-            confirmPasswordRef.current.focus();
+        const checkEmailExists = query(
+            collection(db, 'users'),
+            where('email', '==', email),
+        );
+
+        const checkUsernameExists = query(
+            collection(db, 'users'),
+            where('displayName', '==', username),
+        );
+
+        const dbEmail = await getDocs(checkEmailExists);
+        const dbUsername = await getDocs(checkUsernameExists);
+
+        if (!dbEmail.empty) {
             isValid = false;
+            setEmailError('Email đã tồn tại');
+        }
+
+        if (!dbUsername.empty) {
+            isValid = false;
+            setUsernameError('Tên người dùng đã tồn tại');
         }
 
         if (isValid) {
             try {
                 dispatch(setLoading(true));
-                await signup(email, password);
+
+                const newUser = await signup(email, password);
+
+                await addDoc(usersCollectionRef, {
+                    uid: newUser.user.uid,
+                    email,
+                    displayName: username,
+                } as UserType);
+
                 dispatch(setLoading(false));
 
                 navigate('/sign-in');
             } catch (error) {
                 console.log(error);
-                setEmailError('Email đã tồn tại');
             }
         }
     };
@@ -93,7 +124,13 @@ const SignUp = () => {
                 const data = await getDocs(q);
 
                 if (data.empty) {
-                    await addDoc(usersCollectionRef, { email });
+                    await addDoc(usersCollectionRef, {
+                        email,
+                        displayName,
+                        uid,
+                        photoURL,
+                        phoneNumber,
+                    });
                 }
 
                 navigate('/sign-in');
@@ -104,7 +141,7 @@ const SignUp = () => {
     return (
         <>
             <form
-                onSubmit={handleSubmit}
+                onSubmit={handleSignUpSubmit}
                 className='flex px-[20px] py-[40px] container'>
                 <div className='flex-1 max-w-[350px] mx-auto space-y-5'>
                     <div className='text-center'>
@@ -114,6 +151,21 @@ const SignUp = () => {
                     </div>
 
                     <div className='space-y-2'>
+                        <p className='font-semibold'>Tên người dùng</p>
+                        <input
+                            ref={usernameRef}
+                            value={username}
+                            onChange={(e) => {
+                                setUsername(e.target.value);
+                                setUsernameError('');
+                            }}
+                            onClick={() => setUsernameError('')}
+                            className='input-text w-full'
+                            type='text'
+                            placeholder='Nhập email của bạn'
+                        />
+                        <p className='error'>{usernameError}</p>
+
                         <p className='font-semibold'>Email</p>
                         <input
                             ref={emailRef}
@@ -156,34 +208,6 @@ const SignUp = () => {
                             />
                         </div>
                         <p className='error'>{passwordError}</p>
-
-                        <p className='font-semibold'>Xác nhận mật khẩu</p>
-                        <div className='relative'>
-                            <input
-                                ref={confirmPasswordRef}
-                                value={confirmPassword}
-                                onChange={(e) => {
-                                    setConfirmPassword(e.target.value);
-                                    setConfirmPasswordError('');
-                                }}
-                                onClick={() => setConfirmPasswordError('')}
-                                className='input-text w-full'
-                                type={isVisible ? 'text' : 'password'}
-                                placeholder='Xác nhận mật khẩu của bạn'
-                            />
-
-                            <Icon
-                                icon={
-                                    isVisible
-                                        ? 'gridicons:visible'
-                                        : 'gridicons:not-visible'
-                                }
-                                fontSize={23}
-                                className='absolute right-[10px] top-[25%] cursor-pointer'
-                                onClick={() => setIsVisible(!isVisible)}
-                            />
-                        </div>
-                        <p className='error'>{confirmPasswordError}</p>
                     </div>
 
                     <div className='space-y-2'>
@@ -197,7 +221,9 @@ const SignUp = () => {
                             hoặc
                         </p>
 
-                        <button className='btn-outlined w-full py-[6px] lg:py-[10px] flex items-center justify-center space-x-3'>
+                        <button
+                            className='btn-outlined w-full py-[6px] lg:py-[10px] flex items-center justify-center space-x-3'
+                            onClick={handleGoogleClick}>
                             <Icon
                                 icon='flat-color-icons:google'
                                 fontSize={30}

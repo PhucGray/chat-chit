@@ -7,7 +7,10 @@ export type TabType = 'chat' | 'profile' | 'friend' | 'setting';
 export type UserType = {
     uid: string;
     email: string;
+    //
+    displayName: string;
+    photoURL?: string;
+    //
     phoneNumber?: string;
-    location?: string;
     birth?: string;
 };

@@ -2,21 +2,11 @@ import { initializeApp } from 'firebase/app';
 import {
     createUserWithEmailAndPassword,
     getAuth,
+    GoogleAuthProvider,
     signInWithEmailAndPassword,
     signOut,
-    GoogleAuthProvider,
-    signInWithPopup,
-    UserCredential,
 } from 'firebase/auth';
-import {
-    addDoc,
-    collection,
-    getDocs,
-    getFirestore,
-    query,
-    where,
-} from 'firebase/firestore';
-import { useAppDispatch } from './app/hooks';
+import { collection, getFirestore } from 'firebase/firestore';
 
 const firebaseConfig = {
     apiKey: 'AIzaSyD1Ikv6fFV-S2cqkmXc8P5Nlhd9oRwvfik',
@@ -37,20 +27,13 @@ export const googleProvider = new GoogleAuthProvider();
 
 // FUNCTIONS
 export const logout = async () => {
-    await signOut(auth);
     localStorage.removeItem('uid');
+    sessionStorage.removeItem('currentTab');
+    await signOut(auth);
 };
 
-export const signup = async (email: string, password: string) => {
+export const signup = async (email: string, password: string) =>
     await createUserWithEmailAndPassword(auth, email, password);
-    await addDoc(usersCollectionRef, { email });
-};
 
-export const signIn = async (email: string, password: string) => {
-    const user = await signInWithEmailAndPassword(auth, email, password);
-
-    localStorage.setItem('uid', user.user.uid || '');
-
-    return user;
-};
-
+export const signIn = async (email: string, password: string) =>
+    await signInWithEmailAndPassword(auth, email, password);

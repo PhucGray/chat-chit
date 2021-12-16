@@ -1,9 +1,9 @@
-import { getDocs } from 'firebase/firestore';
+import { collection, getDocs, query, where } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import { useAppDispatch } from '../../app/hooks';
 import Loading from '../../components/Loading';
 import { setUser } from '../../features/user/userSlice';
-import { usersCollectionRef } from '../../firebase';
+import { db, usersCollectionRef } from '../../firebase';
 import { TabType, UserType } from '../../types';
 import ChatTab from './ChatTab';
 import FriendsTab from './FriendsTab';
@@ -23,16 +23,19 @@ const Chat = () => {
     useEffect(() => {
         const getUsers = async () => {
             setLoading(true);
-            try {
-                const data = await getDocs(usersCollectionRef);
 
-                data.forEach((doc) => {
-                    const user = doc.data() as UserType;
-                    dispatch(setUser({ ...user, uid: doc.id }));
-                });
+            const uid = localStorage.getItem('uid');
+
+            const q = query(collection(db, 'users'), where('uid', '==', uid));
+
+            try {
+                const data = await getDocs(q);
+
+                dispatch(setUser(data.docs[0].data() as UserType));
             } catch (error) {
                 console.log(error);
             }
+
             setLoading(false);
         };
         getUsers();

@@ -5,7 +5,7 @@ import { UserType } from '../../types';
 const initialState: UserType | null = {
     uid: '',
     email: '',
-    phoneNumber: '',
+    displayName: '',
 };
 
 const userSlice = createSlice({
@@ -15,12 +15,14 @@ const userSlice = createSlice({
         setUser: (state, { payload }: PayloadAction<UserType | null>) => {
             if (!payload) return;
 
-            const { email, uid, phoneNumber, location, birth } = payload;
+            const { email, displayName, photoURL, uid, phoneNumber, birth } =
+                payload;
 
-            state.email = email;
             state.uid = uid;
+            state.email = email;
+            state.displayName = displayName;
+            state.photoURL = photoURL;
             state.phoneNumber = phoneNumber;
-            state.location = location;
             state.birth = birth;
         },
     },
