@@ -1,22 +1,20 @@
 import { Icon } from '@iconify/react';
 import { signInWithPopup, UserCredential } from 'firebase/auth';
-import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
+import { addDoc } from 'firebase/firestore';
 import { MutableRefObject, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAppDispatch } from '../app/hooks';
-import { setLoading } from '../features/loading/loadingSlide';
+import { useAppDispatch, useAppSelector } from '../app/hooks';
+import { selectLoading, setLoading } from '../features/loading/loadingSlice';
 import { setUser } from '../features/user/userSlice';
 import {
     auth,
-    db,
     getUserWithUID,
     googleProvider,
     signIn,
     usersCollectionRef,
 } from '../firebase';
 import SignInImg from '../images/sign-in.png';
-import { SubmitFormType, UserType } from '../types';
-import { setDocIdToLocalStorage, setUIDToLocalStorage } from '../utils/storage';
+import { SubmitFormType } from '../types';
 import { validateEmail, validatePassword } from '../utils/validateAuth';
 
 const SignIn = () => {
@@ -33,8 +31,11 @@ const SignIn = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
 
+    const loading = useAppSelector(selectLoading);
+
     const handleSignInWithEmailAndPassword = async (e: SubmitFormType) => {
         e.preventDefault();
+        dispatch(setLoading({ state: true, message: 'Đang đăng nhập' }));
 
         const validateEmailMsg = validateEmail(email);
         const validatePasswordMsg = validatePassword(password);
@@ -55,16 +56,12 @@ const SignIn = () => {
 
         if (isValid) {
             try {
-                dispatch(setLoading(true));
-
                 await signIn(email, password);
-
-                dispatch(setLoading(false));
-
+                dispatch(setLoading({ state: false }));
                 navigate('/chat', { replace: true });
             } catch (error) {
-                dispatch(setLoading(false));
                 setPasswordError('Email hoặc mật khẩu không chính xác');
+                dispatch(setLoading({ state: false }));
             }
         }
     };
@@ -72,7 +69,9 @@ const SignIn = () => {
     const handleSignInWithGoogle = async () => {
         signInWithPopup(auth, googleProvider)
             .then(async (res: UserCredential) => {
-                dispatch(setLoading(true));
+                dispatch(
+                    setLoading({ state: true, message: 'Đang đăng nhập' }),
+                );
 
                 const { email, phoneNumber, photoURL, displayName, uid } =
                     res.user;
@@ -80,21 +79,18 @@ const SignIn = () => {
                 const userData = await getUserWithUID(uid);
 
                 if (!userData) {
-                    const newUser = await addDoc(usersCollectionRef, {
+                    await addDoc(usersCollectionRef, {
                         uid,
                         email,
                         displayName,
                         photoURL,
                         phoneNumber,
                     });
-
-                    setDocIdToLocalStorage(newUser.id);
-                    setUIDToLocalStorage(uid);
                 }
 
                 dispatch(setUser(userData));
 
-                dispatch(setLoading(false));
+                dispatch(setLoading({ state: false }));
 
                 navigate('/chat', { replace: true });
             })

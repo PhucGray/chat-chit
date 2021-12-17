@@ -8,12 +8,12 @@ const Loading = ({ msg }: LoadingProps) => {
     return (
         <div className='fixed-center space-y-2 text-teal-500 z-20'>
             <Icon
-                className='mx-auto'
-                icon='eos-icons:bubble-loading'
+                className='animate-bounce mx-auto'
+                icon='ic:baseline-pending'
                 fontSize={60}
             />
 
-            {msg && <p className='text-center'>{msg}</p>}
+            <p className='text-[18px] text-center font-semibold'>{msg}</p>
         </div>
     );
 };

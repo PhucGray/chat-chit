@@ -2,7 +2,7 @@ import { Icon } from '@iconify/react';
 import { Dispatch, FC, SetStateAction } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../app/hooks';
-import { setLoading } from '../../features/loading/loadingSlide';
+import { setLoading } from '../../features/loading/loadingSlice';
 import { setUser } from '../../features/user/userSlice';
 import { logout } from '../../firebase';
 import { TabType } from '../../types';
@@ -70,10 +70,14 @@ const Sidebar: FC<SidebarProps> = ({ currentTab, setTab }) => {
             <button
                 className='p-[8px] rounded-[15px] bg-gray-600 text-teal-500 hover:bg-teal-500 hover:text-white'
                 onClick={async () => {
-                    dispatch(setLoading(true));
+                    dispatch(
+                        setLoading({ state: true, message: 'Đang đăng xuất' }),
+                    );
                     dispatch(setUser(null));
+
                     await logout();
-                    dispatch(setLoading(false));
+
+                    dispatch(setLoading({ state: false }));
 
                     navigate('/sign-in', { replace: true });
                 }}>

@@ -14,7 +14,6 @@ import {
     where,
 } from 'firebase/firestore';
 import { UserType } from './types';
-import { setDocIdToLocalStorage, setUIDToLocalStorage } from './utils/storage';
 
 const firebaseConfig = {
     apiKey: 'AIzaSyD1Ikv6fFV-S2cqkmXc8P5Nlhd9oRwvfik',
@@ -45,7 +44,7 @@ export const signup = async (email: string, password: string) =>
     await createUserWithEmailAndPassword(auth, email, password);
 
 export const signIn = async (email: string, password: string) =>
-    await signInWithEmailAndPassword(auth, email, password);
+    signInWithEmailAndPassword(auth, email, password);
 
 export const getUserWithUID = async (uid: string) => {
     const q = query(collection(db, 'users'), where('uid', '==', uid));
@@ -55,11 +54,7 @@ export const getUserWithUID = async (uid: string) => {
 
     if (isEmpty) return null;
 
-    const docId = userDocs.docs[0].id;
     const userData = userDocs.docs[0].data() as UserType;
-
-    setDocIdToLocalStorage(docId);
-    setUIDToLocalStorage(userData.uid);
 
     return userData;
 };

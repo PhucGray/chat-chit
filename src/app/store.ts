@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import UserReducer from '../features/user/userSlice';
-import LoadingReducer from '../features/loading/loadingSlide';
+import LoadingReducer from '../features/loading/loadingSlice';
 
 export const store = configureStore({
     reducer: {

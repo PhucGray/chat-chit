@@ -4,7 +4,7 @@ import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
 import { MutableRefObject, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../app/hooks';
-import { setLoading } from '../features/loading/loadingSlide';
+import { setLoading } from '../features/loading/loadingSlice';
 import { setUser } from '../features/user/userSlice';
 import {
     auth,
@@ -91,7 +91,9 @@ const SignUp = () => {
 
         if (isValid) {
             try {
-                dispatch(setLoading(true));
+                dispatch(
+                    setLoading({ state: true, message: 'Đang tạo tài khoản' }),
+                );
 
                 const newUser = await signup(email, password);
 
@@ -101,9 +103,9 @@ const SignUp = () => {
                     displayName: username,
                 } as UserType);
 
-                dispatch(setLoading(false));
+                dispatch(setLoading({ state: false }));
 
-                navigate('/sign-in');
+                navigate('/chat');
             } catch (error) {
                 console.log(error);
             }

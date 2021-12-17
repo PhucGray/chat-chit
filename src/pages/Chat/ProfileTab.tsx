@@ -1,12 +1,5 @@
 import { Icon } from '@iconify/react';
-import {
-    collection,
-    doc,
-    getDocs,
-    query,
-    updateDoc,
-    where,
-} from 'firebase/firestore';
+import { doc, updateDoc } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import { useAppSelector } from '../../app/hooks';
 import DateTimePicker from '../../components/DateTimePicker';
@@ -45,13 +38,6 @@ const ProfileTab = () => {
                             <p className='truncate'>{user.email}</p>
                         </div>
                     </div>
-
-                    {/* <div className='flex items-center justify-between'>
-                        <div className='flex items-center space-x-3'>
-                            <Icon icon='si-glyph:badge-name' />
-                            <p className='truncate'>{user.displayName}</p>
-                        </div>
-                    </div> */}
 
                     <Info
                         field='displayName'
@@ -138,6 +124,8 @@ const Info = ({ field, title, data, user, icon }: InfoProps) => {
             setYear(datetime[2]);
 
             setHasData(true);
+
+            setValue(data);
         }
     }, [data]);
 
