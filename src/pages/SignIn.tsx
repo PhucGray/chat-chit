@@ -1,5 +1,5 @@
 import { Icon } from '@iconify/react';
-import { reload, signInWithPopup, UserCredential } from 'firebase/auth';
+import { signInWithPopup, UserCredential } from 'firebase/auth';
 import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
 import { MutableRefObject, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -9,12 +9,14 @@ import { setUser } from '../features/user/userSlice';
 import {
     auth,
     db,
+    getUserWithUID,
     googleProvider,
     signIn,
     usersCollectionRef,
 } from '../firebase';
 import SignInImg from '../images/sign-in.png';
-import { SubmitFormType } from '../types';
+import { SubmitFormType, UserType } from '../types';
+import { setDocIdToLocalStorage, setUIDToLocalStorage } from '../utils/storage';
 import { validateEmail, validatePassword } from '../utils/validateAuth';
 
 const SignIn = () => {
@@ -31,7 +33,7 @@ const SignIn = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
 
-    const handleSubmit = async (e: SubmitFormType) => {
+    const handleSignInWithEmailAndPassword = async (e: SubmitFormType) => {
         e.preventDefault();
 
         const validateEmailMsg = validateEmail(email);
@@ -67,53 +69,42 @@ const SignIn = () => {
         }
     };
 
-    const handleGoogleClick = async () => {
+    const handleSignInWithGoogle = async () => {
         signInWithPopup(auth, googleProvider)
             .then(async (res: UserCredential) => {
+                dispatch(setLoading(true));
+
                 const { email, phoneNumber, photoURL, displayName, uid } =
                     res.user;
 
-                const q = query(
-                    collection(db, 'users'),
-                    where('email', '==', email),
-                );
+                const userData = await getUserWithUID(uid);
 
-                const data = await getDocs(q);
-
-                if (data.empty) {
-                    await addDoc(usersCollectionRef, {
+                if (!userData) {
+                    const newUser = await addDoc(usersCollectionRef, {
                         uid,
                         email,
                         displayName,
                         photoURL,
                         phoneNumber,
                     });
+
+                    setDocIdToLocalStorage(newUser.id);
+                    setUIDToLocalStorage(uid);
                 }
 
-                localStorage.setItem('uid', uid);
+                dispatch(setUser(userData));
 
-                dispatch(
-                    setUser({
-                        uid,
-                        email: email || '',
-                        displayName: displayName || '',
-                        photoURL: photoURL || '',
-                        phoneNumber: phoneNumber || '',
-                    }),
-                );
-            })
-            .catch((err) => console.log(err))
-            .finally(() => {
                 dispatch(setLoading(false));
 
                 navigate('/chat', { replace: true });
-            });
+            })
+            .catch((err) => console.log(err));
     };
 
     return (
         <div>
             <form
-                onSubmit={handleSubmit}
+                onSubmit={handleSignInWithEmailAndPassword}
                 className='flex px-[20px] pt-[20px] lg:pt-[40px] container'>
                 <img
                     className='flex-1 max-w-[50vw] hidden xl:block'
@@ -184,7 +175,7 @@ const SignIn = () => {
 
                         <button
                             className='btn-outlined w-full py-[10px] flex items-center justify-center space-x-3'
-                            onClick={handleGoogleClick}
+                            onClick={handleSignInWithGoogle}
                             type='button'>
                             <Icon
                                 icon='flat-color-icons:google'

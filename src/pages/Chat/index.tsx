@@ -3,8 +3,9 @@ import { useEffect, useState } from 'react';
 import { useAppDispatch } from '../../app/hooks';
 import Loading from '../../components/Loading';
 import { setUser } from '../../features/user/userSlice';
-import { db, usersCollectionRef } from '../../firebase';
+import { db } from '../../firebase';
 import { TabType, UserType } from '../../types';
+import { getUserIDFromLocalStorage } from '../../utils/storage';
 import ChatTab from './ChatTab';
 import FriendsTab from './FriendsTab';
 import ProfileTab from './ProfileTab';
@@ -25,6 +26,8 @@ const Chat = () => {
             setLoading(true);
 
             const uid = localStorage.getItem('uid');
+
+            // const uid = getUserIDFromLocalStorage();
 
             const q = query(collection(db, 'users'), where('uid', '==', uid));
 

@@ -6,7 +6,15 @@ import {
     signInWithEmailAndPassword,
     signOut,
 } from 'firebase/auth';
-import { collection, getFirestore } from 'firebase/firestore';
+import {
+    collection,
+    getDocs,
+    getFirestore,
+    query,
+    where,
+} from 'firebase/firestore';
+import { UserType } from './types';
+import { setDocIdToLocalStorage, setUIDToLocalStorage } from './utils/storage';
 
 const firebaseConfig = {
     apiKey: 'AIzaSyD1Ikv6fFV-S2cqkmXc8P5Nlhd9oRwvfik',
@@ -28,6 +36,7 @@ export const googleProvider = new GoogleAuthProvider();
 // FUNCTIONS
 export const logout = async () => {
     localStorage.removeItem('uid');
+    localStorage.removeItem('id');
     sessionStorage.removeItem('currentTab');
     await signOut(auth);
 };
@@ -37,3 +46,20 @@ export const signup = async (email: string, password: string) =>
 
 export const signIn = async (email: string, password: string) =>
     await signInWithEmailAndPassword(auth, email, password);
+
+export const getUserWithUID = async (uid: string) => {
+    const q = query(collection(db, 'users'), where('uid', '==', uid));
+
+    const userDocs = await getDocs(q);
+    const isEmpty = userDocs.empty;
+
+    if (isEmpty) return null;
+
+    const docId = userDocs.docs[0].id;
+    const userData = userDocs.docs[0].data() as UserType;
+
+    setDocIdToLocalStorage(docId);
+    setUIDToLocalStorage(userData.uid);
+
+    return userData;
+};

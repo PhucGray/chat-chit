@@ -1,62 +1,46 @@
 import { onAuthStateChanged } from 'firebase/auth';
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import {
+    collection,
+    doc,
+    getDoc,
+    getDocs,
+    query,
+    where,
+} from 'firebase/firestore';
 import { useEffect } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from './app/hooks';
 import Loading from './components/Loading';
 import { selectLoading } from './features/loading/loadingSlide';
 import { selectUser, setUser } from './features/user/userSlice';
-import { auth, db } from './firebase';
+import { auth, db, getUserWithUID } from './firebase';
 import Chat from './pages/Chat';
 import Home from './pages/Home';
 import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
 import { UserType } from './types';
+import {
+    getUserIDFromLocalStorage,
+    setDocIdToLocalStorage,
+    setUIDToLocalStorage,
+} from './utils/storage';
 
 const App = () => {
     const user = useAppSelector(selectUser);
     const loading = useAppSelector(selectLoading);
-    const isAuth = localStorage.getItem('uid') || user?.uid;
+    // const isAuth = localStorage.getItem('uid') || user?.uid;
+    const isAuth = getUserIDFromLocalStorage() || user?.uid;
 
     const dispatch = useAppDispatch();
     useEffect(() => {
         onAuthStateChanged(auth, async (currentUser) => {
             if (currentUser) {
-                const q = query(
-                    collection(db, 'users'),
-                    where('email', '==', currentUser.email || ''),
-                );
+                const userData = await getUserWithUID(currentUser.uid);
 
-                const data = await getDocs(q);
-
-                data.forEach((doc) => {
-                    const {
-                        uid,
-                        email,
-                        displayName,
-                        photoURL,
-                        phoneNumber,
-                        birth,
-                    } = doc.data() as UserType;
-
-                    localStorage.setItem('uid', uid || '');
-
-                    dispatch(
-                        setUser({
-                            uid: doc.id,
-                            displayName,
-                            photoURL,
-                            email: email || '',
-                            phoneNumber: phoneNumber,
-                            birth,
-                        }),
-                    );
-                });
+                if (userData) dispatch(setUser(userData));
             }
 
-            if (!currentUser) {
-                dispatch(setUser(null));
-            }
+            if (!currentUser) dispatch(setUser(null));
         });
     }, []);
 

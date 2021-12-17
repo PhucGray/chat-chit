@@ -1,5 +1,12 @@
 import { Icon } from '@iconify/react';
-import { doc, updateDoc } from 'firebase/firestore';
+import {
+    collection,
+    doc,
+    getDocs,
+    query,
+    updateDoc,
+    where,
+} from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import { useAppSelector } from '../../app/hooks';
 import DateTimePicker from '../../components/DateTimePicker';
@@ -7,8 +14,9 @@ import { selectUser } from '../../features/user/userSlice';
 import { db } from '../../firebase';
 import AvatarImg from '../../images/defaultAvatar.png';
 import { SubmitFormType, UserType } from '../../types';
+import { getDocIdFromLocalStorage } from '../../utils/storage';
 
-type InfoField = 'phoneNumber' | 'birth';
+type InfoField = 'phoneNumber' | 'birth' | 'displayName';
 
 interface InfoProps {
     field: InfoField;
@@ -38,12 +46,20 @@ const ProfileTab = () => {
                         </div>
                     </div>
 
-                    <div className='flex items-center justify-between'>
+                    {/* <div className='flex items-center justify-between'>
                         <div className='flex items-center space-x-3'>
                             <Icon icon='si-glyph:badge-name' />
                             <p className='truncate'>{user.displayName}</p>
                         </div>
-                    </div>
+                    </div> */}
+
+                    <Info
+                        field='displayName'
+                        title='tên người dùng'
+                        data={user.displayName}
+                        user={user}
+                        icon='si-glyph:badge-name'
+                    />
 
                     <Info
                         field='phoneNumber'
@@ -84,19 +100,21 @@ const Info = ({ field, title, data, user, icon }: InfoProps) => {
     const handleSubmit = async (e: SubmitFormType) => {
         e.preventDefault();
 
+        const userDocId = getDocIdFromLocalStorage() || '';
+
+        const userRef = doc(db, 'users', userDocId);
+
         if (isBirthField) {
             const birth = `${day}-${month}-${year}`;
 
-            const userDoc = doc(db, 'users', user.uid);
-            await updateDoc(userDoc, { [field]: birth }).then(() => {
+            await updateDoc(userRef, { [field]: birth }).then(() => {
                 setHasData(true);
             });
 
             setValue(birth);
         } else {
             if (value.trim() && value !== prevValue) {
-                const userDoc = doc(db, 'users', user.uid);
-                await updateDoc(userDoc, { [field]: value }).then(() => {
+                await updateDoc(userRef, { [field]: value }).then(() => {
                     setHasData(true);
                 });
             } else setValue(prevValue);
@@ -108,8 +126,8 @@ const Info = ({ field, title, data, user, icon }: InfoProps) => {
     };
 
     const handleDelete = async (field: InfoField) => {
-        const userDoc = doc(db, 'users', user.uid);
-        await updateDoc(userDoc, { [field]: null });
+        const userRef = doc(db, 'users', user.uid);
+        await updateDoc(userRef, { [field]: null });
     };
 
     useEffect(() => {
@@ -118,6 +136,8 @@ const Info = ({ field, title, data, user, icon }: InfoProps) => {
             setDay(datetime[0]);
             setMonth(datetime[1]);
             setYear(datetime[2]);
+
+            setHasData(true);
         }
     }, [data]);
 
