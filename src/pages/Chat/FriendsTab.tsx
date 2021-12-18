@@ -1,49 +1,78 @@
-import HomeImg from '../../images/home.png';
+import AvatarImg from '../../images/defaultAvatar.png';
 import { Icon } from '@iconify/react';
+import { useAppSelector } from '../../app/hooks';
+import { selectUser } from '../../features/user/userSlice';
+import { useEffect, useState } from 'react';
+import { collection, getDocs, query, where } from 'firebase/firestore';
+import { db } from '../../firebase';
+import { UserType } from '../../types';
 
 const FriendsTab = () => {
     return (
         <div className='px-[10px] lg:px-[40px] pt-[20px] pb-[40px] max-h-screen overflow-auto flex flex-col space-y-4'>
             <FriendRequest />
-            <Online />
+            {/* <Online /> */}
             <Search />
-            <ListFriend />
+            <FriendsList />
         </div>
     );
 };
 
 const FriendRequest = () => {
+    const user = useAppSelector(selectUser);
+    const [friendRequests, setFriendRequests] = useState([] as UserType[]);
+
+    useEffect(() => {
+        const getFriendsList = async () => {
+            if (user?.friendRequests && user.friendRequests.length > 0) {
+                const q = query(
+                    collection(db, 'users'),
+                    where('uid', 'in', user.friendRequests || []),
+                );
+
+                const querySnapshot = await getDocs(q);
+
+                setFriendRequests(
+                    querySnapshot.docs.map((doc) => doc.data() as UserType),
+                );
+            }
+        };
+
+        getFriendsList();
+    }, [user]);
+
     return (
         <div>
             <p className='font-semibold text-[23px]'>Lời mời kết bạn</p>
 
-            <div className='bg-white rounded-[10px] ml-[15px] mt-[10px] px-[20px] py-[10px] space-y-2 sm:flex items-center justify-between space-x-2'>
-                <div className='flex items-center space-x-2'>
-                    <img
-                        className='h-[60px] w-[60px] rounded-full border'
-                        src={HomeImg}
-                        alt='Home'
-                    />
+            {friendRequests &&
+                friendRequests.length > 0 &&
+                friendRequests.map(({ uid, displayName, photoURL }) => (
+                    <div className='bg-white rounded-[10px] ml-[15px] mt-[10px] px-[20px] py-[10px] space-y-2 sm:flex items-center justify-between space-x-2'>
+                        <div className='flex items-center space-x-2'>
+                            <img
+                                className='h-[60px] w-[60px] rounded-full border'
+                                src={photoURL || AvatarImg}
+                                alt='Home'
+                            />
 
-                    <div>
-                        <p className='font-bold text-[18px]'>Ronaldo</p>
-                        <div className='flex items-center space-x-1'>
-                            <p className='text text-gray-400'>
-                                Hi, I'm Ronaldo.
-                            </p>
+                            <div>
+                                <p className='font-bold text-[18px]'>
+                                    {displayName}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className='flex items-center space-x-4'>
+                            <button className='btn w-[80px] sm:w-[120px] py-[7px]'>
+                                Đồng ý
+                            </button>
+                            <button className='btn-outlined w-[80px] sm:w-[120px] py-[7px]'>
+                                Xoá
+                            </button>
                         </div>
                     </div>
-                </div>
-
-                <div className='flex items-center space-x-4'>
-                    <button className='btn w-[80px] sm:w-[120px] py-[7px]'>
-                        Đồng ý
-                    </button>
-                    <button className='btn-outlined w-[80px] sm:w-[120px] py-[7px]'>
-                        Xoá
-                    </button>
-                </div>
-            </div>
+                ))}
         </div>
     );
 };
@@ -57,7 +86,7 @@ const Online = () => {
                 <div className='relative'>
                     <img
                         className='h-[55px] w-[55px] rounded-full border'
-                        src={HomeImg}
+                        src={AvatarImg}
                         alt='Home'
                     />
 
@@ -67,7 +96,7 @@ const Online = () => {
                 <div className='relative'>
                     <img
                         className='h-[55px] w-[55px] rounded-full border'
-                        src={HomeImg}
+                        src={AvatarImg}
                         alt='Home'
                     />
 
@@ -77,7 +106,7 @@ const Online = () => {
                 <div className='relative'>
                     <img
                         className='h-[55px] w-[55px] rounded-full border'
-                        src={HomeImg}
+                        src={AvatarImg}
                         alt='Home'
                     />
 
@@ -87,7 +116,7 @@ const Online = () => {
                 <div className='relative'>
                     <img
                         className='h-[55px] w-[55px] rounded-full border'
-                        src={HomeImg}
+                        src={AvatarImg}
                         alt='Home'
                     />
 
@@ -123,26 +152,47 @@ const Search = () => {
     );
 };
 
-const ListFriend = () => {
-    const friends = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+const FriendsList = () => {
+    const user = useAppSelector(selectUser);
+    const [friends, setFriends] = useState([] as UserType[]);
+
+    useEffect(() => {
+        const getFriendsList = async () => {
+            if (user?.friends && user.friends.length > 0) {
+                const q = query(
+                    collection(db, 'users'),
+                    where('uid', 'in', user.friends || []),
+                );
+                const querySnapshot = await getDocs(q);
+
+                setFriends(
+                    querySnapshot.docs.map((doc) => doc.data() as UserType),
+                );
+            }
+        };
+
+        getFriendsList();
+    }, [user]);
+
     return (
         <div>
             <p className='font-semibold text-[23px]'>Danh sách bạn bè</p>
 
             <div className='grid gap-x-[50px] gap-y-[20px] ml-[15px] mt-[10px] lg:grid-cols-2 lg:px-[30px]'>
                 {friends &&
-                    friends.map((friend) => (
+                    friends.length > 0 &&
+                    friends.map(({ uid, displayName, photoURL }) => (
                         <div
-                            key={friend}
+                            key={uid}
                             className='flex items-center justify-between'>
                             <div className='flex items-center space-x-4'>
                                 <img
                                     className='h-[60px] w-[60px] sm:h-[75px] sm:w-[75px] rounded-[10px] border'
-                                    src={HomeImg}
+                                    src={photoURL || AvatarImg}
                                     alt='Home'
                                 />
                                 <p className='font-semibold text-[18px] sm:text-[22px]'>
-                                    Friend {friend}
+                                    {displayName}
                                 </p>
                             </div>
 

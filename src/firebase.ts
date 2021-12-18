@@ -50,11 +50,17 @@ export const getUserWithUID = async (uid: string) => {
     const q = query(collection(db, 'users'), where('uid', '==', uid));
 
     const userDocs = await getDocs(q);
+
     const isEmpty = userDocs.empty;
 
     if (isEmpty) return null;
 
-    const userData = userDocs.docs[0].data() as UserType;
+    const currentDoc = userDocs.docs[0];
+
+    const userData = {
+        ...currentDoc.data(),
+        fieldId: currentDoc.id,
+    } as UserType;
 
     return userData;
 };

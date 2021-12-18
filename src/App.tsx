@@ -1,15 +1,17 @@
 import { onAuthStateChanged } from 'firebase/auth';
+import { doc, onSnapshot } from 'firebase/firestore';
 import { useEffect } from 'react';
-import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from './app/hooks';
 import Loading from './components/Loading';
 import { selectLoading, setLoading } from './features/loading/loadingSlice';
-import { setUser } from './features/user/userSlice';
-import { auth, getUserWithUID } from './firebase';
+import { selectUser, setUser } from './features/user/userSlice';
+import { auth, db, getUserWithUID } from './firebase';
 import Chat from './pages/Chat';
 import Home from './pages/Home';
 import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
+import { UserType } from './types';
 
 const App = () => {
     const loading = useAppSelector(selectLoading);
@@ -18,11 +20,13 @@ const App = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
+    const user = useAppSelector(selectUser);
+
     useEffect(() => {
         location.pathname === '/chat' &&
             dispatch(setLoading({ state: true, message: 'Đang đăng nhập' }));
 
-        onAuthStateChanged(auth, async (currentUser) => {
+        const unsub = onAuthStateChanged(auth, async (currentUser) => {
             if (currentUser) {
                 const userData = await getUserWithUID(currentUser.uid);
 
@@ -42,7 +46,11 @@ const App = () => {
                     navigate('/sign-in', { replace: true });
             }
         });
+
+        return () => unsub();
     }, []);
+
+   
 
     return (
         <>
@@ -55,7 +63,7 @@ const App = () => {
 
             {loading.state && (
                 <>
-                    <div className='black-shadow bg-black'></div>
+                    <div className='black-shadow'></div>
                     <Loading msg={loading.message} />
                 </>
             )}

@@ -1,67 +1,79 @@
 import { Icon } from '@iconify/react';
-import { doc, updateDoc } from 'firebase/firestore';
+import { doc, onSnapshot, updateDoc } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
-import { useAppSelector } from '../../app/hooks';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import DateTimePicker from '../../components/DateTimePicker';
-import { selectUser } from '../../features/user/userSlice';
+import { selectUser, setUser } from '../../features/user/userSlice';
 import { db } from '../../firebase';
 import AvatarImg from '../../images/defaultAvatar.png';
 import { SubmitFormType, UserType } from '../../types';
-import { getDocIdFromLocalStorage } from '../../utils/storage';
 
 type InfoField = 'phoneNumber' | 'birth' | 'displayName';
 
 interface InfoProps {
     field: InfoField;
     title: string;
-    user: UserType;
-    data?: string;
+    user: UserType | null;
+    data: string | '';
     icon: string;
 }
 
 const ProfileTab = () => {
     const user = useAppSelector(selectUser);
 
+    const dispatch = useAppDispatch();
+    useEffect(
+        () =>
+            onSnapshot(doc(db, 'users', user?.fieldId || 'random'), (doc) => {
+                dispatch(
+                    setUser({ ...(doc.data() as UserType), fieldId: doc.id }),
+                );
+            }),
+
+        [dispatch, user?.fieldId],
+    );
     return (
         <>
             <div className='min-h-screen mx-auto flex flex-col items-center justify-center space-y-5'>
                 <img
                     className='h-[100px] w-[100px] rounded-[10px]'
-                    src={user.photoURL || AvatarImg}
+                    src={user?.photoURL || AvatarImg}
                     alt='Home'
                 />
 
-                <div className='w-full max-w-[400px] px-[20px] sm:px-[40px] py-[20px] rounded-[10px] space-y-3 bg-white text-[18px] sm:text-[23px]'>
-                    <div className='flex items-center justify-between'>
-                        <div className='flex items-center space-x-3'>
-                            <Icon icon='carbon:email' />
-                            <p className='truncate'>{user.email}</p>
+                <div className='w-full max-w-[500px] px-[20px] sm:px-[40px] py-[20px] rounded-[10px] bg-white text-[18px] sm:text-[23px]'>
+                    <div className='w-max mx-auto space-y-3'>
+                        <div className='flex items-center justify-between'>
+                            <div className='flex items-center space-x-3'>
+                                <Icon icon='carbon:email' />
+                                <p className='truncate'>{user?.email}</p>
+                            </div>
                         </div>
+
+                        <Info
+                            field='displayName'
+                            title='tên người dùng'
+                            data={user?.displayName || ''}
+                            user={user}
+                            icon='si-glyph:badge-name'
+                        />
+
+                        <Info
+                            field='phoneNumber'
+                            title='số điện thoại'
+                            data={user?.phoneNumber || ''}
+                            user={user}
+                            icon='akar-icons:phone'
+                        />
+
+                        <Info
+                            field='birth'
+                            title='ngày sinh'
+                            data={user?.birth || ''}
+                            user={user}
+                            icon='la:birthday-cake'
+                        />
                     </div>
-
-                    <Info
-                        field='displayName'
-                        title='tên người dùng'
-                        data={user.displayName}
-                        user={user}
-                        icon='si-glyph:badge-name'
-                    />
-
-                    <Info
-                        field='phoneNumber'
-                        title='số điện thoại'
-                        data={user.phoneNumber}
-                        user={user}
-                        icon='akar-icons:phone'
-                    />
-
-                    <Info
-                        field='birth'
-                        title='ngày sinh'
-                        data={user.birth}
-                        user={user}
-                        icon='la:birthday-cake'
-                    />
                 </div>
             </div>
         </>
@@ -72,9 +84,9 @@ const Info = ({ field, title, data, user, icon }: InfoProps) => {
     const [value, setValue] = useState(data || '');
     const [prevValue, setPrevValue] = useState('');
 
-    const [day, setDay] = useState('');
-    const [month, setMonth] = useState('');
-    const [year, setYear] = useState('');
+    const [day, setDay] = useState('1');
+    const [month, setMonth] = useState('1');
+    const [year, setYear] = useState('1990');
 
     const isBirthField = field === 'birth';
 
@@ -86,9 +98,7 @@ const Info = ({ field, title, data, user, icon }: InfoProps) => {
     const handleSubmit = async (e: SubmitFormType) => {
         e.preventDefault();
 
-        const userDocId = getDocIdFromLocalStorage() || '';
-
-        const userRef = doc(db, 'users', userDocId);
+        const userRef = doc(db, 'users', user?.fieldId || '');
 
         if (isBirthField) {
             const birth = `${day}-${month}-${year}`;
@@ -112,7 +122,7 @@ const Info = ({ field, title, data, user, icon }: InfoProps) => {
     };
 
     const handleDelete = async (field: InfoField) => {
-        const userRef = doc(db, 'users', user.uid);
+        const userRef = doc(db, 'users', user?.fieldId || '');
         await updateDoc(userRef, { [field]: null });
     };
 
@@ -126,6 +136,9 @@ const Info = ({ field, title, data, user, icon }: InfoProps) => {
             setHasData(true);
 
             setValue(data);
+        } else {
+            setValue('');
+            setHasData(false);
         }
     }, [data]);
 
@@ -183,13 +196,17 @@ const Info = ({ field, title, data, user, icon }: InfoProps) => {
 
                     {!isEdit && (
                         <div className='flex items-center justify-between relative group'>
-                            <div className='max-w-[80%] flex items-center space-x-3'>
+                            <div className='flex items-center space-x-3'>
                                 <Icon icon={icon} />
-                                <p className='truncate'>{value}</p>
+                                <p className='break-words'>
+                                    {value.length > 20
+                                        ? value.substring(0, 19).concat('...')
+                                        : value}
+                                </p>
                             </div>
 
                             <Icon
-                                className='rounded-full cursor-pointer hover:bg-gray-100 invisible group-hover:visible'
+                                className='ml-[10px] rounded-full cursor-pointer hover:bg-gray-100 invisible group-hover:visible'
                                 icon='akar-icons:more-horizontal'
                                 fontSize={35}
                                 onClick={() => setIsOptionOpen(true)}

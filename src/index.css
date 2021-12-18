@@ -54,7 +54,7 @@
     }
 
     .black-shadow {
-        @apply fixed left-0 top-0 h-screen w-screen z-10;
+        @apply fixed left-0 top-0 h-screen w-screen bg-black z-10;
     }
 
     .fixed-center {
