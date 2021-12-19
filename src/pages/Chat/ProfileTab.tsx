@@ -1,9 +1,9 @@
 import { Icon } from '@iconify/react';
-import { doc, onSnapshot, updateDoc } from 'firebase/firestore';
+import { doc, updateDoc } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { useAppSelector } from '../../app/hooks';
 import DateTimePicker from '../../components/DateTimePicker';
-import { selectUser, setUser } from '../../features/user/userSlice';
+import { selectUser } from '../../features/user/userSlice';
 import { db } from '../../firebase';
 import AvatarImg from '../../images/defaultAvatar.png';
 import { SubmitFormType, UserType } from '../../types';
@@ -21,17 +21,6 @@ interface InfoProps {
 const ProfileTab = () => {
     const user = useAppSelector(selectUser);
 
-    const dispatch = useAppDispatch();
-    useEffect(
-        () =>
-            onSnapshot(doc(db, 'users', user?.fieldId || 'random'), (doc) => {
-                dispatch(
-                    setUser({ ...(doc.data() as UserType), fieldId: doc.id }),
-                );
-            }),
-
-        [dispatch, user?.fieldId],
-    );
     return (
         <>
             <div className='min-h-screen mx-auto flex flex-col items-center justify-center space-y-5'>

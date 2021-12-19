@@ -41,7 +41,7 @@ export const logout = async () => {
 };
 
 export const signup = async (email: string, password: string) =>
-    await createUserWithEmailAndPassword(auth, email, password);
+    createUserWithEmailAndPassword(auth, email, password);
 
 export const signIn = async (email: string, password: string) =>
     signInWithEmailAndPassword(auth, email, password);

@@ -1,11 +1,21 @@
 import AvatarImg from '../../images/defaultAvatar.png';
 import { Icon } from '@iconify/react';
-import { useAppSelector } from '../../app/hooks';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { selectUser } from '../../features/user/userSlice';
 import { useEffect, useState } from 'react';
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import {
+    arrayRemove,
+    arrayUnion,
+    collection,
+    doc,
+    getDocs,
+    query,
+    updateDoc,
+    where,
+} from 'firebase/firestore';
 import { db } from '../../firebase';
-import { UserType } from '../../types';
+import { IdentificationType, UserType } from '../../types';
+import { setIsOpen } from '../../features/formAddFriend/formAddFriendSlice';
 
 const FriendsTab = () => {
     return (
@@ -20,6 +30,7 @@ const FriendsTab = () => {
 
 const FriendRequest = () => {
     const user = useAppSelector(selectUser);
+    const userRef = doc(db, 'users', user?.fieldId || 'random');
     const [friendRequests, setFriendRequests] = useState([] as UserType[]);
 
     useEffect(() => {
@@ -33,7 +44,10 @@ const FriendRequest = () => {
                 const querySnapshot = await getDocs(q);
 
                 setFriendRequests(
-                    querySnapshot.docs.map((doc) => doc.data() as UserType),
+                    querySnapshot.docs.map(
+                        (doc) =>
+                            ({ ...doc.data(), fieldId: doc.id } as UserType),
+                    ),
                 );
             }
         };
@@ -41,38 +55,95 @@ const FriendRequest = () => {
         getFriendsList();
     }, [user]);
 
+    // agree
+    const handleAgree = async ({ uid, fieldId }: IdentificationType) => {
+        const friendRef = doc(db, 'users', fieldId);
+
+        // add friends (current user)
+        await updateDoc(userRef, {
+            friends: arrayUnion(uid),
+        });
+
+        // delete friend request
+        await updateDoc(userRef, {
+            friendRequests: arrayRemove(uid),
+        });
+
+        // add friends (sender)
+        await updateDoc(friendRef, {
+            friends: arrayUnion(user?.uid),
+        });
+
+        // delete request (sender)
+        await updateDoc(friendRef, {
+            requests: arrayRemove(user?.uid),
+        });
+
+        const newFriendRequests = [...friendRequests];
+
+        setFriendRequests(newFriendRequests.filter((user) => user.uid !== uid));
+    };
+    // disagree
+    const handleDisagree = async ({ uid, fieldId }: IdentificationType) => {
+        const friendRef = doc(db, 'users', fieldId);
+
+        await updateDoc(userRef, {
+            friendRequests: arrayRemove(uid),
+        });
+
+        await updateDoc(friendRef, {
+            requests: arrayRemove(user?.uid),
+        });
+
+        const newFriendRequests = [...friendRequests];
+
+        setFriendRequests(newFriendRequests.filter((user) => user.uid !== uid));
+    };
+
     return (
         <div>
             <p className='font-semibold text-[23px]'>Lời mời kết bạn</p>
 
             {friendRequests &&
                 friendRequests.length > 0 &&
-                friendRequests.map(({ uid, displayName, photoURL }) => (
-                    <div className='bg-white rounded-[10px] ml-[15px] mt-[10px] px-[20px] py-[10px] space-y-2 sm:flex items-center justify-between space-x-2'>
-                        <div className='flex items-center space-x-2'>
-                            <img
-                                className='h-[60px] w-[60px] rounded-full border'
-                                src={photoURL || AvatarImg}
-                                alt='Home'
-                            />
+                friendRequests.map(
+                    ({ uid, displayName, photoURL, fieldId }) => (
+                        <div
+                            key={uid}
+                            className='bg-white rounded-[10px] ml-[15px] mt-[10px] px-[20px] py-[10px] space-y-2 sm:flex items-center justify-between space-x-2'>
+                            <div className='flex items-center space-x-2'>
+                                <img
+                                    className='h-[60px] w-[60px] rounded-full border'
+                                    src={photoURL || AvatarImg}
+                                    alt='Home'
+                                />
 
-                            <div>
-                                <p className='font-bold text-[18px]'>
-                                    {displayName}
-                                </p>
+                                <div>
+                                    <p className='font-bold text-[18px]'>
+                                        {displayName}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className='flex items-center space-x-4'>
+                                <button
+                                    className='btn w-[80px] sm:w-[120px] py-[7px]'
+                                    onClick={() =>
+                                        handleAgree({ uid, fieldId })
+                                    }>
+                                    Đồng ý
+                                </button>
+                                <button
+                                    className='btn-outlined w-[80px] sm:w-[120px] py-[7px]'
+                                    onClick={() =>
+                                        handleDisagree({ uid, fieldId })
+                                    }>
+                                    Xoá
+                                </button>
                             </div>
                         </div>
-
-                        <div className='flex items-center space-x-4'>
-                            <button className='btn w-[80px] sm:w-[120px] py-[7px]'>
-                                Đồng ý
-                            </button>
-                            <button className='btn-outlined w-[80px] sm:w-[120px] py-[7px]'>
-                                Xoá
-                            </button>
-                        </div>
-                    </div>
-                ))}
+                    ),
+                )}
         </div>
     );
 };
@@ -128,6 +199,7 @@ const Online = () => {
 };
 
 const Search = () => {
+    const dispatch = useAppDispatch();
     return (
         <div className='flex items-center justify-center space-x-3'>
             <div className='relative'>
@@ -147,6 +219,9 @@ const Search = () => {
                 className='text-gray-500 cursor-pointer transform hover:scale-[1.2] hover:text-teal-500'
                 icon='whh:addfriend'
                 fontSize={30}
+                onClick={() => {
+                    dispatch(setIsOpen(true));
+                }}
             />
         </div>
     );

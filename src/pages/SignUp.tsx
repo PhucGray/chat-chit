@@ -1,6 +1,14 @@
 import { Icon } from '@iconify/react';
 import { signInWithPopup, UserCredential } from 'firebase/auth';
-import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
+import {
+    addDoc,
+    collection,
+    doc,
+    getDocs,
+    query,
+    updateDoc,
+    where,
+} from 'firebase/firestore';
 import { MutableRefObject, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../app/hooks';
@@ -97,11 +105,15 @@ const SignUp = () => {
 
                 const newUser = await signup(email, password);
 
-                await addDoc(usersCollectionRef, {
+                const newDoc = await addDoc(usersCollectionRef, {
                     uid: newUser.user.uid,
                     email,
                     displayName: username,
                 } as UserType);
+
+                const newUserRef = doc(db, 'users', newDoc.id);
+
+                await updateDoc(newUserRef, { fieldId: newDoc.id });
 
                 dispatch(setLoading({ state: false }));
 

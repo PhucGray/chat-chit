@@ -4,9 +4,13 @@ export type ChangeSelectType = ChangeEvent<HTMLSelectElement>;
 export type SubmitFormType = FormEvent<HTMLFormElement>;
 //
 export type TabType = 'chat' | 'profile' | 'friend' | 'setting';
-export type UserType = {
+
+export interface IdentificationType {
     fieldId: string;
     uid: string;
+}
+
+export interface UserType extends IdentificationType {
     email: string;
     displayName: string;
     //
@@ -15,4 +19,5 @@ export type UserType = {
     birth?: string;
     friends?: string[];
     friendRequests?: string[];
-};
+    requests?: string[];
+}
