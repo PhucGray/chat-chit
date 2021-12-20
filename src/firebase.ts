@@ -34,8 +34,7 @@ export const googleProvider = new GoogleAuthProvider();
 
 // FUNCTIONS
 export const logout = async () => {
-    localStorage.removeItem('uid');
-    localStorage.removeItem('id');
+    localStorage.removeItem('authenticated');
     sessionStorage.removeItem('currentTab');
     await signOut(auth);
 };

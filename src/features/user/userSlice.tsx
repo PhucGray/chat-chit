@@ -7,12 +7,7 @@ interface UserProps {
 }
 
 const initialState: UserProps = {
-    user: {
-        fieldId: '',
-        uid: '',
-        email: '',
-        displayName: '',
-    },
+    user: null,
 };
 
 const userSlice = createSlice({

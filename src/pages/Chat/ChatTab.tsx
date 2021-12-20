@@ -9,6 +9,9 @@ import {
     useRef,
     useState,
 } from 'react';
+import { useAppSelector } from '../../app/hooks';
+import Loading from '../../components/Loading';
+import { selectUser } from '../../features/user/userSlice';
 import HomeImg from '../../images/home.png';
 
 interface RecentMessagesProps {
@@ -43,17 +46,27 @@ const ChatTab = () => {
         [],
     );
 
+    const user = useAppSelector(selectUser);
     return (
         <div className='min-h-screen flex'>
-            <RecentMessages
-                isRecentMessagesOpen={isRecentMessagesOpen}
-                setIsRecentMessagesOpen={setIsRecentMessagesOpen}
-            />
-            <MainChat
-                setIsInfoOpen={setIsInfoOpen}
-                setIsRecentMessagesOpen={setIsRecentMessagesOpen}
-            />
-            <Info isInfoOpen={isInfoOpen} setIsInfoOpen={setIsInfoOpen} />
+            {user?.uid ? (
+                <>
+                    <RecentMessages
+                        isRecentMessagesOpen={isRecentMessagesOpen}
+                        setIsRecentMessagesOpen={setIsRecentMessagesOpen}
+                    />
+                    <MainChat
+                        setIsInfoOpen={setIsInfoOpen}
+                        setIsRecentMessagesOpen={setIsRecentMessagesOpen}
+                    />
+                    <Info
+                        isInfoOpen={isInfoOpen}
+                        setIsInfoOpen={setIsInfoOpen}
+                    />
+                </>
+            ) : (
+                <Loading msg='Đang đăng nhập' />
+            )}
         </div>
     );
 };

@@ -1,20 +1,15 @@
 import { Icon } from '@iconify/react';
-import { signInWithPopup, UserCredential } from 'firebase/auth';
-import { addDoc } from 'firebase/firestore';
 import { MutableRefObject, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
-import { selectLoading, setLoading } from '../features/loading/loadingSlice';
-import { setUser } from '../features/user/userSlice';
-import {
-    auth,
-    getUserWithUID,
-    googleProvider,
-    signIn,
-    usersCollectionRef,
-} from '../firebase';
+import Alert from '../components/Alert';
+import ButtonSignInWithGG from '../components/ButtonSignInWithGG';
+import { selectAlert } from '../features/alert/alertSlice';
+import { setLoading } from '../features/loading/loadingSlice';
+import { signIn } from '../firebase';
 import SignInImg from '../images/sign-in.png';
 import { SubmitFormType } from '../types';
+import { setAutheticated } from '../utils/storage';
 import { validateEmail, validatePassword } from '../utils/validateAuth';
 
 const SignIn = () => {
@@ -30,8 +25,6 @@ const SignIn = () => {
 
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-
-    const loading = useAppSelector(selectLoading);
 
     const handleSignInWithEmailAndPassword = async (e: SubmitFormType) => {
         e.preventDefault();
@@ -58,6 +51,7 @@ const SignIn = () => {
             try {
                 await signIn(email, password);
                 dispatch(setLoading({ state: false }));
+                setAutheticated();
                 navigate('/chat', { replace: true });
             } catch (error) {
                 setPasswordError('Email hoặc mật khẩu không chính xác');
@@ -66,39 +60,11 @@ const SignIn = () => {
         }
     };
 
-    const handleSignInWithGoogle = async () => {
-        signInWithPopup(auth, googleProvider)
-            .then(async (res: UserCredential) => {
-                dispatch(
-                    setLoading({ state: true, message: 'Đang đăng nhập' }),
-                );
-
-                const { email, phoneNumber, photoURL, displayName, uid } =
-                    res.user;
-
-                const userData = await getUserWithUID(uid);
-
-                if (!userData) {
-                    await addDoc(usersCollectionRef, {
-                        uid,
-                        email,
-                        displayName,
-                        photoURL,
-                        phoneNumber,
-                    });
-                }
-
-                dispatch(setUser(userData));
-
-                dispatch(setLoading({ state: false }));
-
-                navigate('/chat', { replace: true });
-            })
-            .catch((err) => console.log(err));
-    };
+    //
+    const isAlertOpen = useAppSelector(selectAlert);
 
     return (
-        <div>
+        <>
             <form
                 onSubmit={handleSignInWithEmailAndPassword}
                 className='flex px-[20px] pt-[20px] lg:pt-[40px] container'>
@@ -126,6 +92,7 @@ const SignIn = () => {
                             className='input-text w-full'
                             type='text'
                             placeholder='Nhập email của bạn'
+                            autoFocus
                         />
                         <p className='error'>{emailError}</p>
 
@@ -169,16 +136,7 @@ const SignIn = () => {
                             hoặc
                         </p>
 
-                        <button
-                            className='btn-outlined w-full py-[10px] flex items-center justify-center space-x-3'
-                            onClick={handleSignInWithGoogle}
-                            type='button'>
-                            <Icon
-                                icon='flat-color-icons:google'
-                                fontSize={30}
-                            />
-                            <p>Đăng nhập với Google</p>
-                        </button>
+                        <ButtonSignInWithGG />
                     </div>
 
                     <div className='flex justify-center space-x-2'>
@@ -191,7 +149,9 @@ const SignIn = () => {
                     </div>
                 </div>
             </form>
-        </div>
+
+            {isAlertOpen && <Alert />}
+        </>
     );
 };
 

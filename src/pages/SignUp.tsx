@@ -1,26 +1,12 @@
 import { Icon } from '@iconify/react';
-import { signInWithPopup, UserCredential } from 'firebase/auth';
-import {
-    addDoc,
-    collection,
-    doc,
-    getDocs,
-    query,
-    updateDoc,
-    where,
-} from 'firebase/firestore';
+import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
 import { MutableRefObject, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../app/hooks';
+import ButtonSignInWithGG from '../components/ButtonSignInWithGG';
+import { setIsAlertOpen } from '../features/alert/alertSlice';
 import { setLoading } from '../features/loading/loadingSlice';
-import { setUser } from '../features/user/userSlice';
-import {
-    auth,
-    db,
-    googleProvider,
-    signup,
-    usersCollectionRef,
-} from '../firebase';
+import { db, signup, usersCollectionRef } from '../firebase';
 import SignUpImg from '../images/sign-up.png';
 import { SubmitFormType, UserType } from '../types';
 import {
@@ -47,9 +33,12 @@ const SignUp = () => {
 
     const navigate = useNavigate();
 
-    const handleSignUpSubmit = async (e: SubmitFormType) => {
+    // const [isAlertShow, setIsAlertShow] = useState(false);
+
+    const handleCreateUserWithEmailAndPassowrd = async (e: SubmitFormType) => {
         e.preventDefault();
 
+        //#region validate
         const validateUsernameMsg = validateUsername(username);
         const validateEmailMsg = validateEmail(email);
         const validatePasswordMsg = validatePassword(password);
@@ -64,14 +53,14 @@ const SignUp = () => {
 
         if (validateEmailMsg) {
             setEmailError(validateEmailMsg);
-            emailRef.current.focus();
             isValid = false;
+            emailRef.current.focus();
         }
 
         if (validatePasswordMsg) {
             setPasswordError(validatePasswordMsg);
-            passwordRef.current.focus();
             isValid = false;
+            passwordRef.current.focus();
         }
 
         const checkEmailExists = query(
@@ -90,12 +79,15 @@ const SignUp = () => {
         if (!dbEmail.empty) {
             isValid = false;
             setEmailError('Email đã tồn tại');
+            emailRef.current.focus();
         }
 
         if (!dbUsername.empty) {
             isValid = false;
             setUsernameError('Tên người dùng đã tồn tại');
+            usernameRef.current.focus();
         }
+        //#endregion
 
         if (isValid) {
             try {
@@ -105,59 +97,28 @@ const SignUp = () => {
 
                 const newUser = await signup(email, password);
 
-                const newDoc = await addDoc(usersCollectionRef, {
+                await addDoc(usersCollectionRef, {
                     uid: newUser.user.uid,
                     email,
                     displayName: username,
                 } as UserType);
 
-                const newUserRef = doc(db, 'users', newDoc.id);
+                navigate('/sign-in');
 
-                await updateDoc(newUserRef, { fieldId: newDoc.id });
-
+                dispatch(setIsAlertOpen(true));
                 dispatch(setLoading({ state: false }));
-
-                navigate('/chat');
             } catch (error) {
                 console.log(error);
             }
         }
     };
 
-    const handleGoogleClick = async () => {
-        signInWithPopup(auth, googleProvider)
-            .then(async (res: UserCredential) => {
-                const { email, phoneNumber, photoURL, displayName, uid } =
-                    res.user;
-
-                const q = query(
-                    collection(db, 'users'),
-                    where('email', '==', email),
-                );
-
-                const data = await getDocs(q);
-
-                if (data.empty) {
-                    await addDoc(usersCollectionRef, {
-                        email,
-                        displayName,
-                        uid,
-                        photoURL,
-                        phoneNumber,
-                    });
-                }
-
-                navigate('/sign-in');
-            })
-            .catch((err) => console.log(err));
-    };
-
     return (
         <>
-            <form
-                onSubmit={handleSignUpSubmit}
-                className='flex px-[20px] py-[40px] container'>
-                <div className='flex-1 max-w-[350px] mx-auto space-y-5'>
+            <div className='flex px-[20px] py-[40px] container'>
+                <form
+                    onSubmit={handleCreateUserWithEmailAndPassowrd}
+                    className='flex-1 max-w-[350px] mx-auto space-y-5'>
                     <div className='text-center'>
                         <h1 className='text-[25px] lg:text-[30px] font-bold'>
                             Tham gia với chúng tôi
@@ -177,6 +138,7 @@ const SignUp = () => {
                             className='input-text w-full'
                             type='text'
                             placeholder='Nhập email của bạn'
+                            autoFocus
                         />
                         <p className='error'>{usernameError}</p>
 
@@ -235,15 +197,7 @@ const SignUp = () => {
                             hoặc
                         </p>
 
-                        <button
-                            className='btn-outlined w-full py-[6px] lg:py-[10px] flex items-center justify-center space-x-3'
-                            onClick={handleGoogleClick}>
-                            <Icon
-                                icon='flat-color-icons:google'
-                                fontSize={30}
-                            />
-                            <p>Đăng nhập với Google</p>
-                        </button>
+                        <ButtonSignInWithGG />
                     </div>
 
                     <div className='flex justify-center space-x-2'>
@@ -254,14 +208,14 @@ const SignUp = () => {
                             </p>
                         </Link>
                     </div>
-                </div>
+                </form>
 
                 <img
                     className='flex-1 max-w-[50vw] hidden xl:block'
                     src={SignUpImg}
                     alt='Sign in'
                 />
-            </form>
+            </div>
         </>
     );
 };

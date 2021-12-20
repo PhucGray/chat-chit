@@ -15,7 +15,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '../../firebase';
 import { IdentificationType, UserType } from '../../types';
-import { setIsOpen } from '../../features/formAddFriend/formAddFriendSlice';
+import { setIsFormAddFriendOpen } from '../../features/formAddFriend/formAddFriendSlice';
 
 const FriendsTab = () => {
     return (
@@ -55,26 +55,30 @@ const FriendRequest = () => {
         getFriendsList();
     }, [user]);
 
-    // agree
     const handleAgree = async ({ uid, fieldId }: IdentificationType) => {
         const friendRef = doc(db, 'users', fieldId);
 
-        // add friends (current user)
+        /** current user (receiver: userRef: who receives friend request)
+         * - add friend
+         * - delete friend request
+         */
         await updateDoc(userRef, {
             friends: arrayUnion(uid),
         });
 
-        // delete friend request
         await updateDoc(userRef, {
             friendRequests: arrayRemove(uid),
         });
 
-        // add friends (sender)
+        /** friend (sender: friendRef: who sends request)
+         * - add friend
+         * - delete request
+         */
+
         await updateDoc(friendRef, {
             friends: arrayUnion(user?.uid),
         });
 
-        // delete request (sender)
         await updateDoc(friendRef, {
             requests: arrayRemove(user?.uid),
         });
@@ -87,17 +91,21 @@ const FriendRequest = () => {
     const handleDisagree = async ({ uid, fieldId }: IdentificationType) => {
         const friendRef = doc(db, 'users', fieldId);
 
+        // receiver:
+        // - delete friend request
+
         await updateDoc(userRef, {
             friendRequests: arrayRemove(uid),
         });
 
+        const newFriendRequests = [...friendRequests];
+        setFriendRequests(newFriendRequests.filter((user) => user.uid !== uid));
+
+        // sender
+        // - delete request
         await updateDoc(friendRef, {
             requests: arrayRemove(user?.uid),
         });
-
-        const newFriendRequests = [...friendRequests];
-
-        setFriendRequests(newFriendRequests.filter((user) => user.uid !== uid));
     };
 
     return (
@@ -220,7 +228,7 @@ const Search = () => {
                 icon='whh:addfriend'
                 fontSize={30}
                 onClick={() => {
-                    dispatch(setIsOpen(true));
+                    dispatch(setIsFormAddFriendOpen(true));
                 }}
             />
         </div>

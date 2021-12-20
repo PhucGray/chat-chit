@@ -2,12 +2,14 @@ import { configureStore } from '@reduxjs/toolkit';
 import UserReducer from '../features/user/userSlice';
 import LoadingReducer from '../features/loading/loadingSlice';
 import FormAddFriendReducer from '../features/formAddFriend/formAddFriendSlice';
+import AlertReducer from '../features/alert/alertSlice';
 
 export const store = configureStore({
     reducer: {
         user: UserReducer,
         loading: LoadingReducer,
         formAddFriend: FormAddFriendReducer,
+        alert: AlertReducer,
     },
 });
 

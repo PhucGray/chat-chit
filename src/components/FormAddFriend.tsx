@@ -3,9 +3,7 @@ import {
     arrayUnion,
     collection,
     doc,
-    FieldValue,
     getDocs,
-    increment,
     query,
     updateDoc,
     where,
@@ -14,7 +12,7 @@ import { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import {
     selectIsFormAddFriendOpen,
-    setIsOpen,
+    setIsFormAddFriendOpen,
 } from '../features/formAddFriend/formAddFriendSlice';
 import { selectUser } from '../features/user/userSlice';
 import { db } from '../firebase';
@@ -22,9 +20,9 @@ import AvatarImg from '../images/defaultAvatar.png';
 import { IdentificationType, SubmitFormType, UserType } from '../types';
 
 const FormAddFriend = () => {
-    const isOpen = useAppSelector(selectIsFormAddFriendOpen);
+    const isFormAddFriendOpen = useAppSelector(selectIsFormAddFriendOpen);
     const dispatch = useAppDispatch();
-    const closeForm = () => dispatch(setIsOpen(false));
+    const closeForm = () => dispatch(setIsFormAddFriendOpen(false));
 
     const [value, setValue] = useState('');
     const [matchedFriends, setMatchedFriends] = useState([] as UserType[]);
@@ -68,7 +66,7 @@ const FormAddFriend = () => {
     };
     return (
         <>
-            {isOpen && (
+            {isFormAddFriendOpen && (
                 <>
                     <div
                         className='exit-zone bg-black opacity-50 z-20'
@@ -95,6 +93,7 @@ const FormAddFriend = () => {
                                 className='input-text'
                                 type='text'
                                 placeholder='Nhập tên người dùng'
+                                autoFocus
                             />
                             <button
                                 className='btn px-[20px] flex items-center sm:space-x-2'

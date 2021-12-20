@@ -23,7 +23,7 @@ const Chat = () => {
         () =>
             onSnapshot(doc(db, 'users', user?.fieldId || 'random'), (doc) => {
                 dispatch(
-                    setUser({ ...(doc.data() as UserType), fieldId: doc.id }),
+                    setUser({ ...doc.data(), fieldId: doc.id } as UserType),
                 );
             }),
 

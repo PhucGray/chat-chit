@@ -1,18 +1,27 @@
-import { onAuthStateChanged } from 'firebase/auth';
+import { async } from '@firebase/util';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { useEffect } from 'react';
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import {
+    Navigate,
+    Route,
+    Routes,
+    useLocation,
+    useNavigate,
+} from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from './app/hooks';
 import Loading from './components/Loading';
 import { selectLoading, setLoading } from './features/loading/loadingSlice';
-import { setUser } from './features/user/userSlice';
-import { auth, getUserWithUID } from './firebase';
+import { selectUser, setUser } from './features/user/userSlice';
+import { auth, getUserWithUID, logout } from './firebase';
 import Chat from './pages/Chat';
 import Home from './pages/Home';
 import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
+import { getAuthenticated } from './utils/storage';
 
 const App = () => {
     const loading = useAppSelector(selectLoading);
+    const user = useAppSelector(selectUser);
 
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
@@ -20,28 +29,38 @@ const App = () => {
 
     const isChatPage = location.pathname === '/chat';
     const isHomePage = location.pathname === '/';
+    const isSignUpPage = location.pathname === '/sign-up';
+
+    useEffect(
+        () =>
+            window.addEventListener('storage', async () => {
+                if (getAuthenticated()) {
+                    if (!user?.uid) localStorage.removeItem('authenticated');
+                } else {
+                    dispatch(setUser(null));
+                    await signOut(auth);
+                    isChatPage && navigate('/sign-in', { replace: true });
+                }
+            }),
+        [],
+    );
 
     useEffect(() => {
-        isChatPage &&
+        if (getAuthenticated()) {
+            !isSignUpPage && navigate('chat', { replace: true });
             dispatch(setLoading({ state: true, message: 'Đang đăng nhập' }));
+        } else {
+            isChatPage && navigate('sign-in', { replace: true });
+        }
 
         const unsub = onAuthStateChanged(auth, async (currentUser) => {
             if (currentUser) {
                 const userData = await getUserWithUID(currentUser.uid);
 
-                if (userData) {
-                    dispatch(setUser(userData));
-                    dispatch(setLoading({ state: false }));
-                    navigate('/chat', { replace: true });
-                }
+                userData && dispatch(setUser(userData));
             }
 
-            if (!currentUser) {
-                dispatch(setUser(null));
-                dispatch(setLoading({ state: false }));
-
-                isHomePage && navigate('/sign-in', { replace: true });
-            }
+            dispatch(setLoading({ state: false }));
         });
 
         return () => unsub();

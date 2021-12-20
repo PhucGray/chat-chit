@@ -2,20 +2,23 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 
 const initialState = {
-    isOpen: false,
+    isFormAddFriendOpen: false,
 };
 
 const formAddFriendSlice = createSlice({
     name: 'formAddFriendSlice',
     initialState,
     reducers: {
-        setIsOpen: (state, { payload }: PayloadAction<boolean>) => {
-            state.isOpen = payload;
+        setIsFormAddFriendOpen: (
+            state,
+            { payload }: PayloadAction<boolean>,
+        ) => {
+            state.isFormAddFriendOpen = payload;
         },
     },
 });
 
-export const { setIsOpen } = formAddFriendSlice.actions;
+export const { setIsFormAddFriendOpen } = formAddFriendSlice.actions;
 export const selectIsFormAddFriendOpen = (state: RootState) =>
-    state.formAddFriend.isOpen;
+    state.formAddFriend.isFormAddFriendOpen;
 export default formAddFriendSlice.reducer;
