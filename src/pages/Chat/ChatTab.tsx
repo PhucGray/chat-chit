@@ -9,8 +9,9 @@ import {
     useRef,
     useState,
 } from 'react';
-import { useAppSelector } from '../../app/hooks';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import Loading from '../../components/Loading';
+import { setIsFormAddFriendOpen } from '../../features/formAddFriend/formAddFriendSlice';
 import { selectUser } from '../../features/user/userSlice';
 import HomeImg from '../../images/home.png';
 
@@ -47,26 +48,20 @@ const ChatTab = () => {
     );
 
     const user = useAppSelector(selectUser);
+
     return (
         <div className='min-h-screen flex'>
-            {user?.uid ? (
-                <>
-                    <RecentMessages
-                        isRecentMessagesOpen={isRecentMessagesOpen}
-                        setIsRecentMessagesOpen={setIsRecentMessagesOpen}
-                    />
-                    <MainChat
-                        setIsInfoOpen={setIsInfoOpen}
-                        setIsRecentMessagesOpen={setIsRecentMessagesOpen}
-                    />
-                    <Info
-                        isInfoOpen={isInfoOpen}
-                        setIsInfoOpen={setIsInfoOpen}
-                    />
-                </>
-            ) : (
-                <Loading msg='Đang đăng nhập' />
-            )}
+            <>
+                <RecentMessages
+                    isRecentMessagesOpen={isRecentMessagesOpen}
+                    setIsRecentMessagesOpen={setIsRecentMessagesOpen}
+                />
+                <MainChat
+                    setIsInfoOpen={setIsInfoOpen}
+                    setIsRecentMessagesOpen={setIsRecentMessagesOpen}
+                />
+                <Info isInfoOpen={isInfoOpen} setIsInfoOpen={setIsInfoOpen} />
+            </>
         </div>
     );
 };
@@ -117,6 +112,8 @@ const RecentMessages: FC<RecentMessagesProps> = ({
             from: 'me',
         },
     ];
+
+    const dispatch = useAppDispatch();
     return (
         <>
             <div
@@ -134,6 +131,9 @@ const RecentMessages: FC<RecentMessagesProps> = ({
                         className='text-gray-500 cursor-pointer transform hover:scale-[1.2] hover:text-teal-500'
                         icon='whh:addfriend'
                         fontSize={30}
+                        onClick={() => {
+                            dispatch(setIsFormAddFriendOpen(true));
+                        }}
                     />
                     <p>Tìm kiếm bạn bè</p>
                 </div>

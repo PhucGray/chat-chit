@@ -1,7 +1,9 @@
 import { doc, onSnapshot } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import Alert from '../../components/Alert';
 import FormAddFriend from '../../components/FormAddFriend';
+import { selectAlert } from '../../features/alert/alertSlice';
 import { selectUser, setUser } from '../../features/user/userSlice';
 import { db } from '../../firebase';
 import { TabType, UserType } from '../../types';
@@ -18,7 +20,9 @@ const Chat = () => {
 
     const user = useAppSelector(selectUser);
     const dispatch = useAppDispatch();
+    const isAlertOpen = useAppSelector(selectAlert);
 
+    // realtime
     useEffect(
         () =>
             onSnapshot(doc(db, 'users', user?.fieldId || 'random'), (doc) => {
@@ -29,6 +33,7 @@ const Chat = () => {
 
         [user?.fieldId],
     );
+
     return (
         <>
             <div className='flex bg-gray-100'>
@@ -42,6 +47,8 @@ const Chat = () => {
                 </div>
 
                 <FormAddFriend />
+
+                {isAlertOpen && <Alert />}
             </div>
         </>
     );

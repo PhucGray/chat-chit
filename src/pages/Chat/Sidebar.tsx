@@ -103,13 +103,13 @@ const Sidebar: FC<SidebarProps> = ({ currentTab, setTab }) => {
                                 message: 'Đang đăng xuất',
                             }),
                         );
+
                         dispatch(setUser(null));
 
-                        await logout();
+                        logout();
 
                         dispatch(setLoading({ state: false }));
 
-                        closeSiderbar();
                         navigate('/sign-in', { replace: true });
                     }}>
                     <Icon icon='carbon:logout' />

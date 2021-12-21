@@ -31,10 +31,6 @@ const SignUp = () => {
     const passwordRef = useRef() as MutableRefObject<HTMLInputElement>;
     const usernameRef = useRef() as MutableRefObject<HTMLInputElement>;
 
-    const navigate = useNavigate();
-
-    // const [isAlertShow, setIsAlertShow] = useState(false);
-
     const handleCreateUserWithEmailAndPassowrd = async (e: SubmitFormType) => {
         e.preventDefault();
 
@@ -102,8 +98,6 @@ const SignUp = () => {
                     email,
                     displayName: username,
                 } as UserType);
-
-                navigate('/sign-in');
 
                 dispatch(setIsAlertOpen(true));
                 dispatch(setLoading({ state: false }));

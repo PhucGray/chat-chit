@@ -17,7 +17,7 @@ import Chat from './pages/Chat';
 import Home from './pages/Home';
 import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
-import { getAuthenticated } from './utils/storage';
+import { getAuthenticated, setAutheticated } from './utils/storage';
 
 const App = () => {
     const loading = useAppSelector(selectLoading);
@@ -28,7 +28,6 @@ const App = () => {
     const location = useLocation();
 
     const isChatPage = location.pathname === '/chat';
-    const isHomePage = location.pathname === '/';
     const isSignUpPage = location.pathname === '/sign-up';
 
     useEffect(
@@ -39,7 +38,7 @@ const App = () => {
                 } else {
                     dispatch(setUser(null));
                     await signOut(auth);
-                    isChatPage && navigate('/sign-in', { replace: true });
+                    navigate('/sign-in', { replace: true });
                 }
             }),
         [],
@@ -47,17 +46,23 @@ const App = () => {
 
     useEffect(() => {
         if (getAuthenticated()) {
-            !isSignUpPage && navigate('chat', { replace: true });
+            navigate('chat', { replace: true });
             dispatch(setLoading({ state: true, message: 'Đang đăng nhập' }));
         } else {
-            isChatPage && navigate('sign-in', { replace: true });
+            isChatPage && navigate('/sign-in', { replace: true });
         }
 
         const unsub = onAuthStateChanged(auth, async (currentUser) => {
             if (currentUser) {
                 const userData = await getUserWithUID(currentUser.uid);
 
-                userData && dispatch(setUser(userData));
+                setAutheticated();
+                navigate('/chat', { replace: true });
+
+                dispatch(setUser(userData));
+            } else {
+                dispatch(setUser(null));
+                await signOut(auth);
             }
 
             dispatch(setLoading({ state: false }));

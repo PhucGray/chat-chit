@@ -22,10 +22,18 @@ import { IdentificationType, SubmitFormType, UserType } from '../types';
 const FormAddFriend = () => {
     const isFormAddFriendOpen = useAppSelector(selectIsFormAddFriendOpen);
     const dispatch = useAppDispatch();
-    const closeForm = () => dispatch(setIsFormAddFriendOpen(false));
 
     const [value, setValue] = useState('');
     const [matchedFriends, setMatchedFriends] = useState([] as UserType[]);
+    const [isFound, setIsFound] = useState(true);
+
+    const closeForm = () => {
+        setValue('');
+        setMatchedFriends([]);
+        dispatch(setIsFormAddFriendOpen(false));
+
+        setIsFound(true);
+    };
 
     const handleSearch = async (e: SubmitFormType) => {
         e.preventDefault();
@@ -38,15 +46,18 @@ const FormAddFriend = () => {
 
             const querySnapshot = await getDocs(q);
 
-            setMatchedFriends(
-                querySnapshot.docs.map(
-                    (doc) =>
-                        ({
-                            ...doc.data(),
-                            fieldId: doc.id,
-                        } as UserType),
-                ),
+            const matchedFriends = querySnapshot.docs.map(
+                (doc) =>
+                    ({
+                        ...doc.data(),
+                        fieldId: doc.id,
+                    } as UserType),
             );
+
+            setMatchedFriends(matchedFriends);
+
+            if (matchedFriends.length === 0) setIsFound(false);
+            else setIsFound(true);
         }
     };
 
@@ -83,7 +94,6 @@ const FormAddFriend = () => {
                                 onClick={closeForm}
                             />
                         </div>
-
                         <form
                             onSubmit={handleSearch}
                             className='h-[45px] flex justify-center justify-items-stretch space-x-2'>
@@ -102,10 +112,9 @@ const FormAddFriend = () => {
                                 <p className='hidden sm:block'>Tìm kiếm</p>
                             </button>
                         </form>
-
                         <hr />
-
-                        {matchedFriends && matchedFriends.length > 0 ? (
+                        {matchedFriends &&
+                            matchedFriends.length > 0 &&
                             matchedFriends.map(
                                 ({ uid, displayName, photoURL, fieldId }) => {
                                     const isRequested =
@@ -154,8 +163,9 @@ const FormAddFriend = () => {
                                         </div>
                                     );
                                 },
-                            )
-                        ) : (
+                            )}
+
+                        {isFound || (
                             <p className='text-center font-semibold'>
                                 Không tồn tại người dùng
                             </p>

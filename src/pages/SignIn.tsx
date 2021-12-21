@@ -1,15 +1,12 @@
 import { Icon } from '@iconify/react';
 import { MutableRefObject, useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../app/hooks';
-import Alert from '../components/Alert';
+import { Link } from 'react-router-dom';
+import { useAppDispatch } from '../app/hooks';
 import ButtonSignInWithGG from '../components/ButtonSignInWithGG';
-import { selectAlert } from '../features/alert/alertSlice';
 import { setLoading } from '../features/loading/loadingSlice';
 import { signIn } from '../firebase';
 import SignInImg from '../images/sign-in.png';
 import { SubmitFormType } from '../types';
-import { setAutheticated } from '../utils/storage';
 import { validateEmail, validatePassword } from '../utils/validateAuth';
 
 const SignIn = () => {
@@ -23,13 +20,12 @@ const SignIn = () => {
     const emailRef = useRef() as MutableRefObject<HTMLInputElement>;
     const passwordRef = useRef() as MutableRefObject<HTMLInputElement>;
 
-    const navigate = useNavigate();
     const dispatch = useAppDispatch();
 
     const handleSignInWithEmailAndPassword = async (e: SubmitFormType) => {
         e.preventDefault();
-        dispatch(setLoading({ state: true, message: 'Đang đăng nhập' }));
 
+        //#region validate
         const validateEmailMsg = validateEmail(email);
         const validatePasswordMsg = validatePassword(password);
 
@@ -46,22 +42,19 @@ const SignIn = () => {
             passwordRef.current.focus();
             isValid = false;
         }
+        //#endregion
 
         if (isValid) {
+            dispatch(setLoading({ state: true, message: 'Đang đăng nhập' }));
+
             try {
                 await signIn(email, password);
-                dispatch(setLoading({ state: false }));
-                setAutheticated();
-                navigate('/chat', { replace: true });
             } catch (error) {
                 setPasswordError('Email hoặc mật khẩu không chính xác');
                 dispatch(setLoading({ state: false }));
             }
         }
     };
-
-    //
-    const isAlertOpen = useAppSelector(selectAlert);
 
     return (
         <>
@@ -149,8 +142,6 @@ const SignIn = () => {
                     </div>
                 </div>
             </form>
-
-            {isAlertOpen && <Alert />}
         </>
     );
 };

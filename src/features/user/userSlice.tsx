@@ -15,8 +15,6 @@ const userSlice = createSlice({
     initialState,
     reducers: {
         setUser: (state, { payload }: PayloadAction<UserType | null>) => {
-            if (!payload) return;
-
             state.user = payload;
         },
     },
