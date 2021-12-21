@@ -53,15 +53,17 @@ const Sidebar: FC<SidebarProps> = ({ currentTab, setTab }) => {
         <>
             {isOpen && (
                 <div
-                    className='black-shadow opacity-70'
+                    className='black-shadow opacity-70 sm:hidden'
                     onClick={closeSiderbar}
                 />
             )}
 
             <div
-                className={`h-screen w-[75px] flex flex-col items-center justify-between py-[10px] transform ${
-                    isOpen ? 'translate-x-[0]' : 'translate-x-[-100%]'
-                } fixed left-0 z-20 sm:transform-none sm:static  md:py-[10px] md:text-[27px] xl:text-[30px] xl:py-[15px] bg-gray-800 text-[25px] text-[#B1B1B1]`}>
+                className={`h-screen w-[75px] flex flex-col items-center justify-between py-[10px] 
+                transform ${isOpen ? 'translate-x-[0]' : 'translate-x-[-100%]'} 
+                fixed left-0 z-20 
+                sm:transform-none sm:static md:py-[10px] md:text-[27px] xl:text-[30px] xl:py-[15px] 
+                bg-gray-800 text-[25px] text-[#B1B1B1]`}>
                 {isOpen || (
                     <Icon
                         onClick={() => setIsOpen(true)}
@@ -79,7 +81,7 @@ const Sidebar: FC<SidebarProps> = ({ currentTab, setTab }) => {
                                     currentTab === tab
                                         ? 'text-white bg-teal-500'
                                         : 'text-gray-400'
-                                } hover:bg-teal-500 hover:text-white`}
+                                } hover:bg-teal-500 hover:text-white duration-300`}
                                 onClick={() => {
                                     setTab(tab);
                                     sessionStorage.setItem('currentTab', tab);
