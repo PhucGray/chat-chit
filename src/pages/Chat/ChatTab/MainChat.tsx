@@ -97,7 +97,7 @@ const MainChat: FC<MainChatProps> = ({
         <div className='h-screen flex-1 flex flex-col justify-between pt-[10px] space-y-2 relative'>
             <div className='flex items-center justify-between px-[20px]'>
                 <Icon
-                    className='icon lg:hidden'
+                    className='icon md:hidden'
                     icon='carbon:open-panel-left'
                     fontSize={25}
                     onClick={(e) => {

@@ -61,13 +61,14 @@ const RecentMessages: FC<RecentMessagesProps> = ({
             <div
                 className={`exit-zone ${
                     isRecentMessagesOpen ? 'block' : 'hidden'
-                }  bg-black opacity-60 z-10 sm:hidden`}
+                }  bg-black opacity-60 z-10 md:hidden`}
                 onClick={() => setIsRecentMessagesOpen(false)}></div>
 
             <div
                 className={`${
                     isRecentMessagesOpen ? 'flex' : 'hidden'
-                } w-[270px] h-full max-h-screen py-[20px] z-10 fixed left-0 top-0 border-r bg-white lg:flex flex-col lg:static lg:bg-transparent`}>
+                } w-[270px] h-full max-h-screen py-[20px] z-10 fixed left-0 top-0 border-r bg-white 
+                md:flex flex-col md:static md:bg-transparent`}>
                 <div className='flex items-center space-x-2 px-[15px]'>
                     <Icon
                         className='text-gray-500 cursor-pointer transform hover:scale-[1.2] hover:text-teal-500'

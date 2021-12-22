@@ -53,7 +53,7 @@ const Sidebar: FC<SidebarProps> = ({ currentTab, setTab }) => {
         <>
             {isOpen && (
                 <div
-                    className='black-shadow opacity-70 sm:hidden'
+                    className='black-shadow opacity-70 lg:hidden'
                     onClick={closeSiderbar}
                 />
             )}
@@ -62,12 +62,13 @@ const Sidebar: FC<SidebarProps> = ({ currentTab, setTab }) => {
                 className={`h-screen w-[75px] flex flex-col items-center justify-between py-[10px] 
                 transform ${isOpen ? 'translate-x-[0]' : 'translate-x-[-100%]'} 
                 fixed left-0 z-20 
-                sm:transform-none sm:static md:py-[10px] md:text-[27px] xl:text-[30px] xl:py-[15px] 
+                lg:transform-none lg:static 
+                md:py-[10px] md:text-[27px] xl:text-[30px] xl:py-[15px] 
                 bg-gray-800 text-[25px] text-[#B1B1B1]`}>
                 {isOpen || (
                     <Icon
                         onClick={() => setIsOpen(true)}
-                        className='icon text-[40px] absolute top-[50%] right-0 transform translate-x-[100%] sm:hidden'
+                        className='icon text-[40px] absolute top-[50%] right-0 transform translate-x-[100%] lg:hidden'
                         icon='bi:arrow-right-square-fill'
                     />
                 )}

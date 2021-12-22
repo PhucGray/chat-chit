@@ -15,7 +15,8 @@ const ChatTab = () => {
     useEffect(
         () =>
             window.addEventListener('resize', () => {
-                if (window.outerWidth < 1024) setIsInfoOpen(false);
+                if (window.outerWidth >= 768) setIsRecentMessagesOpen(false);
+                if (window.outerWidth >= 1024) setIsInfoOpen(false);
             }),
         [],
     );

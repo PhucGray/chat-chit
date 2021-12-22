@@ -12,14 +12,16 @@ const Info: FC<InfoProps> = ({ isInfoOpen, setIsInfoOpen }) => {
             <div
                 className={`exit-zone ${
                     isInfoOpen ? 'block' : 'hidden'
-                } bg-black opacity-60 sm:hidden`}
+                } bg-black opacity-60 xl:hidden z-20`}
                 onClick={() => setIsInfoOpen(false)}
             />
 
             <div
                 className={`${
                     isInfoOpen ? 'flex' : 'hidden'
-                }  w-[300px] h-full pt-[40px] text-center fixed right-0 top-0 bg-white shadow-lg space-y-1 xl:flex flex-col items-center xl:static xl:shadow-none xl:bg-transparent`}
+                }  w-[300px] h-full pt-[40px] text-center flex-col items-center
+                z-20 fixed right-0 top-0 bg-white shadow-lg space-y-1 
+                xl:flex xl:static xl:shadow-none xl:bg-transparent`}
                 onClick={(e) => e.stopPropagation()}>
                 <div className='relative w-max'>
                     <img
