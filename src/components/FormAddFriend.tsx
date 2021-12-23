@@ -68,7 +68,7 @@ const FormAddFriend = () => {
         const friendRef = doc(db, 'users', fieldId);
 
         await updateDoc(friendRef, {
-            friendRequests: arrayUnion(user?.uid),
+            friendRequests: arrayUnion(user?.uid || 'random'),
         });
 
         await updateDoc(userRef, {

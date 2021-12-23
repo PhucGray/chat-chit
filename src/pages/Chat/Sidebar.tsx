@@ -1,16 +1,12 @@
 import { Icon } from '@iconify/react';
-import { Dispatch, FC, SetStateAction, useState } from 'react';
+import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAppDispatch } from '../../app/hooks';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { setLoading } from '../../features/loading/loadingSlice';
 import { setUser } from '../../features/user/userSlice';
 import { logout } from '../../firebase';
 import { TabType } from '../../types';
-
-interface SidebarProps {
-    currentTab: TabType;
-    setTab: Dispatch<SetStateAction<TabType>>;
-}
+import { setCurrentTab, selectCurrentTab } from '../../features/tab/tabSlice';
 
 type SideBarIconType = {
     icon: string;
@@ -18,7 +14,7 @@ type SideBarIconType = {
     tab: TabType;
 };
 
-const Sidebar: FC<SidebarProps> = ({ currentTab, setTab }) => {
+const Sidebar = () => {
     const icons = [
         {
             icon: 'bi:chat-text',
@@ -48,6 +44,8 @@ const Sidebar: FC<SidebarProps> = ({ currentTab, setTab }) => {
     const [isOpen, setIsOpen] = useState(false);
 
     const closeSiderbar = () => setIsOpen(false);
+
+    const currentTab = useAppSelector(selectCurrentTab);
 
     return (
         <>
@@ -84,7 +82,7 @@ const Sidebar: FC<SidebarProps> = ({ currentTab, setTab }) => {
                                         : 'text-gray-400'
                                 } hover:bg-teal-500 hover:text-white duration-300`}
                                 onClick={() => {
-                                    setTab(tab);
+                                    dispatch(setCurrentTab(tab));
                                     sessionStorage.setItem('currentTab', tab);
                                     closeSiderbar();
                                 }}>

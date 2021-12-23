@@ -1,7 +1,14 @@
 import { Icon } from '@iconify/react';
-import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
-import { useAppDispatch } from '../../../app/hooks';
+import { Dispatch, FC, SetStateAction } from 'react';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
+import { selectConversations } from '../../../features/conversation/conversationSlice';
 import { setIsFormAddFriendOpen } from '../../../features/formAddFriend/formAddFriendSlice';
+import {
+    selectCurrentFriend,
+    selectFriends,
+    selectUser,
+    setCurrentFriend,
+} from '../../../features/user/userSlice';
 
 interface RecentMessagesProps {
     isRecentMessagesOpen: boolean;
@@ -12,50 +19,12 @@ const RecentMessages: FC<RecentMessagesProps> = ({
     isRecentMessagesOpen,
     setIsRecentMessagesOpen,
 }) => {
-    const rencentMessages = [
-        {
-            name: 'CR7',
-            msg: 'Hôm nay bạn thế nào ajkfba a f w n a w f o a aofw aj k w',
-            from: 'friend',
-        },
-        {
-            name: 'Stephen',
-            msg: 'Mới trúng vé số được 100 ngàn',
-            from: 'me',
-        },
-        {
-            name: 'Nadal',
-            msg: 'Hút cần không pro ????',
-            from: 'friend',
-        },
-        {
-            name: 'Nadal',
-            msg: 'Hút cần không pro ????',
-            from: 'friend',
-        },
-        {
-            name: 'Nadal',
-            msg: 'Hút cần không pro ????',
-            from: 'me',
-        },
-        {
-            name: 'Nadal',
-            msg: 'Hút cần không pro ????',
-            from: 'friend',
-        },
-        {
-            name: 'Nadal',
-            msg: 'Hút cần không pro ????',
-            from: 'me',
-        },
-        {
-            name: 'Nadal',
-            msg: 'Hút cần không pro ????',
-            from: 'me',
-        },
-    ];
-
     const dispatch = useAppDispatch();
+    const user = useAppSelector(selectUser);
+    const friends = useAppSelector(selectFriends);
+    const currentFriend = useAppSelector(selectCurrentFriend);
+    const conversations = useAppSelector(selectConversations);
+
     return (
         <>
             <div
@@ -63,12 +32,15 @@ const RecentMessages: FC<RecentMessagesProps> = ({
                     isRecentMessagesOpen ? 'block' : 'hidden'
                 }  bg-black opacity-60 z-10 md:hidden`}
                 onClick={() => setIsRecentMessagesOpen(false)}></div>
-
             <div
                 className={`${
-                    isRecentMessagesOpen ? 'flex' : 'hidden'
-                } w-[270px] h-full max-h-screen py-[20px] z-10 fixed left-0 top-0 border-r bg-white 
-                md:flex flex-col md:static md:bg-transparent`}>
+                    isRecentMessagesOpen || !currentFriend
+                        ? 'flex w-full'
+                        : 'hidden'
+                } ${
+                    currentFriend && 'w-[270px]'
+                } h-screen py-[20px] z-10 fixed left-0 top-0 border-r bg-white 
+                md:flex flex-col md:static md:bg-transparent md:w-[270px]`}>
                 <div className='flex items-center space-x-2 px-[15px]'>
                     <Icon
                         className='text-gray-500 cursor-pointer transform hover:scale-[1.2] hover:text-teal-500'
@@ -88,6 +60,50 @@ const RecentMessages: FC<RecentMessagesProps> = ({
                 </p>
 
                 <div className='flex-1 overflow-auto'>
+                    {conversations && friends ? (
+                        conversations.map(({ fieldId, messages, members }) => {
+                            if (messages && messages.length > 0) {
+                                const { uid, messageId, sentAt, msg } =
+                                    messages[0];
+
+                                const isCurrentUser = user?.uid === uid;
+
+                                const friendId = members.filter(
+                                    (id) => id !== user?.uid,
+                                )[0];
+
+                                const friend = friends.filter(
+                                    (friend) => friend.uid === friendId,
+                                )[0];
+
+                                return (
+                                    <div
+                                        key={fieldId}
+                                        onClick={() => {
+                                            dispatch(setCurrentFriend(friend));
+                                        }}>
+                                        <div className='w-full overflow-hidden px-[10px] py-[10px] bg-white border-b-[1px] cursor-pointer hover:bg-teal-50'>
+                                            <p className='font-semibold text-[18px]'>
+                                                {friend?.displayName}
+                                            </p>
+
+                                            <p className='text-sm text-gray-400 truncate'>
+                                                {isCurrentUser && 'Bạn: '}
+                                                {msg.content}
+                                            </p>
+                                        </div>
+                                    </div>
+                                );
+                            }
+
+                            return <></>;
+                        })
+                    ) : (
+                        <div className='text-center'>Đang tải dữ liệu...</div>
+                    )}
+                </div>
+
+                {/* <div className='flex-1 overflow-auto'>
                     {rencentMessages &&
                         rencentMessages.map(({ name, msg, from }, index) => (
                             <div
@@ -100,7 +116,7 @@ const RecentMessages: FC<RecentMessagesProps> = ({
                                 </p>
                             </div>
                         ))}
-                </div>
+                </div> */}
             </div>
         </>
     );

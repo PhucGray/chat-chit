@@ -3,6 +3,8 @@ import UserReducer from '../features/user/userSlice';
 import LoadingReducer from '../features/loading/loadingSlice';
 import FormAddFriendReducer from '../features/formAddFriend/formAddFriendSlice';
 import AlertReducer from '../features/alert/alertSlice';
+import TabReducer from '../features/tab/tabSlice';
+import ConversationReducer from '../features/conversation/conversationSlice';
 
 export const store = configureStore({
     reducer: {
@@ -10,6 +12,8 @@ export const store = configureStore({
         loading: LoadingReducer,
         formAddFriend: FormAddFriendReducer,
         alert: AlertReducer,
+        tab: TabReducer,
+        conversation: ConversationReducer,
     },
 });
 

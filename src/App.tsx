@@ -1,18 +1,11 @@
-import { async } from '@firebase/util';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { useEffect } from 'react';
-import {
-    Navigate,
-    Route,
-    Routes,
-    useLocation,
-    useNavigate,
-} from 'react-router-dom';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from './app/hooks';
 import Loading from './components/Loading';
 import { selectLoading, setLoading } from './features/loading/loadingSlice';
 import { selectUser, setUser } from './features/user/userSlice';
-import { auth, getUserWithUID, logout } from './firebase';
+import { auth, getUserWithUID } from './firebase';
 import Chat from './pages/Chat';
 import Home from './pages/Home';
 import SignIn from './pages/SignIn';

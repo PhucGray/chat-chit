@@ -1,12 +1,15 @@
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import Info from './Info';
+import { documentId, getDocs, query, where } from 'firebase/firestore';
+import { useEffect, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
+import { setConversations } from '../../../features/conversation/conversationSlice';
+import {
+    selectCurrentFriend,
+    selectUser,
+} from '../../../features/user/userSlice';
+import { conversationsCollectionRef } from '../../../firebase';
+import { RoomType } from '../../../types';
 import MainChat from './MainChat';
 import RecentMessages from './RecentMessages';
-
-interface RecentMessagesProps {
-    isRecentMessagesOpen: boolean;
-    setIsRecentMessagesOpen: Dispatch<SetStateAction<boolean>>;
-}
 
 const ChatTab = () => {
     const [isInfoOpen, setIsInfoOpen] = useState(false);
@@ -21,6 +24,37 @@ const ChatTab = () => {
         [],
     );
 
+    //
+    const user = useAppSelector(selectUser);
+    const dispatch = useAppDispatch();
+
+    const getConversations = async () => {
+        if (user?.conversationIds && user.conversationIds.length > 0) {
+            const q = query(
+                conversationsCollectionRef,
+                where(documentId(), 'in', user.conversationIds),
+            );
+
+            const querySnapshot = await getDocs(q);
+
+            const conversations = querySnapshot.docs.map((doc) => {
+                return { ...doc.data(), fieldId: doc.id } as RoomType;
+            });
+
+            dispatch(setConversations(conversations));
+        }
+    };
+
+    const currentFriend = useAppSelector(selectCurrentFriend);
+
+    useEffect(() => {
+        if (user?.fieldId && !currentFriend?.uid) {
+            getConversations();
+        }
+    }, [user?.fieldId]);
+
+    
+
     return (
         <div className='min-h-screen flex'>
             <>
@@ -32,7 +66,7 @@ const ChatTab = () => {
                     setIsInfoOpen={setIsInfoOpen}
                     setIsRecentMessagesOpen={setIsRecentMessagesOpen}
                 />
-                <Info isInfoOpen={isInfoOpen} setIsInfoOpen={setIsInfoOpen} />
+                {/* <Info isInfoOpen={isInfoOpen} setIsInfoOpen={setIsInfoOpen} /> */}
             </>
         </div>
     );

@@ -41,7 +41,7 @@ const ButtonSignInWithGG = () => {
                 if (!userData) {
                     const newUser = await addDoc(usersCollectionRef, basicInfo);
                     dispatch(setUser({ ...basicInfo, fieldId: newUser.id }));
-                }
+                } else dispatch(setUser(userData));
             })
             .catch((err) => console.log(err));
     };

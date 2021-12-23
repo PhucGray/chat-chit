@@ -1,21 +1,30 @@
-import AvatarImg from '../../images/defaultAvatar.png';
 import { Icon } from '@iconify/react';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { selectUser } from '../../features/user/userSlice';
-import { useEffect, useState } from 'react';
 import {
+    addDoc,
     arrayRemove,
     arrayUnion,
     collection,
     doc,
+    DocumentData,
+    DocumentReference,
     getDocs,
     query,
     updateDoc,
     where,
 } from 'firebase/firestore';
-import { db } from '../../firebase';
-import { IdentificationType, UserType } from '../../types';
+import { useEffect, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { selectConversations } from '../../features/conversation/conversationSlice';
 import { setIsFormAddFriendOpen } from '../../features/formAddFriend/formAddFriendSlice';
+import { setCurrentTab } from '../../features/tab/tabSlice';
+import {
+    selectFriends,
+    selectUser,
+    setCurrentFriend,
+} from '../../features/user/userSlice';
+import { conversationsCollectionRef, db } from '../../firebase';
+import AvatarImg from '../../images/defaultAvatar.png';
+import { IdentificationType, RoomType, UserType } from '../../types';
 
 const FriendsTab = () => {
     return (
@@ -40,9 +49,7 @@ const FriendRequest = () => {
                     collection(db, 'users'),
                     where('uid', 'in', user.friendRequests || []),
                 );
-
                 const querySnapshot = await getDocs(q);
-
                 setFriendRequests(
                     querySnapshot.docs.map(
                         (doc) =>
@@ -51,23 +58,46 @@ const FriendRequest = () => {
                 );
             }
         };
-
         getFriendsList();
     }, [user]);
 
-    const handleAgree = async ({ uid, fieldId }: IdentificationType) => {
-        const friendRef = doc(db, 'users', fieldId);
+    const createChat = async (
+        friendRef: DocumentReference<DocumentData>,
+        senderId: string,
+    ) => {
+        const members = [user?.uid, senderId];
+
+        const newConversation = await addDoc(conversationsCollectionRef, {
+            members,
+            messages: [],
+            lastSent: new Date().toString(),
+        } as RoomType);
+
+        await updateDoc(friendRef, {
+            conversationIds: arrayUnion(newConversation.id),
+        });
+
+        await updateDoc(userRef, {
+            conversationIds: arrayUnion(newConversation.id),
+        });
+    };
+
+    const handleAgree = async ({
+        uid: senderId,
+        fieldId: senderFieldId,
+    }: IdentificationType) => {
+        const friendRef = doc(db, 'users', senderFieldId);
 
         /** current user (receiver: userRef: who receives friend request)
          * - add friend
          * - delete friend request
          */
         await updateDoc(userRef, {
-            friends: arrayUnion(uid),
+            friends: arrayUnion(senderId),
         });
 
         await updateDoc(userRef, {
-            friendRequests: arrayRemove(uid),
+            friendRequests: arrayRemove(senderId),
         });
 
         /** friend (sender: friendRef: who sends request)
@@ -83,23 +113,32 @@ const FriendRequest = () => {
             requests: arrayRemove(user?.uid),
         });
 
+        createChat(friendRef, senderId);
+
         const newFriendRequests = [...friendRequests];
 
-        setFriendRequests(newFriendRequests.filter((user) => user.uid !== uid));
+        setFriendRequests(
+            newFriendRequests.filter((user) => user.uid !== senderId),
+        );
     };
-    // disagree
-    const handleDisagree = async ({ uid, fieldId }: IdentificationType) => {
-        const friendRef = doc(db, 'users', fieldId);
+
+    const handleDisagree = async ({
+        uid: senderId,
+        fieldId: senderFieldId,
+    }: IdentificationType) => {
+        const friendRef = doc(db, 'users', senderFieldId);
 
         // receiver:
         // - delete friend request
 
         await updateDoc(userRef, {
-            friendRequests: arrayRemove(uid),
+            friendRequests: arrayRemove(senderId),
         });
 
         const newFriendRequests = [...friendRequests];
-        setFriendRequests(newFriendRequests.filter((user) => user.uid !== uid));
+        setFriendRequests(
+            newFriendRequests.filter((user) => user.uid !== senderId),
+        );
 
         // sender
         // - delete request
@@ -236,26 +275,9 @@ const Search = () => {
 };
 
 const FriendsList = () => {
-    const user = useAppSelector(selectUser);
-    const [friends, setFriends] = useState([] as UserType[]);
+    const friends = useAppSelector(selectFriends);
 
-    useEffect(() => {
-        const getFriendsList = async () => {
-            if (user?.friends && user.friends.length > 0) {
-                const q = query(
-                    collection(db, 'users'),
-                    where('uid', 'in', user.friends || []),
-                );
-                const querySnapshot = await getDocs(q);
-
-                setFriends(
-                    querySnapshot.docs.map((doc) => doc.data() as UserType),
-                );
-            }
-        };
-
-        getFriendsList();
-    }, [user]);
+    const dispatch = useAppDispatch();
 
     return (
         <div>
@@ -264,27 +286,40 @@ const FriendsList = () => {
             <div className='grid gap-x-[50px] gap-y-[20px] ml-[15px] mt-[10px] lg:grid-cols-2 lg:px-[30px]'>
                 {friends &&
                     friends.length > 0 &&
-                    friends.map(({ uid, displayName, photoURL }) => (
-                        <div
-                            key={uid}
-                            className='flex items-center justify-between'>
-                            <div className='flex items-center space-x-4'>
-                                <img
-                                    className='h-[60px] w-[60px] sm:h-[75px] sm:w-[75px] rounded-[10px] border'
-                                    src={photoURL || AvatarImg}
-                                    alt='Home'
-                                />
-                                <p className='font-semibold text-[18px] sm:text-[22px]'>
-                                    {displayName}
-                                </p>
-                            </div>
+                    friends.map((friend) => {
+                        const { uid, displayName, photoURL } = friend;
 
-                            <Icon
-                                className='text-[30px] sm:text-[35px] rounded-full cursor-pointer hover:bg-gray-300'
-                                icon='akar-icons:more-horizontal'
-                            />
-                        </div>
-                    ))}
+                        return (
+                            <div
+                                key={uid}
+                                className='flex items-center justify-between cursor-pointer hover:shadow'
+                                onClick={() => {
+                                    dispatch(setCurrentTab('chat'));
+                                    dispatch(setCurrentFriend(friend));
+
+                                    sessionStorage.setItem(
+                                        'currentTab',
+                                        'chat',
+                                    );
+                                }}>
+                                <div className='flex items-center space-x-4'>
+                                    <img
+                                        className='h-[60px] w-[60px] sm:h-[75px] sm:w-[75px] rounded-[10px] border'
+                                        src={photoURL || AvatarImg}
+                                        alt='Home'
+                                    />
+                                    <p className='font-semibold text-[18px] sm:text-[22px]'>
+                                        {displayName}
+                                    </p>
+                                </div>
+
+                                <Icon
+                                    className='text-[30px] sm:text-[35px] rounded-full cursor-pointer hover:bg-gray-300'
+                                    icon='akar-icons:more-horizontal'
+                                />
+                            </div>
+                        );
+                    })}
             </div>
         </div>
     );
