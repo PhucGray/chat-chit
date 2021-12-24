@@ -280,7 +280,7 @@ const FriendsList = () => {
     const dispatch = useAppDispatch();
 
     return (
-        <div>
+        <div className='h-screen'>
             <p className='font-semibold text-[23px]'>Danh sách bạn bè</p>
 
             <div className='grid gap-x-[50px] gap-y-[20px] ml-[15px] mt-[10px] lg:grid-cols-2 lg:px-[30px]'>

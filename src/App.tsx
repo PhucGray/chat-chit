@@ -39,8 +39,8 @@ const App = () => {
 
     useEffect(() => {
         if (getAuthenticated()) {
-            navigate('chat', { replace: true });
             dispatch(setLoading({ state: true, message: 'Đang đăng nhập' }));
+            navigate('/chat', { replace: true });
         } else {
             isChatPage && navigate('/sign-in', { replace: true });
         }
@@ -50,6 +50,7 @@ const App = () => {
                 const userData = await getUserWithUID(currentUser.uid);
 
                 setAutheticated();
+
                 navigate('/chat', { replace: true });
 
                 dispatch(setUser(userData));

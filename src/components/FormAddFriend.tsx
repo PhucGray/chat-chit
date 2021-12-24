@@ -22,6 +22,7 @@ import { IdentificationType, SubmitFormType, UserType } from '../types';
 const FormAddFriend = () => {
     const isFormAddFriendOpen = useAppSelector(selectIsFormAddFriendOpen);
     const dispatch = useAppDispatch();
+    const user = useAppSelector(selectUser);
 
     const [value, setValue] = useState('');
     const [matchedFriends, setMatchedFriends] = useState([] as UserType[]);
@@ -60,8 +61,6 @@ const FormAddFriend = () => {
             else setIsFound(true);
         }
     };
-
-    const user = useAppSelector(selectUser);
 
     const handleAdd = async ({ fieldId, uid }: IdentificationType) => {
         const userRef = doc(db, 'users', user?.fieldId || 'random');
@@ -123,6 +122,9 @@ const FormAddFriend = () => {
                                     const isFriend =
                                         user && user.friends?.includes(uid);
 
+                                    const isCurrentUser =
+                                        user && user.uid === uid;
+
                                     return (
                                         <div
                                             key={uid}
@@ -139,7 +141,7 @@ const FormAddFriend = () => {
                                                 </p>
                                             </div>
 
-                                            {isFriend || (
+                                            {isFriend || isCurrentUser || (
                                                 <button
                                                     className={`
                                                 ${

@@ -5,7 +5,7 @@ const SettingTab = () => {
     const [isLanguageOpen, setIsLanguageOpen] = useState(false);
 
     return (
-        <div className='h-full w-full grid place-items-center'>
+        <div className='h-screen w-full grid place-items-center'>
             <div className='h-full w-full max-w-[600px] max-h-[450px] rounded-[10px] bg-white p-4'>
                 <p className='font-semibold text-[30px] text-center mb-5'>
                     Cài đặt
@@ -91,7 +91,7 @@ const SettingTab = () => {
                         </div>
                     </div>
 
-                    <div>
+                    {/* <div>
                         <div className='flex items-center space-x-2 mb-3'>
                             <Icon icon='clarity:notification-solid' />
                             <p>Thông báo</p>
@@ -121,7 +121,7 @@ const SettingTab = () => {
                                 </label>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </div>

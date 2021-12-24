@@ -57,9 +57,9 @@ const Sidebar = () => {
             )}
 
             <div
-                className={`h-screen w-[75px] flex flex-col items-center justify-between py-[10px] 
+                className={`min-h-full w-[75px] flex flex-col items-center justify-between py-[10px] 
                 transform ${isOpen ? 'translate-x-[0]' : 'translate-x-[-100%]'} 
-                fixed left-0 z-20 
+                fixed left-0 top-0 bottom-0 z-20 
                 lg:transform-none lg:static 
                 md:py-[10px] md:text-[27px] xl:text-[30px] xl:py-[15px] 
                 bg-gray-800 text-[25px] text-[#B1B1B1]`}>
