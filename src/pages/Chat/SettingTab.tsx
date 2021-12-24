@@ -1,12 +1,19 @@
 import { Icon } from '@iconify/react';
 import { useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { selectTheme, setTheme } from '../../features/theme/themeSlice';
 
 const SettingTab = () => {
     const [isLanguageOpen, setIsLanguageOpen] = useState(false);
 
+    const theme = useAppSelector(selectTheme);
+    const dispatch = useAppDispatch();
+
     return (
         <div className='h-screen w-full grid place-items-center'>
-            <div className='h-full w-full max-w-[600px] max-h-[450px] rounded-[10px] bg-white p-4'>
+            <div
+                className='h-full w-full max-w-[600px] max-h-[450px] p-4 rounded-[10px] 
+            bg-white dark:bg-trueGray-700 dark:text-gray-400'>
                 <p className='font-semibold text-[30px] text-center mb-5'>
                     Cài đặt
                 </p>
@@ -68,6 +75,8 @@ const SettingTab = () => {
                                     type='radio'
                                     name='theme'
                                     id='light'
+                                    checked={theme === 'light'}
+                                    onClick={() => dispatch(setTheme('light'))}
                                 />
                                 <label
                                     className='cursor-pointer'
@@ -81,6 +90,8 @@ const SettingTab = () => {
                                     type='radio'
                                     name='theme'
                                     id='dark'
+                                    checked={theme === 'dark'}
+                                    onClick={() => dispatch(setTheme('dark'))}
                                 />
                                 <label
                                     className='cursor-pointer'

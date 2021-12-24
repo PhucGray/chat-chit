@@ -141,7 +141,8 @@ const MainChat: FC<MainChatProps> = ({
 
                             <div
                                 ref={conversationRef}
-                                className='flex-1 overflow-y-auto bg-white space-y-3 p-[20px] rounded-[10px]'>
+                                className='flex-1 overflow-y-auto  space-y-3 p-[20px] rounded-[10px] bg-white
+                                    dark:bg-trueGray-700'>
                                 {getCurrentConversation(currentFriend.uid) &&
                                     getCurrentConversation(
                                         currentFriend.uid,
@@ -155,8 +156,8 @@ const MainChat: FC<MainChatProps> = ({
                                                     key={messageId}
                                                     className={` ${
                                                         isCurrentUser
-                                                            ? 'ml-auto bg-gray-200'
-                                                            : 'ml-0 border'
+                                                            ? 'ml-auto bg-gray-200 dark:bg-trueGray-500 dark:text-trueGray-200'
+                                                            : 'ml-0 border dark:text-trueGray-100 dark:border-trueGray-500'
                                                     }
                                                             w-max max-w-[300px] rounded-[7px] py-[15px] px-[20px] 
                                                             break-all  relative group`}>
@@ -183,7 +184,10 @@ const MainChat: FC<MainChatProps> = ({
                                     )}
                             </div>
 
-                            <div className='min-h-[10%] bg-white p-[15px]  flex items-center justify-between rounded-[10px] space-x-4'>
+                            <div
+                                className='min-h-[10%] p-[15px] rounded-[10px] space-x-4
+                                    flex items-center justify-between bg-white
+                                    dark:bg-trueGray-700'>
                                 <div className='relative'>
                                     {isPickerOpen && (
                                         <>
@@ -232,12 +236,14 @@ const MainChat: FC<MainChatProps> = ({
 
                                 <span
                                     onClick={handleSendMessage}
-                                    className='block sm:hidden text-[18px] cursor-pointer hover:text-teal-500'>
+                                    className='block sm:hidden text-[18px] cursor-pointer hover:text-teal-500
+                                    dark:hover:text-trueGray-200'>
                                     Gửi
                                 </span>
 
                                 <button
-                                    className='hidden btn px-[30px] py-[10px] sm:flex items-center space-x-3'
+                                    className='hidden btn px-[30px] py-[10px] sm:flex items-center space-x-3
+                                    dark:btn-dark'
                                     onClick={handleSendMessage}>
                                     <span>Gửi</span>{' '}
                                     <Icon

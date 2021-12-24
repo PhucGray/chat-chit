@@ -5,6 +5,7 @@ import FormAddFriendReducer from '../features/formAddFriend/formAddFriendSlice';
 import AlertReducer from '../features/alert/alertSlice';
 import TabReducer from '../features/tab/tabSlice';
 import ConversationReducer from '../features/conversation/conversationSlice';
+import ThemeReducer from '../features/theme/themeSlice';
 
 export const store = configureStore({
     reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
         alert: AlertReducer,
         tab: TabReducer,
         conversation: ConversationReducer,
+        theme: ThemeReducer,
     },
 });
 

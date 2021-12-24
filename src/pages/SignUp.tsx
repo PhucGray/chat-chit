@@ -1,7 +1,7 @@
 import { Icon } from '@iconify/react';
 import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
 import { MutableRefObject, useRef, useState } from 'react';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { useAppDispatch } from '../app/hooks';
 import ButtonSignInWithGG from '../components/ButtonSignInWithGG';
 import { setIsAlertOpen } from '../features/alert/alertSlice';

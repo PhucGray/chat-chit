@@ -16,6 +16,7 @@ import {
     setSingleConversation,
 } from '../../features/conversation/conversationSlice';
 import { selectCurrentTab } from '../../features/tab/tabSlice';
+import { selectTheme } from '../../features/theme/themeSlice';
 import { selectUser, setFriends, setUser } from '../../features/user/userSlice';
 import { db } from '../../firebase';
 import { RoomType, UserType } from '../../types';
@@ -92,12 +93,15 @@ const Chat = () => {
         getFriendsList();
     }, [user?.fieldId]);
 
+    //
+    const theme = useAppSelector(selectTheme);
+
     return (
         <>
-            <div className='flex bg-gray-100'>
+            <div className={`flex ${theme === 'dark' && 'dark'}`}>
                 <Sidebar />
 
-                <div className='flex-1'>
+                <div className='flex-1 bg-gray-100 dark:bg-trueGray-800 dark:text-gray-400'>
                     {currentTab === 'chat' && <ChatTab />}
                     {currentTab === 'profile' && <ProfileTab />}
                     {currentTab === 'friend' && <FriendsTab />}

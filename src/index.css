@@ -11,12 +11,16 @@
         @apply bg-white text-gray-600 rounded-[10px] border border-teal-500  hover:bg-teal-500 hover:text-white hover:border-transparent;
     }
 
+    .btn-dark {
+        @apply bg-trueGray-500 text-white outline-none ring-2 ring-trueGray-500 rounded-[10px] hover:bg-trueGray-400 hover:ring-trueGray-400;
+    }
+
     .input {
         @apply border-gray-300 rounded-[10px] focus:ring-teal-500 focus:border-teal-500;
     }
 
     .input-text {
-        @apply min-w-[300px] pr-[40px] border-gray-300 rounded-[10px] focus:ring-teal-500 focus:border-teal-500;
+        @apply min-w-[300px] pr-[40px] border-gray-300 rounded-[10px] focus:ring-teal-500 focus:border-teal-500 dark:bg-trueGray-500 dark:text-gray-100;
     }
 
     .error {
@@ -28,7 +32,8 @@
     }
 
     .radio {
-        @apply cursor-pointer text-black focus:ring-black focus:text-black active:text-black;
+        @apply cursor-pointer text-black focus:ring-black focus:text-black active:text-black 
+        dark:text-teal-500 dark:focus:ring-teal-500 dark:focus:text-teal-500 dark:active:text-teal-500;
     }
 
     .icon {
@@ -54,7 +59,7 @@
     }
 
     .black-shadow {
-        @apply fixed left-0 top-0 h-screen w-screen bg-black z-20;
+        @apply fixed left-0 top-0 h-screen w-screen bg-black z-20 dark:bg-trueGray-700;
     }
 
     .fixed-center {

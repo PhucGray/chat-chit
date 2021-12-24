@@ -62,7 +62,8 @@ const Sidebar = () => {
                 fixed left-0 top-0 bottom-0 z-20 
                 lg:transform-none lg:static 
                 md:py-[10px] md:text-[27px] xl:text-[30px] xl:py-[15px] 
-                bg-gray-800 text-[25px] text-[#B1B1B1]`}>
+                bg-gray-700 text-[25px] text-[#B1B1B1]
+                dark:bg-trueGray-700`}>
                 {isOpen || (
                     <Icon
                         onClick={() => setIsOpen(true)}

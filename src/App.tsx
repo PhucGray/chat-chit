@@ -21,7 +21,6 @@ const App = () => {
     const location = useLocation();
 
     const isChatPage = location.pathname === '/chat';
-    const isSignUpPage = location.pathname === '/sign-up';
 
     useEffect(
         () =>

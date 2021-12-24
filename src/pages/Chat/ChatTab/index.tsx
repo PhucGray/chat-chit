@@ -8,6 +8,7 @@ import {
 } from '../../../features/user/userSlice';
 import { conversationsCollectionRef } from '../../../firebase';
 import { RoomType } from '../../../types';
+import Info from './Info';
 import MainChat from './MainChat';
 import RecentMessages from './RecentMessages';
 
@@ -53,8 +54,6 @@ const ChatTab = () => {
         }
     }, [user?.fieldId]);
 
-    
-
     return (
         <div className='min-h-screen flex'>
             <>
@@ -66,7 +65,7 @@ const ChatTab = () => {
                     setIsInfoOpen={setIsInfoOpen}
                     setIsRecentMessagesOpen={setIsRecentMessagesOpen}
                 />
-                {/* <Info isInfoOpen={isInfoOpen} setIsInfoOpen={setIsInfoOpen} /> */}
+                <Info isInfoOpen={isInfoOpen} setIsInfoOpen={setIsInfoOpen} />
             </>
         </div>
     );

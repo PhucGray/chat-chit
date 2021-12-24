@@ -30,7 +30,10 @@ const ProfileTab = () => {
                     alt='Home'
                 />
 
-                <div className='w-full max-w-[500px] px-[20px] sm:px-[40px] py-[20px] rounded-[10px] bg-white text-[18px] sm:text-[23px]'>
+                <div
+                    className='w-full max-w-[500px] px-[20px] py-[20px] rounded-[10px] bg-white text-[18px] 
+                    sm:text-[23px] sm:px-[40px]
+                    dark:bg-trueGray-700 dark:text-gray-400'>
                     <div className='w-max mx-auto space-y-3'>
                         <div className='flex items-center justify-between'>
                             <div className='flex items-center space-x-3'>
