@@ -4,6 +4,7 @@ import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from './app/hooks';
 import Loading from './components/Loading';
 import { selectLoading, setLoading } from './features/loading/loadingSlice';
+import { selectLanguage, setLanguage } from './features/setting/settingSlice';
 import { selectUser, setUser } from './features/user/userSlice';
 import { auth, getUserWithUID } from './firebase';
 import Chat from './pages/Chat';
@@ -15,6 +16,7 @@ import { getAuthenticated, setAutheticated } from './utils/storage';
 const App = () => {
     const loading = useAppSelector(selectLoading);
     const user = useAppSelector(selectUser);
+    const isVietnames = useAppSelector(selectLanguage) === 'vn';
 
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
@@ -38,7 +40,12 @@ const App = () => {
 
     useEffect(() => {
         if (getAuthenticated()) {
-            dispatch(setLoading({ state: true, message: 'Đang đăng nhập' }));
+            dispatch(
+                setLoading({
+                    state: true,
+                    message: isVietnames ? 'Đang đăng nhập' : 'Signing in...',
+                }),
+            );
             navigate('/chat', { replace: true });
         } else {
             isChatPage && navigate('/sign-in', { replace: true });
@@ -72,6 +79,30 @@ const App = () => {
                 <Route path='sign-up' element={<SignUp />} />
                 <Route path='chat' element={<Chat />} />
             </Routes>
+
+            {!isChatPage && (
+                <div className='fixed right-[100px] top-[10px] flex space-x-1'>
+                    <p
+                        className={`cursor-pointer hover:underline hover:text-teal-500 ${
+                            isVietnames && 'text-teal-500 font-bold'
+                        }`}
+                        onClick={() => {
+                            dispatch(setLanguage('vn'));
+                        }}>
+                        Tiếng Việt
+                    </p>
+                    <span>|</span>
+                    <p
+                        className={`cursor-pointer hover:underline hover:text-teal-500 ${
+                            !isVietnames && 'text-teal-500 font-bold'
+                        }`}
+                        onClick={() => {
+                            dispatch(setLanguage('en'));
+                        }}>
+                        English
+                    </p>
+                </div>
+            )}
 
             {loading.state && (
                 <>

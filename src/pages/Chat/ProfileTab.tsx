@@ -3,6 +3,7 @@ import { doc, updateDoc } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import { useAppSelector } from '../../app/hooks';
 import DateTimePicker from '../../components/DateTimePicker';
+import { selectLanguage } from '../../features/setting/settingSlice';
 import { selectUser } from '../../features/user/userSlice';
 import { db } from '../../firebase';
 import AvatarImg from '../../images/defaultAvatar.png';
@@ -20,6 +21,7 @@ interface InfoProps {
 
 const ProfileTab = () => {
     const user = useAppSelector(selectUser);
+    const isVietnames = useAppSelector(selectLanguage) === 'vn';
 
     return (
         <>
@@ -44,7 +46,7 @@ const ProfileTab = () => {
 
                         <Info
                             field='displayName'
-                            title='tên người dùng'
+                            title={isVietnames ? 'tên người dùng' : 'username'}
                             data={user?.displayName || ''}
                             user={user}
                             icon='si-glyph:badge-name'
@@ -52,7 +54,9 @@ const ProfileTab = () => {
 
                         <Info
                             field='phoneNumber'
-                            title='số điện thoại'
+                            title={
+                                isVietnames ? 'số điện thoại' : 'phone number'
+                            }
                             data={user?.phoneNumber || ''}
                             user={user}
                             icon='akar-icons:phone'
@@ -60,7 +64,7 @@ const ProfileTab = () => {
 
                         <Info
                             field='birth'
-                            title='ngày sinh'
+                            title={isVietnames ? 'ngày sinh' : 'day of birth'}
                             data={user?.birth || ''}
                             user={user}
                             icon='la:birthday-cake'
@@ -134,6 +138,8 @@ const Info = ({ field, title, data, user, icon }: InfoProps) => {
         }
     }, [data]);
 
+    const isVietnames = useAppSelector(selectLanguage) === 'vn';
+
     return (
         <form onSubmit={handleSubmit}>
             {hasData && (
@@ -175,12 +181,12 @@ const Info = ({ field, title, data, user, icon }: InfoProps) => {
                                     }}
                                     className='btn-outlined ml-auto px-[40px] py-[5px]'
                                     type='button'>
-                                    Huỷ
+                                    {isVietnames ? 'Huỷ' : 'Cancle'}
                                 </button>
                                 <button
                                     className='btn px-[40px] py-[5px]'
                                     type='submit'>
-                                    Lưu
+                                    {isVietnames ? 'Lưu' : 'Save'}
                                 </button>
                             </div>
                         </div>
@@ -222,8 +228,9 @@ const Info = ({ field, title, data, user, icon }: InfoProps) => {
                                                 className=' hover:text-teal-500'
                                                 icon='fa-regular:edit'
                                             />
-
-                                            <p>Sửa</p>
+                                            <p>
+                                                {isVietnames ? 'Sửa' : 'Edit'}
+                                            </p>
                                         </button>
 
                                         <button
@@ -237,8 +244,9 @@ const Info = ({ field, title, data, user, icon }: InfoProps) => {
                                                 className=' hover:text-teal-500'
                                                 icon='bi:trash'
                                             />
-
-                                            <p>Xoá</p>
+                                            <p>
+                                                {isVietnames ? 'Xoá' : 'Delete'}
+                                            </p>
                                         </button>
                                     </div>
                                 </>
@@ -254,7 +262,9 @@ const Info = ({ field, title, data, user, icon }: InfoProps) => {
                         onClick={() => setIsAdd(!isAdd)}
                         className='flex items-center space-x-2 text-teal-500 cursor-pointer hover:underline'>
                         <Icon icon='carbon:add-alt' />
-                        <p>Thêm {title}</p>
+                        <p>
+                            {isVietnames ? 'Thêm' : 'Add'} {title}
+                        </p>
                     </div>
 
                     {isAdd && (
@@ -278,12 +288,12 @@ const Info = ({ field, title, data, user, icon }: InfoProps) => {
                                             }}
                                             className='btn-outlined ml-auto px-[40px] py-[5px]'
                                             type='button'>
-                                            Huỷ
+                                            {isVietnames ? 'Huỷ' : 'Cancle'}
                                         </button>
                                         <button
                                             className='btn rounded-[10px] px-[40px] py-[5px]'
                                             type='submit'>
-                                            Lưu
+                                            {isVietnames ? 'Lưu' : 'Save'}
                                         </button>
                                     </div>
                                 </div>
@@ -307,12 +317,12 @@ const Info = ({ field, title, data, user, icon }: InfoProps) => {
                                             onClick={() => setIsAdd(false)}
                                             className='btn-outlined ml-auto px-[40px] py-[5px]'
                                             type='button'>
-                                            Huỷ
+                                            {isVietnames ? 'Huỷ' : 'Cancle'}
                                         </button>
                                         <button
                                             className='btn rounded-[10px] px-[40px] py-[5px]'
                                             type='submit'>
-                                            Lưu
+                                            {isVietnames ? 'Lưu' : 'Save'}
                                         </button>
                                     </div>
                                 </div>

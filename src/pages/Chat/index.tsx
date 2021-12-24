@@ -16,7 +16,7 @@ import {
     setSingleConversation,
 } from '../../features/conversation/conversationSlice';
 import { selectCurrentTab } from '../../features/tab/tabSlice';
-import { selectTheme } from '../../features/theme/themeSlice';
+import { selectTheme } from '../../features/setting/settingSlice';
 import { selectUser, setFriends, setUser } from '../../features/user/userSlice';
 import { db } from '../../firebase';
 import { RoomType, UserType } from '../../types';

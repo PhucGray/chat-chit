@@ -28,7 +28,7 @@
     }
 
     .select {
-        @apply flex items-center space-x-2 border w-max py-[5px] px-[15px] cursor-pointer rounded-[10px] relative hover:border-teal-500;
+        @apply w-[200px] px-[10px] flex items-center space-x-2 border py-[5px] cursor-pointer rounded-[10px] relative hover:border-teal-500;
     }
 
     .radio {

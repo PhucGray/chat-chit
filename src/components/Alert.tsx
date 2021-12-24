@@ -1,6 +1,7 @@
 import React, { MutableRefObject, useEffect, useRef } from 'react';
-import { useAppDispatch } from '../app/hooks';
+import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { setIsAlertOpen } from '../features/alert/alertSlice';
+import { selectLanguage } from '../features/setting/settingSlice';
 
 const Alert = () => {
     const dispatch = useAppDispatch();
@@ -18,6 +19,8 @@ const Alert = () => {
 
         return () => clearTimeout(timeout);
     }, []);
+
+    const isVietnames = useAppSelector(selectLanguage) === 'vn';
     return (
         <div
             ref={ref}
@@ -26,7 +29,7 @@ const Alert = () => {
             transform scale-[0] duration-300 
             rounded-[10px] border border-teal-500 text-teal-900 bg-teal-300
             sm:w-max sm:px-[70px]'>
-            Đăng ký thành công !
+            {isVietnames ? 'Đăng ký thành công !' : 'Sign up successfully !'}
         </div>
     );
 };

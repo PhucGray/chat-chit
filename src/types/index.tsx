@@ -5,6 +5,7 @@ export type SubmitFormType = FormEvent<HTMLFormElement>;
 //
 export type TabType = 'chat' | 'profile' | 'friend' | 'setting';
 export type ThemeType = 'light' | 'dark';
+export type LanguageType = 'en' | 'vn';
 
 export interface IdentificationType {
     fieldId: string;

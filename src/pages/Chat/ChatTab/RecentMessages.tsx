@@ -4,6 +4,7 @@ import { Dispatch, FC, SetStateAction } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { selectConversations } from '../../../features/conversation/conversationSlice';
 import { setIsFormAddFriendOpen } from '../../../features/formAddFriend/formAddFriendSlice';
+import { selectLanguage } from '../../../features/setting/settingSlice';
 import {
     selectCurrentFriend,
     selectFriends,
@@ -25,6 +26,8 @@ const RecentMessages: FC<RecentMessagesProps> = ({
     const friends = useAppSelector(selectFriends);
     const currentFriend = useAppSelector(selectCurrentFriend);
     const conversations = useAppSelector(selectConversations);
+
+    const isVietnames = useAppSelector(selectLanguage) === 'vn';
 
     return (
         <>
@@ -54,13 +57,13 @@ const RecentMessages: FC<RecentMessagesProps> = ({
                             dispatch(setIsFormAddFriendOpen(true));
                         }}
                     />
-                    <p>Tìm kiếm bạn bè</p>
+                    <p>{isVietnames ? 'Tìm kiếm bạn bè' : 'Search friends'}</p>
                 </div>
 
                 <hr className='my-[20px] dark:border-trueGray-500' />
 
                 <p className='font-semibold mb-[15px] px-[15px]'>
-                    Tin nhắn gần đây
+                    {isVietnames ? 'Tin nhắn gần đây' : 'Recent messages'}
                 </p>
 
                 <div className='flex-1 overflow-auto'>
@@ -111,24 +114,13 @@ const RecentMessages: FC<RecentMessagesProps> = ({
                             return <></>;
                         })
                     ) : (
-                        <div className='text-center'>Đang tải dữ liệu...</div>
+                        <div className='text-center'>
+                            {isVietnames
+                                ? 'Đang tải dữ liệu...'
+                                : 'Loading data...'}
+                        </div>
                     )}
                 </div>
-
-                {/* <div className='flex-1 overflow-auto'>
-                    {rencentMessages &&
-                        rencentMessages.map(({ name, msg, from }, index) => (
-                            <div
-                                key={index}
-                                className='w-full overflow-hidden px-[10px] py-[10px] bg-white border-b-[1px] cursor-pointer hover:bg-teal-50'>
-                                <p className='font-semibold'>{name}</p>
-
-                                <p className='text-sm text-gray-400 truncate'>
-                                    {from === 'me' && 'Bạn:'} {msg}
-                                </p>
-                            </div>
-                        ))}
-                </div> */}
             </div>
         </>
     );

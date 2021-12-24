@@ -1,9 +1,10 @@
 import { Icon } from '@iconify/react';
 import { MutableRefObject, useRef, useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
-import { useAppDispatch } from '../app/hooks';
+import { useAppDispatch, useAppSelector } from '../app/hooks';
 import ButtonSignInWithGG from '../components/ButtonSignInWithGG';
 import { setLoading } from '../features/loading/loadingSlice';
+import { selectLanguage } from '../features/setting/settingSlice';
 import { signIn } from '../firebase';
 import SignInImg from '../images/sign-in.png';
 import { SubmitFormType } from '../types';
@@ -56,6 +57,8 @@ const SignIn = () => {
         }
     };
 
+    const isVietnames = useAppSelector(selectLanguage) === 'vn';
+
     return (
         <>
             {localStorage.getItem('authenticated') ? (
@@ -72,7 +75,7 @@ const SignIn = () => {
 
                     <div className='flex-1 max-w-[350px] space-y-4 mx-auto'>
                         <h1 className='text-[40px] font-bold mb-[20px]'>
-                            Chào mừng trở lại
+                            {isVietnames ? 'Chào mừng trở lại' : 'Welcome back'}
                         </h1>
 
                         <div className='space-y-2'>
@@ -87,12 +90,18 @@ const SignIn = () => {
                                 onClick={() => setEmailError('')}
                                 className='input-text w-full'
                                 type='text'
-                                placeholder='Nhập email của bạn'
+                                placeholder={
+                                    isVietnames
+                                        ? 'Nhập email của bạn'
+                                        : 'Enter your email'
+                                }
                                 autoFocus
                             />
                             <p className='error'>{emailError}</p>
 
-                            <p className='font-semibold'>Mật khẩu</p>
+                            <p className='font-semibold'>
+                                {isVietnames ? 'Mật khẩu' : 'Password'}
+                            </p>
                             <div className='relative'>
                                 <input
                                     ref={passwordRef}
@@ -104,7 +113,11 @@ const SignIn = () => {
                                     onClick={() => setPasswordError('')}
                                     className='input-text w-full'
                                     type={isVisible ? 'text' : 'password'}
-                                    placeholder='Nhập mật khẩu của bạn'
+                                    placeholder={
+                                        isVietnames
+                                            ? 'Nhập mật khẩu của bạn'
+                                            : 'Enter your password'
+                                    }
                                 />
 
                                 <Icon
@@ -121,27 +134,35 @@ const SignIn = () => {
                             <p className='error'>{passwordError}</p>
                         </div>
 
-                        <p className='text-right'>Quên mật khẩu ?</p>
+                        <p className='text-right'>
+                            {isVietnames
+                                ? 'Quên mật khẩu ?'
+                                : 'Forgot password ?'}
+                        </p>
 
                         <div className='space-y-2'>
                             <button
                                 type='submit'
                                 className='btn py-[13px] w-full'>
-                                Đăng nhập
+                                {isVietnames ? 'Đăng nhập' : 'Sign in'}
                             </button>
 
                             <p className='text-[18px] italic text-gray-500 text-center'>
-                                hoặc
+                                {isVietnames ? 'hoặc' : 'or'}
                             </p>
 
                             <ButtonSignInWithGG />
                         </div>
 
                         <div className='flex justify-center space-x-2'>
-                            <p>Chưa có tài khoản ?</p>
+                            <p>
+                                {isVietnames
+                                    ? 'Chưa có tài khoản ?'
+                                    : "Don't have an account ?"}
+                            </p>
                             <Link to='/sign-up'>
                                 <p className='font-bold text-teal-500 hover:underline'>
-                                    Đăng ký
+                                    {isVietnames ? 'Đăng ký' : 'Sign up'}
                                 </p>
                             </Link>
                         </div>

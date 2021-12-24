@@ -14,8 +14,8 @@ import {
 } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { selectConversations } from '../../features/conversation/conversationSlice';
 import { setIsFormAddFriendOpen } from '../../features/formAddFriend/formAddFriendSlice';
+import { selectLanguage } from '../../features/setting/settingSlice';
 import { setCurrentTab } from '../../features/tab/tabSlice';
 import {
     selectFriends,
@@ -26,18 +26,24 @@ import { conversationsCollectionRef, db } from '../../firebase';
 import AvatarImg from '../../images/defaultAvatar.png';
 import { IdentificationType, RoomType, UserType } from '../../types';
 
+interface Props {
+    isVietnames: boolean;
+}
+
 const FriendsTab = () => {
+    const isVietnames = useAppSelector(selectLanguage) === 'vn';
+
     return (
         <div className='px-[10px] lg:px-[40px] pt-[20px] pb-[40px] max-h-screen overflow-auto flex flex-col space-y-4'>
-            <FriendRequest />
-            {/* <Online /> */}
-            <Search />
-            <FriendsList />
+            <FriendRequest isVietnames={isVietnames} />
+            {/* <Online isVietnames={isVietnames}/> */}
+            <Search isVietnames={isVietnames} />
+            <FriendsList isVietnames={isVietnames} />
         </div>
     );
 };
 
-const FriendRequest = () => {
+const FriendRequest = ({ isVietnames }: Props) => {
     const user = useAppSelector(selectUser);
     const userRef = doc(db, 'users', user?.fieldId || 'random');
     const [friendRequests, setFriendRequests] = useState([] as UserType[]);
@@ -149,7 +155,9 @@ const FriendRequest = () => {
 
     return (
         <div>
-            <p className='font-semibold text-[23px]'>Lời mời kết bạn</p>
+            <p className='font-semibold text-[23px]'>
+                {isVietnames ? 'Lời mời kết bạn' : 'Friend requests'}
+            </p>
 
             {friendRequests &&
                 friendRequests.length > 0 &&
@@ -178,14 +186,14 @@ const FriendRequest = () => {
                                     onClick={() =>
                                         handleAgree({ uid, fieldId })
                                     }>
-                                    Đồng ý
+                                    {isVietnames ? 'Đồng ý' : 'Accept'}
                                 </button>
                                 <button
                                     className='btn-outlined w-[80px] sm:w-[120px] py-[7px]'
                                     onClick={() =>
                                         handleDisagree({ uid, fieldId })
                                     }>
-                                    Xoá
+                                    {isVietnames ? 'Xoá' : 'Delete'}
                                 </button>
                             </div>
                         </div>
@@ -195,10 +203,12 @@ const FriendRequest = () => {
     );
 };
 
-const Online = () => {
+const Online = ({ isVietnames }: Props) => {
     return (
         <div>
-            <p className='font-semibold text-[23px]'>Đang hoạt động</p>
+            <p className='font-semibold text-[23px]'>
+                {isVietnames ? 'Đang hoạt động' : 'Online'}
+            </p>
 
             <div className='flex items-center space-x-4 ml-[15px] mt-[10px]'>
                 <div className='relative'>
@@ -245,7 +255,7 @@ const Online = () => {
     );
 };
 
-const Search = () => {
+const Search = ({ isVietnames }: Props) => {
     const dispatch = useAppDispatch();
     return (
         <div className='flex items-center justify-center space-x-3'>
@@ -258,7 +268,9 @@ const Search = () => {
                 <input
                     className='input-text pl-[45px] bg-gray-300 font-semibold text-[18px]'
                     type='text'
-                    placeholder='Tìm kiếm bạn'
+                    placeholder={
+                        isVietnames ? 'Tìm kiếm bạn' : 'Search friends'
+                    }
                 />
             </div>
 
@@ -274,14 +286,15 @@ const Search = () => {
     );
 };
 
-const FriendsList = () => {
+const FriendsList = ({ isVietnames }: Props) => {
     const friends = useAppSelector(selectFriends);
-
     const dispatch = useAppDispatch();
 
     return (
         <div className='h-screen'>
-            <p className='font-semibold text-[23px]'>Danh sách bạn bè</p>
+            <p className='font-semibold text-[23px]'>
+                {isVietnames ? 'Danh sách bạn bè' : 'Friend list'}
+            </p>
 
             <div className='grid gap-x-[50px] gap-y-[20px] ml-[15px] mt-[10px] lg:grid-cols-2 lg:px-[30px]'>
                 {friends &&

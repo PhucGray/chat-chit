@@ -7,6 +7,10 @@ import { setUser } from '../../features/user/userSlice';
 import { logout } from '../../firebase';
 import { TabType } from '../../types';
 import { setCurrentTab, selectCurrentTab } from '../../features/tab/tabSlice';
+import {
+    selectLanguage,
+    setLanguage,
+} from '../../features/setting/settingSlice';
 
 type SideBarIconType = {
     icon: string;
@@ -46,6 +50,8 @@ const Sidebar = () => {
     const closeSiderbar = () => setIsOpen(false);
 
     const currentTab = useAppSelector(selectCurrentTab);
+
+    const language = useAppSelector(selectLanguage);
 
     return (
         <>
@@ -102,7 +108,10 @@ const Sidebar = () => {
                         dispatch(
                             setLoading({
                                 state: true,
-                                message: 'Đang đăng xuất',
+                                message:
+                                    language === 'vn'
+                                        ? 'Đang đăng xuất'
+                                        : 'Signing out',
                             }),
                         );
 
@@ -111,6 +120,8 @@ const Sidebar = () => {
                         logout();
 
                         dispatch(setLoading({ state: false }));
+
+                        dispatch(setLanguage('vn'));
 
                         navigate('/sign-in', { replace: true });
                     }}>

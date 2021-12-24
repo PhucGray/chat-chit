@@ -14,6 +14,7 @@ import {
     selectIsFormAddFriendOpen,
     setIsFormAddFriendOpen,
 } from '../features/formAddFriend/formAddFriendSlice';
+import { selectLanguage } from '../features/setting/settingSlice';
 import { selectUser } from '../features/user/userSlice';
 import { db } from '../firebase';
 import AvatarImg from '../images/defaultAvatar.png';
@@ -74,6 +75,9 @@ const FormAddFriend = () => {
             requests: arrayUnion(uid),
         });
     };
+
+    const isVietnames = useAppSelector(selectLanguage) === 'vn';
+
     return (
         <>
             {isFormAddFriendOpen && (
@@ -85,7 +89,9 @@ const FormAddFriend = () => {
 
                     <div className='z-20 fixed-center translate-y-[-50%] bg-white w-screen max-w-[500px] rounded-[10px] p-[20px] space-y-3'>
                         <div className='flex items-center justify-between'>
-                            <p className='text-[20px] font-bold'>Thêm bạn bè</p>
+                            <p className='text-[20px] font-bold'>
+                                {isVietnames ? 'Thêm bạn bè' : 'Search friends'}
+                            </p>
 
                             <Icon
                                 className='icon text-[30px]'
@@ -101,14 +107,20 @@ const FormAddFriend = () => {
                                 onChange={(e) => setValue(e.target.value)}
                                 className='input-text'
                                 type='text'
-                                placeholder='Nhập tên người dùng'
+                                placeholder={
+                                    isVietnames
+                                        ? `Nhập tên người dùng`
+                                        : 'Enter username'
+                                }
                                 autoFocus
                             />
                             <button
                                 className='btn px-[20px] flex items-center sm:space-x-2'
                                 type='submit'>
                                 <Icon fontSize={25} icon='carbon:search' />
-                                <p className='hidden sm:block'>Tìm kiếm</p>
+                                <p className='hidden sm:block'>
+                                    {isVietnames ? 'Tìm kiếm' : 'Search'}
+                                </p>
                             </button>
                         </form>
                         <hr />
@@ -157,9 +169,13 @@ const FormAddFriend = () => {
                                                             fieldId,
                                                         })
                                                     }>
-                                                    {isRequested
-                                                        ? 'Đã gửi lời mời'
-                                                        : 'Kết bạn'}
+                                                    {isVietnames
+                                                        ? isRequested
+                                                            ? 'Đã gửi lời mời'
+                                                            : 'Kết bạn'
+                                                        : isRequested
+                                                        ? 'Sent'
+                                                        : 'Add friend'}
                                                 </button>
                                             )}
                                         </div>
@@ -169,7 +185,9 @@ const FormAddFriend = () => {
 
                         {isFound || (
                             <p className='text-center font-semibold'>
-                                Không tồn tại người dùng
+                                {isVietnames
+                                    ? 'Không tồn tại người dùng'
+                                    : 'User does not exist'}
                             </p>
                         )}
                     </div>

@@ -1,5 +1,6 @@
 import { Dispatch, FC, SetStateAction } from 'react';
 import { useAppSelector } from '../../../app/hooks';
+import { selectLanguage } from '../../../features/setting/settingSlice';
 import { selectCurrentFriend } from '../../../features/user/userSlice';
 import AvatarImg from '../../../images/defaultAvatar.png';
 
@@ -10,7 +11,7 @@ interface InfoProps {
 
 const Info: FC<InfoProps> = ({ isInfoOpen, setIsInfoOpen }) => {
     const currentFriend = useAppSelector(selectCurrentFriend);
-
+    const isVietnames = useAppSelector(selectLanguage) === 'vn';
     return (
         <>
             {currentFriend && (
@@ -41,12 +42,14 @@ const Info: FC<InfoProps> = ({ isInfoOpen, setIsInfoOpen }) => {
                         <p className='font-bold text-[18px]'>
                             {currentFriend.displayName}
                         </p>
-                        <p className='italic text-gray-400'>Đang hoạt động</p>
+                        <p className='italic text-gray-400'>
+                            {isVietnames ? 'Đang hoạt động' : 'Online'}
+                        </p>
 
                         <div className='h-px w-[80%] bg-gray-400'></div>
 
                         <p className='font-bold text-[18px] w-[80%]'>
-                            Hình ảnh
+                            {isVietnames ? 'Hình ảnh' : 'Images'}
                         </p>
 
                         {/* <div className='w-[80%] grid grid-cols-3 gap-[5px]'>

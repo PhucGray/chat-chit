@@ -1,4 +1,6 @@
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { useAppSelector } from '../app/hooks';
+import { selectLanguage } from '../features/setting/settingSlice';
 import { ChangeSelectType } from '../types';
 
 interface DateTimePickerProps {
@@ -104,10 +106,12 @@ const DateTimePicker = ({
         }
     };
 
+    const isVietnames = useAppSelector(selectLanguage) === 'vn';
+
     return (
         <div className='flex space-x-3'>
             <div>
-                <p className='text-base'>Ngày</p>
+                <p className='text-base'>{isVietnames ? 'Ngày' : 'Day'}</p>
                 <select
                     className='input'
                     value={day}
@@ -121,7 +125,7 @@ const DateTimePicker = ({
                 </select>
             </div>
             <div>
-                <p className='text-base'>Tháng</p>
+                <p className='text-base'>{isVietnames ? 'Tháng' : 'Month'}</p>
                 <select
                     className='input'
                     value={month}
@@ -135,7 +139,7 @@ const DateTimePicker = ({
                 </select>
             </div>
             <div>
-                <p className='text-base'>Năm</p>
+                <p className='text-base'>{isVietnames ? 'Năm' : 'Year'}</p>
                 <select
                     className='input'
                     value={year}

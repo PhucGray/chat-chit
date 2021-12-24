@@ -1,6 +1,7 @@
 import { Icon } from '@iconify/react';
 import Picker from 'emoji-picker-react';
 import { arrayUnion, doc, updateDoc } from 'firebase/firestore';
+import moment from 'moment';
 import {
     Dispatch,
     FC,
@@ -11,6 +12,8 @@ import {
     useState,
 } from 'react';
 import { useAppSelector } from '../../../app/hooks';
+import { selectConversations } from '../../../features/conversation/conversationSlice';
+import { selectLanguage } from '../../../features/setting/settingSlice';
 import {
     selectCurrentFriend,
     selectUser,
@@ -18,11 +21,6 @@ import {
 import { db } from '../../../firebase';
 import AvatarImg from '../../../images/defaultAvatar.png';
 import { MessageType } from '../../../types';
-import moment from 'moment';
-import {
-    selectConversations,
-    selectCurrentConversation,
-} from '../../../features/conversation/conversationSlice';
 
 interface MainChatProps {
     setIsInfoOpen: Dispatch<SetStateAction<boolean>>;
@@ -36,7 +34,6 @@ const MainChat: FC<MainChatProps> = ({
     const user = useAppSelector(selectUser);
     const conversations = useAppSelector(selectConversations);
     const currentFriend = useAppSelector(selectCurrentFriend);
-    // const currentConversation = useAppSelector(selectCurrentConversation);
 
     const inputRef = useRef() as MutableRefObject<HTMLDivElement>;
     const conversationRef = useRef() as MutableRefObject<HTMLDivElement>;
@@ -88,6 +85,8 @@ const MainChat: FC<MainChatProps> = ({
     const handleEmojiClick = (event: any, { emoji }: any) =>
         (inputRef.current.innerText += emoji);
 
+    const isVietnames = useAppSelector(selectLanguage) === 'vn';
+
     return (
         <>
             {user && (
@@ -121,7 +120,9 @@ const MainChat: FC<MainChatProps> = ({
                                         <div className='flex items-center space-x-1'>
                                             <div className='circle-primary'></div>
                                             <p className='text-sm italic text-gray-400'>
-                                                Đang hoạt động
+                                                {isVietnames
+                                                    ? 'Đang hoạt động'
+                                                    : 'Online'}
                                             </p>
                                         </div>
                                     </div>
@@ -133,7 +134,6 @@ const MainChat: FC<MainChatProps> = ({
                                     fontSize={25}
                                     onClick={(e) => {
                                         e.stopPropagation();
-
                                         setIsInfoOpen(true);
                                     }}
                                 />
@@ -238,14 +238,14 @@ const MainChat: FC<MainChatProps> = ({
                                     onClick={handleSendMessage}
                                     className='block sm:hidden text-[18px] cursor-pointer hover:text-teal-500
                                     dark:hover:text-trueGray-200'>
-                                    Gửi
+                                    {isVietnames ? 'Gửi' : 'Send'}
                                 </span>
 
                                 <button
                                     className='hidden btn px-[30px] py-[10px] sm:flex items-center space-x-3
                                     dark:btn-dark'
                                     onClick={handleSendMessage}>
-                                    <span>Gửi</span>{' '}
+                                    <span>{isVietnames ? 'Gửi' : 'Send'}</span>{' '}
                                     <Icon
                                         icon='fluent:send-28-filled'
                                         fontSize={25}

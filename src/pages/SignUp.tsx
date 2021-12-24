@@ -2,10 +2,11 @@ import { Icon } from '@iconify/react';
 import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
 import { MutableRefObject, useRef, useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
-import { useAppDispatch } from '../app/hooks';
+import { useAppDispatch, useAppSelector } from '../app/hooks';
 import ButtonSignInWithGG from '../components/ButtonSignInWithGG';
 import { setIsAlertOpen } from '../features/alert/alertSlice';
 import { setLoading } from '../features/loading/loadingSlice';
+import { selectLanguage } from '../features/setting/settingSlice';
 import { db, signup, usersCollectionRef } from '../firebase';
 import SignUpImg from '../images/sign-up.png';
 import { SubmitFormType, UserType } from '../types';
@@ -107,6 +108,8 @@ const SignUp = () => {
         }
     };
 
+    const isVietnames = useAppSelector(selectLanguage) === 'vn';
+
     return (
         <>
             {localStorage.getItem('authenticated') ? (
@@ -118,12 +121,16 @@ const SignUp = () => {
                         className='flex-1 max-w-[350px] mx-auto space-y-5'>
                         <div className='text-center'>
                             <h1 className='text-[25px] lg:text-[30px] font-bold'>
-                                Tham gia với chúng tôi
+                                {isVietnames
+                                    ? 'Tham gia với chúng tôi'
+                                    : 'Join with us'}
                             </h1>
                         </div>
 
                         <div className='space-y-2'>
-                            <p className='font-semibold'>Tên người dùng</p>
+                            <p className='font-semibold'>
+                                {isVietnames ? 'Tên người dùng' : 'Username'}
+                            </p>
                             <input
                                 ref={usernameRef}
                                 value={username}
@@ -134,7 +141,11 @@ const SignUp = () => {
                                 onClick={() => setUsernameError('')}
                                 className='input-text w-full'
                                 type='text'
-                                placeholder='Nhập email của bạn'
+                                placeholder={
+                                    isVietnames
+                                        ? 'Nhập tên người dùng'
+                                        : 'Enter username'
+                                }
                                 autoFocus
                             />
                             <p className='error'>{usernameError}</p>
@@ -150,11 +161,17 @@ const SignUp = () => {
                                 onClick={() => setEmailError('')}
                                 className='input-text w-full'
                                 type='text'
-                                placeholder='Nhập email của bạn'
+                                placeholder={
+                                    isVietnames
+                                        ? 'Nhập email của bạn'
+                                        : 'Enter your email'
+                                }
                             />
                             <p className='error'>{emailError}</p>
 
-                            <p className='font-semibold'>Mật khẩu</p>
+                            <p className='font-semibold'>
+                                {isVietnames ? 'Mật khẩu' : 'Password'}
+                            </p>
                             <div className='relative'>
                                 <input
                                     ref={passwordRef}
@@ -166,7 +183,11 @@ const SignUp = () => {
                                     onClick={() => setPasswordError('')}
                                     className='input-text w-full'
                                     type={isVisible ? 'text' : 'password'}
-                                    placeholder='Nhập mật khẩu của bạn'
+                                    placeholder={
+                                        isVietnames
+                                            ? 'Nhập mật khẩu của bạn'
+                                            : 'Enter your password'
+                                    }
                                 />
 
                                 <Icon
@@ -187,21 +208,25 @@ const SignUp = () => {
                             <button
                                 type='submit'
                                 className='btn py-[10px] lg:py-[13px] w-full'>
-                                Đăng ký
+                                {isVietnames ? 'Đăng ký' : 'Sign up'}
                             </button>
 
                             <p className='text-sm lg:text-base italic text-gray-500 text-center'>
-                                hoặc
+                                {isVietnames ? 'hoặc' : 'or'}
                             </p>
 
                             <ButtonSignInWithGG />
                         </div>
 
                         <div className='flex justify-center space-x-2'>
-                            <p>Đã có tài khoản ?</p>
+                            <p>
+                                {isVietnames
+                                    ? 'Đã có tài khoản ?'
+                                    : 'Already have an account ?'}
+                            </p>
                             <Link to='/sign-in'>
                                 <p className='font-bold text-teal-500 hover:underline'>
-                                    Đăng nhập
+                                    {isVietnames ? 'Đăng nhập' : 'Sign in'}
                                 </p>
                             </Link>
                         </div>
