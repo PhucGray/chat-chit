@@ -203,58 +203,6 @@ const FriendRequest = ({ isVietnames }: Props) => {
     );
 };
 
-const Online = ({ isVietnames }: Props) => {
-    return (
-        <div>
-            <p className='font-semibold text-[23px]'>
-                {isVietnames ? 'Đang hoạt động' : 'Online'}
-            </p>
-
-            <div className='flex items-center space-x-4 ml-[15px] mt-[10px]'>
-                <div className='relative'>
-                    <img
-                        className='h-[55px] w-[55px] rounded-full border'
-                        src={AvatarImg}
-                        alt='Home'
-                    />
-
-                    <div className='circle-primary absolute bottom-0 right-1'></div>
-                </div>
-
-                <div className='relative'>
-                    <img
-                        className='h-[55px] w-[55px] rounded-full border'
-                        src={AvatarImg}
-                        alt='Home'
-                    />
-
-                    <div className='circle-primary absolute bottom-0 right-1'></div>
-                </div>
-
-                <div className='relative'>
-                    <img
-                        className='h-[55px] w-[55px] rounded-full border'
-                        src={AvatarImg}
-                        alt='Home'
-                    />
-
-                    <div className='circle-primary absolute bottom-0 right-1'></div>
-                </div>
-
-                <div className='relative'>
-                    <img
-                        className='h-[55px] w-[55px] rounded-full border'
-                        src={AvatarImg}
-                        alt='Home'
-                    />
-
-                    <div className='circle-primary absolute bottom-0 right-1'></div>
-                </div>
-            </div>
-        </div>
-    );
-};
-
 const Search = ({ isVietnames }: Props) => {
     const dispatch = useAppDispatch();
     return (

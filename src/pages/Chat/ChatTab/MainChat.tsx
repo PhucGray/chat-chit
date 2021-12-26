@@ -113,19 +113,9 @@ const MainChat: FC<MainChatProps> = ({
                                         alt='Avartar'
                                     />
 
-                                    <div>
-                                        <p className='font-bold'>
-                                            {currentFriend.displayName}
-                                        </p>
-                                        <div className='flex items-center space-x-1'>
-                                            <div className='circle-primary'></div>
-                                            <p className='text-sm italic text-gray-400'>
-                                                {isVietnames
-                                                    ? 'Đang hoạt động'
-                                                    : 'Online'}
-                                            </p>
-                                        </div>
-                                    </div>
+                                    <p className='font-bold'>
+                                        {currentFriend.displayName}
+                                    </p>
                                 </div>
 
                                 <Icon
@@ -160,7 +150,7 @@ const MainChat: FC<MainChatProps> = ({
                                                             : 'ml-0 border dark:text-trueGray-100 dark:border-trueGray-500'
                                                     }
                                                             w-max max-w-[300px] rounded-[7px] py-[15px] px-[20px] 
-                                                            break-all  relative group`}>
+                                                            break-all relative group`}>
                                                     {msg.content}
 
                                                     <div

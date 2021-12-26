@@ -113,7 +113,7 @@ const DateTimePicker = ({
             <div>
                 <p className='text-base'>{isVietnames ? 'Ngày' : 'Day'}</p>
                 <select
-                    className='input'
+                    className='select'
                     value={day}
                     onChange={(e) => setDay(e.target.value)}>
                     {days &&
@@ -127,7 +127,7 @@ const DateTimePicker = ({
             <div>
                 <p className='text-base'>{isVietnames ? 'Tháng' : 'Month'}</p>
                 <select
-                    className='input'
+                    className='select'
                     value={month}
                     onChange={handleMonthChange}>
                     {months &&
@@ -141,7 +141,7 @@ const DateTimePicker = ({
             <div>
                 <p className='text-base'>{isVietnames ? 'Năm' : 'Year'}</p>
                 <select
-                    className='input'
+                    className='select'
                     value={year}
                     onChange={handleYearChange}>
                     {years &&

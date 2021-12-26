@@ -36,14 +36,10 @@ const Info: FC<InfoProps> = ({ isInfoOpen, setIsInfoOpen }) => {
                                 src={currentFriend.photoURL || AvatarImg}
                                 alt='Home'
                             />
-                            <div className='circle-primary h-[13px] w-[13px] absolute right-[10px] bottom-0'></div>
                         </div>
 
                         <p className='font-bold text-[18px]'>
                             {currentFriend.displayName}
-                        </p>
-                        <p className='italic text-gray-400'>
-                            {isVietnames ? 'Đang hoạt động' : 'Online'}
                         </p>
 
                         <div className='h-px w-[80%] bg-gray-400'></div>

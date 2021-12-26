@@ -1,4 +1,4 @@
-import React, { MutableRefObject, useEffect, useRef } from 'react';
+import { MutableRefObject, useEffect, useRef } from 'react';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { setIsAlertOpen } from '../features/alert/alertSlice';
 import { selectLanguage } from '../features/setting/settingSlice';

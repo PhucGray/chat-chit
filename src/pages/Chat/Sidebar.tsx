@@ -1,16 +1,16 @@
 import { Icon } from '@iconify/react';
-import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { setLoading } from '../../features/loading/loadingSlice';
-import { setUser } from '../../features/user/userSlice';
-import { logout } from '../../firebase';
-import { TabType } from '../../types';
-import { setCurrentTab, selectCurrentTab } from '../../features/tab/tabSlice';
 import {
     selectLanguage,
     setLanguage,
 } from '../../features/setting/settingSlice';
+import { selectCurrentTab, setCurrentTab } from '../../features/tab/tabSlice';
+import { setUser } from '../../features/user/userSlice';
+import { logout } from '../../firebase';
+import { TabType } from '../../types';
 
 type SideBarIconType = {
     icon: string;

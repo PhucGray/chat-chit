@@ -15,7 +15,7 @@
         @apply bg-trueGray-500 text-white outline-none ring-2 ring-trueGray-500 rounded-[10px] hover:bg-trueGray-400 hover:ring-trueGray-400;
     }
 
-    .input {
+    .select {
         @apply border-gray-300 rounded-[10px] focus:ring-teal-500 focus:border-teal-500;
     }
 
@@ -38,20 +38,6 @@
 
     .icon {
         @apply cursor-pointer hover:text-teal-500;
-    }
-
-    /* online (active) */
-    .circle-primary {
-        @apply h-[11px] w-[11px] rounded-full bg-teal-500;
-    }
-
-    /* message */
-    .sent-msg {
-        @apply w-max max-w-[300px] rounded-[7px] py-[15px] px-[20px] bg-gray-200 break-all ml-auto;
-    }
-
-    .received-msg {
-        @apply w-max max-w-[300px] rounded-[7px] py-[15px] px-[20px] border break-all;
     }
 
     .exit-zone {
