@@ -27,7 +27,7 @@
         "web-vitals": "^1.1.2"
     },
     "scripts": {
-        "dev": "set TAILWIND_MODE=watch && craco start",
+        "dev": "cross-env TAILWIND_MODE=watch craco start",
         "start": "craco start",
         "build": "craco build",
         "test": "craco test",

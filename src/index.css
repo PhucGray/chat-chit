@@ -4,11 +4,11 @@
 
 @layer components {
     .btn {
-        @apply bg-teal-500 text-white outline-none ring-2 ring-teal-500 rounded-[10px] hover:bg-teal-700 hover:ring-teal-700;
+        @apply bg-teal-500 text-white outline-none ring-2 ring-teal-500 rounded-[10px] hover:bg-teal-700 hover:ring-teal-700 duration-300;
     }
 
     .btn-outlined {
-        @apply bg-white text-gray-600 rounded-[10px] border border-teal-500  hover:bg-teal-500 hover:text-white hover:border-transparent;
+        @apply bg-white text-gray-600 rounded-[10px] border border-teal-500  hover:bg-teal-500 hover:text-white hover:border-transparent duration-500;
     }
 
     .btn-dark {

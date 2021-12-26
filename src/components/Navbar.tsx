@@ -1,5 +1,5 @@
 import LogoImg from '../images/logo.png';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { selectLanguage, setLanguage } from '../features/setting/settingSlice';
 
@@ -10,13 +10,15 @@ const Language = () => {
     const isChatPage = location.pathname === '/chat';
 
     return (
-        <div className='flex items-center justify-between px-[40x] pt-[10px]'>
-            <div className='flex items-center'>
-                <img className='w-[40px]' src={LogoImg} alt='Logo' />
-                <p className='font-bold text-[18px]'>Chat chit</p>
-            </div>
+        <div className='flex items-center justify-between mt-[10px] px-[20px]'>
+            <Link to='/'>
+                <div className='flex items-center'>
+                    <img className='w-[40px]' src={LogoImg} alt='Logo' />
+                    <p className='font-bold text-[18px]'>Chat chit</p>
+                </div>
+            </Link>
 
-            <div>
+            <div className='flex items-center gap-2'>
                 {!isChatPage && (
                     <>
                         <span

@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '../app/hooks';
 import { selectLanguage } from '../features/setting/settingSlice';
 import HomeImg from '../images/home.png';
-import LogoImg from '../images/dog.png';
 
 const Home = () => {
     const navigate = useNavigate();
@@ -75,13 +74,17 @@ const Home = () => {
                             Chat chit
                         </h1>
 
-                        <p className='text-[25px] mx-auto mt-[10px] text-center sm:max-w-[80%] md:max-w-[60%] lg:max-w-[75%] lg:text-[27px]'>
+                        <p
+                            className='text-[25px] mx-auto mt-[10px] text-center 
+                        sm:max-w-[80%] md:max-w-[60%] lg:max-w-[100%] xl:max-w-[460px] lg:text-[27px]'>
                             {isVietnames
                                 ? `Trò chuyện với bạn bè, người thân của bạn. Miễn phí và mãi mãi là như thế.`
                                 : `Chat with your friends, your family. Free Forever.`}
                         </p>
 
-                        <div className='text-[20px] mx-auto mt-[10px] max-w-[50%] md:max-w-[30%] lg:max-w-[35%] lg:text-[25px]'>
+                        <div
+                            className='text-[20px] mx-auto mt-[10px] max-w-[50%] 
+                        md:max-w-[30%] lg:max-w-[40%] lg:text-[25px]'>
                             <div className='flex items-center space-x-2'>
                                 <TickIcon />
                                 <p>{isVietnames ? 'Miễn phí' : 'Free'}</p>
@@ -118,7 +121,7 @@ const Home = () => {
                     </div>
 
                     <img
-                        className='flex-1 max-w-[46vw] hidden xl:block'
+                        className='flex-1 max-w-[46vw] hidden lg:block'
                         src={HomeImg}
                         alt='Home'
                     />

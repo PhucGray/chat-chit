@@ -74,7 +74,7 @@ const App = () => {
 
     return (
         <>
-            <Navbar />
+            {!isChatPage && <Navbar />}
 
             <Routes>
                 <Route path='/' element={<Home />} />
