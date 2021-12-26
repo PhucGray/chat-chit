@@ -82,6 +82,14 @@ const RecentMessages: FC<RecentMessagesProps> = ({
                                     (friend) => friend.uid === friendId,
                                 )[0];
 
+                                let content = '';
+
+                                if (msg.type === 'text') content = msg.content;
+
+                                if (msg.type === 'image')
+                                    content = `--${
+                                        isVietnames ? 'Ảnh' : 'Picture'
+                                    }--`;
                                 return (
                                     <div
                                         key={fieldId}
@@ -98,7 +106,7 @@ const RecentMessages: FC<RecentMessagesProps> = ({
 
                                             <p className='text-sm text-gray-400 truncate'>
                                                 {isCurrentUser && 'Bạn: '}
-                                                {msg.content}
+                                                {content}
                                             </p>
 
                                             <p>

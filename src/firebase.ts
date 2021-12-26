@@ -14,6 +14,7 @@ import {
     where,
 } from 'firebase/firestore';
 import { UserType } from './types';
+import { getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
     apiKey: 'AIzaSyD1Ikv6fFV-S2cqkmXc8P5Nlhd9oRwvfik',
@@ -28,6 +29,7 @@ const app = initializeApp(firebaseConfig);
 
 export const db = getFirestore(app);
 export const auth = getAuth(app);
+export const storage = getStorage(app)
 
 export const googleProvider = new GoogleAuthProvider();
 

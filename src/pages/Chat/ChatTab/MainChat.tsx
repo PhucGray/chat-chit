@@ -1,6 +1,7 @@
 import { Icon } from '@iconify/react';
 import Picker from 'emoji-picker-react';
 import { arrayUnion, doc, updateDoc } from 'firebase/firestore';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import moment from 'moment';
 import {
     Dispatch,
@@ -11,16 +12,17 @@ import {
     useRef,
     useState,
 } from 'react';
-import { useAppSelector } from '../../../app/hooks';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { selectConversations } from '../../../features/conversation/conversationSlice';
+import { setLoading } from '../../../features/loading/loadingSlice';
 import { selectLanguage } from '../../../features/setting/settingSlice';
 import {
     selectCurrentFriend,
     selectUser,
 } from '../../../features/user/userSlice';
-import { db } from '../../../firebase';
+import { db, storage } from '../../../firebase';
 import AvatarImg from '../../../images/defaultAvatar.png';
-import { MessageType } from '../../../types';
+import { ChangeInputType, MessageType } from '../../../types';
 
 interface MainChatProps {
     setIsInfoOpen: Dispatch<SetStateAction<boolean>>;
@@ -34,8 +36,10 @@ const MainChat: FC<MainChatProps> = ({
     const user = useAppSelector(selectUser);
     const conversations = useAppSelector(selectConversations);
     const currentFriend = useAppSelector(selectCurrentFriend);
+    const dispatch = useAppDispatch();
 
     const inputRef = useRef() as MutableRefObject<HTMLDivElement>;
+    const fileRef = useRef() as MutableRefObject<HTMLInputElement>;
     const conversationRef = useRef() as MutableRefObject<HTMLDivElement>;
 
     const getCurrentConversation = (friendId: string) =>
@@ -54,6 +58,54 @@ const MainChat: FC<MainChatProps> = ({
         getCurrentConversation(currentFriend?.uid || 'test')?.fieldId ||
             'random',
     );
+
+    // image
+    const handleUploadImage = async (e: ChangeInputType) => {
+        const types = ['image/jpeg', 'image/jpg', 'image/png'];
+
+        if (e.target.files && e.target.files.length > 0) {
+            const selectedFile = e.target.files[0];
+
+            if (selectedFile && types.includes(selectedFile.type)) {
+                dispatch(
+                    setLoading({
+                        state: true,
+                        message: isVietnames
+                            ? 'Đang tải ảnh...'
+                            : 'Uploading...',
+                    }),
+                );
+
+                const time = new Date().toISOString();
+                const fileName = selectedFile.name;
+
+                const storageRef = ref(storage, time.concat(fileName));
+
+                await uploadBytes(storageRef, selectedFile);
+
+                const resultUrl = await getDownloadURL(storageRef);
+
+                if (resultUrl) {
+                    const newMessage = {
+                        msg: {
+                            type: 'image',
+                            content: resultUrl,
+                        },
+                        sentAt: new Date().toString(),
+                        uid: user?.uid,
+                    } as MessageType;
+
+                    await updateDoc(conversationDocumentRef, {
+                        messages: arrayUnion(newMessage),
+                    });
+
+                    dispatch(setLoading({ state: false }));
+                }
+            }
+        }
+    };
+
+    //
 
     const handleSendMessage = async () => {
         const content = inputRef.current.innerText;
@@ -78,7 +130,7 @@ const MainChat: FC<MainChatProps> = ({
             conversationRef.current.scrollTop =
                 conversationRef.current.scrollHeight;
         }
-    }, []);
+    }, [conversations, currentFriend]);
 
     const [isPickerOpen, setIsPickerOpen] = useState(false);
 
@@ -142,33 +194,50 @@ const MainChat: FC<MainChatProps> = ({
                                                 user.uid === uid;
 
                                             return (
-                                                <div
-                                                    key={messageId}
-                                                    className={` ${
-                                                        isCurrentUser
-                                                            ? 'ml-auto bg-gray-200 dark:bg-trueGray-500 dark:text-trueGray-200'
-                                                            : 'ml-0 border dark:text-trueGray-100 dark:border-trueGray-500'
-                                                    }
-                                                            w-max max-w-[300px] rounded-[7px] py-[15px] px-[20px] 
-                                                            break-all relative group`}>
-                                                    {msg.content}
-
+                                                <>
                                                     <div
-                                                        className={`
-                                                        ${
+                                                        key={messageId}
+                                                        className={`flex items-center gap-2 ${
                                                             isCurrentUser
-                                                                ? 'right-[80%]'
-                                                                : 'left-[80%]'
-                                                        }
-                                                        absolute  top-[-20%] w-max 
-                                                               px-[10px] py-[5px] rounded-[10px]
+                                                                ? 'flex-row-reverse'
+                                                                : 'justify-start'
+                                                        } relative group`}>
+                                                        {msg.type ===
+                                                            'text' && (
+                                                            <div
+                                                                className={` ${
+                                                                    isCurrentUser
+                                                                        ? 'bg-gray-200 dark:bg-trueGray-500 dark:text-trueGray-200'
+                                                                        : 'border dark:text-trueGray-100 dark:border-trueGray-500'
+                                                                } py-[15px] px-[20px] rounded-[10px] break-all`}>
+                                                                {msg.content}
+                                                            </div>
+                                                        )}
+
+                                                        {msg.type ===
+                                                            'image' && (
+                                                            <img
+                                                                key={messageId}
+                                                                className={`max-w-[50%] border`}
+                                                                src={
+                                                                    msg.content
+                                                                }
+                                                                alt={
+                                                                    msg.content
+                                                                }
+                                                            />
+                                                        )}
+
+                                                        <div
+                                                            className={`min-w-max px-[10px] py-[5px] rounded-[10px]
                                                               bg-gray-500 text-white
-                                                              hidden group-hover:block`}>
-                                                        {moment(sentAt)
-                                                            .startOf('hour')
-                                                            .fromNow()}
+                                                             invisible group-hover:visible`}>
+                                                            {moment(sentAt)
+                                                                .startOf('hour')
+                                                                .fromNow()}
+                                                        </div>
                                                     </div>
-                                                </div>
+                                                </>
                                             );
                                         },
                                     )}
@@ -178,6 +247,23 @@ const MainChat: FC<MainChatProps> = ({
                                 className='min-h-[10%] p-[15px] rounded-[10px] space-x-4
                                     flex items-center justify-between bg-white
                                     dark:bg-trueGray-700'>
+                                <Icon
+                                    className='icon'
+                                    icon='bx:bxs-image'
+                                    fontSize={30}
+                                    onClick={() => {
+                                        if (fileRef.current)
+                                            fileRef.current.click();
+                                    }}
+                                />
+
+                                <input
+                                    className='fixed top-[100000px]'
+                                    type='file'
+                                    ref={fileRef}
+                                    onChange={handleUploadImage}
+                                />
+
                                 <div className='relative'>
                                     {isPickerOpen && (
                                         <>
