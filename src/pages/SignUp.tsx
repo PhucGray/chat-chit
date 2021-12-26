@@ -1,6 +1,7 @@
 import { Icon } from '@iconify/react';
 import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
 import { MutableRefObject, useRef, useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Link, Navigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import ButtonSignInWithGG from '../components/ButtonSignInWithGG';
@@ -112,6 +113,59 @@ const SignUp = () => {
 
     return (
         <>
+            <Helmet async>
+                <title>Chat chit - Tham gia với chúng tôi</title>
+                <meta
+                    name='title'
+                    content='Chat chit - Tham gia với chúng tôi'
+                />
+                <meta
+                    name='description'
+                    content='Đăng ký vào Chat chit để trò chuyện với bạn bè, người thân của bạn. Chat chit miễn phí và mãi mãi là như thế.'
+                />
+
+                <link rel='canonical' href='https://chatchit.vercel.app' />
+                {/* social */}
+
+                <meta property='og:type' content='website' />
+                <meta
+                    property='og:url'
+                    content='https://chatchit.vercel.app/sign-up'
+                />
+                <meta
+                    property='og:title'
+                    content='Chat chit - Tham gia với chúng tôi'
+                />
+                <meta
+                    property='og:description'
+                    content='Đăng ký vào Chat chit để trò chuyện với bạn bè, người thân của bạn. Chat chit miễn phí và mãi mãi là như thế.'
+                />
+                <meta
+                    property='og:image'
+                    content='https://chatchit.vercel.app/sign_up.png'
+                />
+
+                {/* Twitter */}
+
+                <meta property='twitter:card' content='summary_large_image' />
+                <meta
+                    property='twitter:url'
+                    content='https://chatchit.vercel.app/sign-up'
+                />
+                <meta
+                    property='twitter:title'
+                    content='Chat chit - Tham gia với chúng tôi'
+                />
+                <meta
+                    property='twitter:description'
+                    content='Đăng ký vào Chat chit để trò chuyện với bạn bè, người thân của bạn. Chat chit miễn phí và mãi mãi là như thế.'
+                />
+                <meta
+                    property='twitter:image'
+                    content='https://chatchit.vercel.app/sign-up.png'
+                />
+            </Helmet>
+
             {localStorage.getItem('authenticated') ? (
                 <Navigate to='/chat' />
             ) : (

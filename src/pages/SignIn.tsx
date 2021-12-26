@@ -1,5 +1,6 @@
 import { Icon } from '@iconify/react';
 import { MutableRefObject, useRef, useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Link, Navigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import ButtonSignInWithGG from '../components/ButtonSignInWithGG';
@@ -61,6 +62,57 @@ const SignIn = () => {
 
     return (
         <>
+            <Helmet async>
+                <title>Chat chit - Chào mừng trở lại</title>
+                <meta name='title' content='Chat chit - Chào mừng trở lại' />
+                <meta
+                    name='description'
+                    content='Đăng nhập vào Chat chit để trò chuyện với bạn bè, người thân của bạn. Chat chit miễn phí và mãi mãi là như thế.'
+                />
+
+                <link rel='canonical' href='https://chatchit.vercel.app' />
+
+                {/* social */}
+
+                <meta property='og:type' content='website' />
+                <meta
+                    property='og:url'
+                    content='https://chatchit.vercel.app/sign-in'
+                />
+                <meta
+                    property='og:title'
+                    content='Chat chit - Chào mừng trở lại'
+                />
+                <meta
+                    property='og:description'
+                    content='Đăng nhập vào Chat chit để trò chuyện với bạn bè, người thân của bạn. Chat chit miễn phí và mãi mãi là như thế.'
+                />
+                <meta
+                    property='og:image'
+                    content='https://chatchit.vercel.app/sign_in.png'
+                />
+
+                {/* Twitter */}
+
+                <meta property='twitter:card' content='summary_large_image' />
+                <meta
+                    property='twitter:url'
+                    content='https://chatchit.vercel.app'
+                />
+                <meta
+                    property='twitter:title'
+                    content='Chat chit - Chào mừng trở lại'
+                />
+                <meta
+                    property='twitter:description'
+                    content='Chat chit là trang web trò chuyện với bạn bè, người thân của bạn. Chat chit miễn phí và mãi mãi là như thế.'
+                />
+                <meta
+                    property='twitter:image'
+                    content='https://chatchit.vercel.app/sign_in.png'
+                />
+            </Helmet>
+
             {localStorage.getItem('authenticated') ? (
                 <Navigate to='/chat' />
             ) : (

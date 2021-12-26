@@ -1,4 +1,5 @@
 import { Icon } from '@iconify/react';
+import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '../app/hooks';
 import { selectLanguage } from '../features/setting/settingSlice';
@@ -19,6 +20,53 @@ const Home = () => {
 
     return (
         <>
+            <Helmet async>
+                <title>Chat chit - Kết nối và chia sẽ</title>
+                <meta name='title' content='Chat chit - Kết nối và chia sẽ' />
+                <meta
+                    name='description'
+                    content='Chat chit là trang web trò chuyện với bạn bè, người thân của bạn. Miễn phí và mãi mãi là như thế.'
+                />
+
+                <link rel='canonical' href='https://chatchit.vercel.app' />
+                {/* social */}
+
+                <meta property='og:type' content='website' />
+                <meta property='og:url' content='https://chatchit.vercel.app' />
+                <meta
+                    property='og:title'
+                    content='Chat chit - Kết nối và chia sẽ'
+                />
+                <meta
+                    property='og:description'
+                    content='Chat chit là trang web trò chuyện với bạn bè, người thân của bạn. Chat chit miễn phí và mãi mãi là như thế.'
+                />
+                <meta
+                    property='og:image'
+                    content='https://chatchit.vercel.app/home.png'
+                />
+
+                {/* Twitter */}
+
+                <meta property='twitter:card' content='summary_large_image' />
+                <meta
+                    property='twitter:url'
+                    content='https://chatchit.vercel.app'
+                />
+                <meta
+                    property='twitter:title'
+                    content='Chat chit - Kết nối và chia sẽ'
+                />
+                <meta
+                    property='twitter:description'
+                    content='Chat chit là trang web trò chuyện với bạn bè, người thân của bạn. Chat chit miễn phí và mãi mãi là như thế.'
+                />
+                <meta
+                    property='twitter:image'
+                    content='https://chatchit.vercel.app/home.png'
+                />
+            </Helmet>
+
             <div className='container'>
                 <div className='text-[30px] px-[20px] py-[5px]'>
                     <span>Logo</span>

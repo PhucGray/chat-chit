@@ -30,6 +30,7 @@ import SettingTab from './SettingTab';
 import Sidebar from './Sidebar';
 import 'moment/locale/vi';
 import moment from 'moment';
+import { Helmet } from 'react-helmet-async';
 
 const Chat = () => {
     const dispatch = useAppDispatch();
@@ -110,6 +111,50 @@ const Chat = () => {
 
     return (
         <>
+            <Helmet async>
+                <title>Chat chit</title>
+                <meta name='title' content='Chat chit' />
+                <meta
+                    name='description'
+                    content='Trò chuyện với bạn bè, người thân của bạn. Chat chit miễn phí và mãi mãi là như thế.'
+                />
+
+                <link rel='canonical' href='https://chatchit.vercel.app' />
+                {/* social */}
+
+                <meta property='og:type' content='website' />
+                <meta
+                    property='og:url'
+                    content='https://chatchit.vercel.app/chat'
+                />
+                <meta property='og:title' content='Chat chit' />
+                <meta
+                    property='og:description'
+                    content='Trò chuyện với bạn bè, người thân của bạn. Chat chit miễn phí và mãi mãi là như thế.'
+                />
+                <meta
+                    property='og:image'
+                    content='https://chatchit.vercel.app/chat.png'
+                />
+
+                {/* Twitter */}
+
+                <meta property='twitter:card' content='summary_large_image' />
+                <meta
+                    property='twitter:url'
+                    content='https://chatchit.vercel.app/chat'
+                />
+                <meta property='twitter:title' content='Chat chit' />
+                <meta
+                    property='twitter:description'
+                    content='Trò chuyện với bạn bè, người thân của bạn. Chat chit miễn phí và mãi mãi là như thế.'
+                />
+                <meta
+                    property='twitter:image'
+                    content='https://chatchit.vercel.app/chat.png'
+                />
+            </Helmet>
+
             <div className={`flex ${theme === 'dark' && 'dark'}`}>
                 <Sidebar />
 
