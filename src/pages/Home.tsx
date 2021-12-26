@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '../app/hooks';
 import { selectLanguage } from '../features/setting/settingSlice';
 import HomeImg from '../images/home.png';
+import LogoImg from '../images/dog.png';
 
 const Home = () => {
     const navigate = useNavigate();
@@ -68,10 +69,6 @@ const Home = () => {
             </Helmet>
 
             <div className='container'>
-                <div className='text-[30px] px-[20px] py-[5px]'>
-                    <span>Logo</span>
-                </div>
-
                 <div className='flex px-[20px]'>
                     <div className='flex-1'>
                         <h1 className='text-[50px] text-center lg:text-[55px]'>

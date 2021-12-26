@@ -2,9 +2,10 @@ import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { useEffect } from 'react';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from './app/hooks';
+import Navbar from './components/Navbar';
 import Loading from './components/Loading';
 import { selectLoading, setLoading } from './features/loading/loadingSlice';
-import { selectLanguage, setLanguage } from './features/setting/settingSlice';
+import { selectLanguage } from './features/setting/settingSlice';
 import { selectUser, setUser } from './features/user/userSlice';
 import { auth, getUserWithUID } from './firebase';
 import Chat from './pages/Chat';
@@ -73,36 +74,14 @@ const App = () => {
 
     return (
         <>
+            <Navbar />
+
             <Routes>
                 <Route path='/' element={<Home />} />
                 <Route path='sign-in' element={<SignIn />} />
                 <Route path='sign-up' element={<SignUp />} />
                 <Route path='chat' element={<Chat />} />
             </Routes>
-
-            {!isChatPage && (
-                <div className='fixed right-[100px] top-[10px] flex space-x-1'>
-                    <p
-                        className={`cursor-pointer hover:underline hover:text-teal-500 ${
-                            isVietnames && 'text-teal-500 font-bold'
-                        }`}
-                        onClick={() => {
-                            dispatch(setLanguage('vn'));
-                        }}>
-                        Tiếng Việt
-                    </p>
-                    <span>|</span>
-                    <p
-                        className={`cursor-pointer hover:underline hover:text-teal-500 ${
-                            !isVietnames && 'text-teal-500 font-bold'
-                        }`}
-                        onClick={() => {
-                            dispatch(setLanguage('en'));
-                        }}>
-                        English
-                    </p>
-                </div>
-            )}
 
             {loading.state && (
                 <>
