@@ -16,7 +16,10 @@ import {
     setSingleConversation,
 } from '../../features/conversation/conversationSlice';
 import { selectCurrentTab } from '../../features/tab/tabSlice';
-import { selectTheme } from '../../features/setting/settingSlice';
+import {
+    selectLanguage,
+    selectTheme,
+} from '../../features/setting/settingSlice';
 import { selectUser, setFriends, setUser } from '../../features/user/userSlice';
 import { db } from '../../firebase';
 import { RoomType, UserType } from '../../types';
@@ -25,6 +28,8 @@ import FriendsTab from './FriendsTab';
 import ProfileTab from './ProfileTab';
 import SettingTab from './SettingTab';
 import Sidebar from './Sidebar';
+import 'moment/locale/vi';
+import moment from 'moment';
 
 const Chat = () => {
     const dispatch = useAppDispatch();
@@ -92,6 +97,13 @@ const Chat = () => {
 
         getFriendsList();
     }, [user?.fieldId]);
+
+    //
+
+    const isVietnames = useAppSelector(selectLanguage) === 'vn';
+    useEffect(() => {
+        moment.locale(isVietnames ? 'vi' : 'en');
+    }, [isVietnames]);
 
     //
     const theme = useAppSelector(selectTheme);
