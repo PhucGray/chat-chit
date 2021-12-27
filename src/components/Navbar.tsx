@@ -10,7 +10,9 @@ const Language = () => {
     const isChatPage = location.pathname === '/chat';
 
     return (
-        <div className='flex items-center justify-between mt-[10px] px-[20px]'>
+        <div
+            className='flex items-center justify-between mt-[10px] px-[20px]
+        animate-fallDown'>
             <Link to='/'>
                 <div className='flex items-center'>
                     <img className='w-[40px]' src={LogoImg} alt='Logo' />

@@ -1,4 +1,5 @@
 import { Icon } from '@iconify/react';
+import { MutableRefObject, useEffect, useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '../app/hooks';
@@ -68,13 +69,16 @@ const Home = () => {
             <div className='container'>
                 <div className='flex px-[20px]'>
                     <div className='flex-1'>
-                        <h1 className='text-[50px] text-center lg:text-[55px]'>
+                        <h1
+                            className='text-[50px] text-center lg:text-[55px]
+                        animate-fallDown'>
                             Chat chit
                         </h1>
 
                         <p
                             className='text-[25px] mx-auto mt-[10px] text-center 
-                        sm:max-w-[80%] md:max-w-[60%] lg:max-w-[100%] xl:max-w-[460px] lg:text-[27px]'>
+                        sm:max-w-[80%] md:max-w-[60%] lg:max-w-[100%] xl:max-w-[460px] lg:text-[27px]
+                        animate-ltr'>
                             {isVietnames
                                 ? `Trò chuyện với bạn bè, người thân của bạn. Miễn phí và mãi mãi là như thế.`
                                 : `Chat with your friends, your family. Free Forever.`}
@@ -82,7 +86,8 @@ const Home = () => {
 
                         <div
                             className='text-[20px] mx-auto mt-[10px] max-w-[50%] 
-                        md:max-w-[30%] lg:max-w-[40%] lg:text-[25px]'>
+                        md:max-w-[30%] lg:max-w-[40%] lg:text-[25px]
+                        animate-rtl'>
                             <div className='flex items-center space-x-2'>
                                 <TickIcon />
                                 <p>{isVietnames ? 'Miễn phí' : 'Free'}</p>
@@ -97,7 +102,9 @@ const Home = () => {
                             </div>
                         </div>
 
-                        <div className='flex flex-col items-center justify-center mt-[25px] space-y-2'>
+                        <div
+                            className='flex flex-col items-center justify-center mt-[25px] space-y-2
+                        animate-up'>
                             <button
                                 className='btn min-w-[300px] py-[10px] text-[20px]'
                                 onClick={handleSignInClick}>
@@ -119,7 +126,8 @@ const Home = () => {
                     </div>
 
                     <img
-                        className='flex-1 max-w-[46vw] hidden lg:block'
+                        className={`flex-1 max-w-[46vw] hidden lg:block
+                        animate-fallDown`}
                         src={HomeImg}
                         alt='Home'
                     />

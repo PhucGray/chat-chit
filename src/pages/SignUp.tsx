@@ -172,7 +172,8 @@ const SignUp = () => {
                 <div className='flex px-[20px] py-[40px] container'>
                     <form
                         onSubmit={handleCreateUserWithEmailAndPassowrd}
-                        className='flex-1 max-w-[350px] mx-auto space-y-5'>
+                        className='flex-1 max-w-[350px] mx-auto space-y-5
+                        animate-up'>
                         <div className='text-center'>
                             <h1 className='text-[25px] lg:text-[30px] font-bold'>
                                 {isVietnames
@@ -287,7 +288,7 @@ const SignUp = () => {
                     </form>
 
                     <img
-                        className='flex-1 max-w-[50vw] hidden xl:block'
+                        className='flex-1 max-w-[50vw] hidden xl:block animate-fallDown'
                         src={SignUpImg}
                         alt='Sign in'
                     />

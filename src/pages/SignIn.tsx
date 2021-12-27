@@ -120,12 +120,14 @@ const SignIn = () => {
                     onSubmit={handleSignInWithEmailAndPassword}
                     className='flex px-[20px] pt-[20px] lg:pt-[40px] container'>
                     <img
-                        className='flex-1 max-w-[50vw] hidden xl:block'
+                        className='flex-1 max-w-[50vw] hidden xl:block animate-fallDown'
                         src={SignInImg}
                         alt='Sign in'
                     />
 
-                    <div className='flex-1 max-w-[350px] space-y-4 mx-auto'>
+                    <div
+                        className='flex-1 max-w-[350px] space-y-4 mx-auto
+                    animate-up'>
                         <h1 className='text-[40px] font-bold mb-[20px]'>
                             {isVietnames ? 'Chào mừng trở lại' : 'Welcome back'}
                         </h1>
