@@ -21,11 +21,9 @@ const Home = () => {
     return (
         <>
             <Helmet async>
-                <title>Chat chit - Kết nối và chia sẽ</title>
-                <meta name='title' content='Chat chit - Kết nối và chia sẽ' />
                 <meta
                     name='description'
-                    content='Chat chit là trang web trò chuyện với bạn bè, người thân của bạn. Miễn phí và mãi mãi là như thế.'
+                    content='Chat chit - Trò chuyện trực tuyến với bạn bè, người thân yêu thương của bạn. Cùng nhau kết nối, cùng nhau chia sẽ. Chat chit miễn phí và mãi mãi là như thế.'
                 />
 
                 <link rel='canonical' href='https://chatchit.vercel.app' />
@@ -35,11 +33,11 @@ const Home = () => {
                 <meta property='og:url' content='https://chatchit.vercel.app' />
                 <meta
                     property='og:title'
-                    content='Chat chit - Kết nối và chia sẽ'
+                    content='Chat chit - Trò chuyện trực tiếp, kết nối và chia sẽ'
                 />
                 <meta
                     property='og:description'
-                    content='Chat chit là trang web trò chuyện với bạn bè, người thân của bạn. Chat chit miễn phí và mãi mãi là như thế.'
+                    content='Chat chit - Trò chuyện trực tuyến với bạn bè, người thân yêu thương của bạn. Cùng nhau kết nối, cùng nhau chia sẽ. Chat chit miễn phí và mãi mãi là như thế.'
                 />
                 <meta
                     property='og:image'
@@ -55,11 +53,11 @@ const Home = () => {
                 />
                 <meta
                     property='twitter:title'
-                    content='Chat chit - Kết nối và chia sẽ'
+                    content='Chat chit - Trò chuyện trực tiếp, kết nối và chia sẽ'
                 />
                 <meta
                     property='twitter:description'
-                    content='Chat chit là trang web trò chuyện với bạn bè, người thân của bạn. Chat chit miễn phí và mãi mãi là như thế.'
+                    content='Chat chit - Trò chuyện trực tuyến với bạn bè, người thân yêu thương của bạn. Cùng nhau kết nối, cùng nhau chia sẽ. Chat chit miễn phí và mãi mãi là như thế.'
                 />
                 <meta
                     property='twitter:image'
