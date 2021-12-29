@@ -1,5 +1,4 @@
 import { Icon } from '@iconify/react';
-import { MutableRefObject, useEffect, useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '../app/hooks';

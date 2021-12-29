@@ -112,8 +112,8 @@ const RecentMessages: FC<RecentMessagesProps> = ({
 
                                             <p>
                                                 {moment(sentAt)
-                                                    .startOf('day')
-                                                    .fromNow()}
+                                                    .fromNow()
+                                                    .toString()}
                                             </p>
                                         </div>
                                     </div>
