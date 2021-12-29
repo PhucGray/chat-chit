@@ -22,7 +22,7 @@ import {
 } from '../../../features/user/userSlice';
 import { db, storage } from '../../../firebase';
 import AvatarImg from '../../../images/defaultAvatar.png';
-import { ChangeInputType, MessageType } from '../../../types';
+import { ChangeInputType, MessageType, RoomType } from '../../../types';
 
 interface MainChatProps {
     setIsInfoOpen: Dispatch<SetStateAction<boolean>>;
@@ -41,22 +41,30 @@ const MainChat: FC<MainChatProps> = ({
     const inputRef = useRef() as MutableRefObject<HTMLDivElement>;
     const fileRef = useRef() as MutableRefObject<HTMLInputElement>;
     const conversationRef = useRef() as MutableRefObject<HTMLDivElement>;
+    const conversationEndRef = useRef() as MutableRefObject<HTMLDivElement>;
 
-    const getCurrentConversation = (friendId: string) =>
-        conversations &&
-        conversations
-            .filter(
-                (conversation) =>
-                    conversation.members.length === 2 &&
-                    conversation.members.includes(friendId),
-            )
-            .map((conversation) => conversation)[0];
+    const [currentConversation, setCurrentConversation] = useState(
+        null as RoomType | null,
+    );
+
+    useEffect(() => {
+        if (conversations && currentFriend) {
+            setCurrentConversation(
+                conversations
+                    .filter(
+                        (conversation) =>
+                            conversation.members.length === 2 &&
+                            conversation.members.includes(currentFriend.uid),
+                    )
+                    .map((conversation) => conversation)[0],
+            );
+        }
+    }, [conversations, currentFriend]);
 
     const conversationDocumentRef = doc(
         db,
         'conversations',
-        getCurrentConversation(currentFriend?.uid || 'test')?.fieldId ||
-            'random',
+        currentConversation?.fieldId || 'random',
     );
 
     // image
@@ -125,13 +133,6 @@ const MainChat: FC<MainChatProps> = ({
         });
     };
 
-    useEffect(() => {
-        if (conversationRef.current) {
-            conversationRef.current.scrollTop =
-                conversationRef.current.scrollHeight;
-        }
-    }, [conversations, currentFriend]);
-
     const [isPickerOpen, setIsPickerOpen] = useState(false);
 
     const handleEmojiClick = (event: any, { emoji }: any) =>
@@ -184,16 +185,18 @@ const MainChat: FC<MainChatProps> = ({
                             <div
                                 ref={conversationRef}
                                 className='flex-1 overflow-y-auto  space-y-3 p-[20px] rounded-[10px] bg-white
-                                    dark:bg-trueGray-700'>
-                                {getCurrentConversation(currentFriend.uid) &&
-                                    getCurrentConversation(
-                                        currentFriend.uid,
-                                    ).messages.map(
+                                    dark:bg-trueGray-700'
+                                onLoad={(e) => {
+                                    e.currentTarget.scrollTop =
+                                        e.currentTarget.scrollHeight;
+                                }}>
+                                {currentConversation &&
+                                    currentConversation.messages.map(
                                         ({ messageId, msg, sentAt, uid }) => {
                                             const isCurrentUser =
                                                 user.uid === uid;
 
-                                            let time = moment(sentAt).isSame(
+                                            const time = moment(sentAt).isSame(
                                                 new Date(),
                                                 'day',
                                             )
@@ -246,6 +249,8 @@ const MainChat: FC<MainChatProps> = ({
                                             );
                                         },
                                     )}
+
+                                <div ref={conversationEndRef} />
                             </div>
 
                             <div
