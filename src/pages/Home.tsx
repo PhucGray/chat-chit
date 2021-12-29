@@ -22,6 +22,14 @@ const Home = () => {
     return (
         <>
             <Helmet async>
+                <title>
+                    Chat chit - Trò chuyện trực tuyến, kết nối và chia sẽ
+                </title>
+                <meta
+                    name='title'
+                    content='Chat chit - Trò chuyện trực tuyến, kết nối và chia sẽ'
+                />
+
                 <meta
                     name='description'
                     content='Chat chit - Trò chuyện trực tuyến với bạn bè, người thân yêu thương của bạn. Cùng nhau kết nối, cùng nhau chia sẽ. Chat chit miễn phí và mãi mãi là như thế.'

@@ -232,9 +232,11 @@ const MainChat: FC<MainChatProps> = ({
                                                             className={`min-w-max px-[10px] py-[5px] rounded-[10px]
                                                               bg-gray-500 text-white
                                                              invisible group-hover:visible`}>
-                                                            {moment(sentAt)
-                                                                .startOf('hour')
-                                                                .fromNow()}
+                                                            {moment(
+                                                                sentAt,
+                                                            ).format(
+                                                                'dddd, D/MM, h:mm a',
+                                                            )}
                                                         </div>
                                                     </div>
                                                 </>

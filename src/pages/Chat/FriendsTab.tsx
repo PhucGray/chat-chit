@@ -214,7 +214,8 @@ const Search = ({ isVietnames }: Props) => {
                     icon='carbon:search'
                 />
                 <input
-                    className='input-text pl-[45px] bg-gray-300 font-semibold text-[18px]'
+                    className='input-text pl-[45px] bg-gray-300 font-semibold text-[18px]
+                    dark:text-trueGray-600 dark:bg-trueGray-300'
                     type='text'
                     placeholder={
                         isVietnames ? 'Tìm kiếm bạn' : 'Search friends'
@@ -253,7 +254,10 @@ const FriendsList = ({ isVietnames }: Props) => {
                         return (
                             <div
                                 key={uid}
-                                className='flex items-center justify-between cursor-pointer hover:shadow'
+                                className='flex items-center justify-between 
+                                px-[20px] py-[10px] rounded-[10px] cursor-pointer hover:shadow
+                                bg-white
+                                dark:bg-trueGray-600 dark:hover:bg-trueGray-700'
                                 onClick={() => {
                                     dispatch(setCurrentTab('chat'));
                                     dispatch(setCurrentFriend(friend));
@@ -275,7 +279,8 @@ const FriendsList = ({ isVietnames }: Props) => {
                                 </div>
 
                                 <Icon
-                                    className='text-[30px] sm:text-[35px] rounded-full cursor-pointer hover:bg-gray-300'
+                                    className='text-[30px] sm:text-[35px] rounded-full cursor-pointer hover:bg-gray-300
+                                    dark:text-white dark:hover:bg-trueGray-600'
                                     icon='akar-icons:more-horizontal'
                                 />
                             </div>

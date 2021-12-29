@@ -69,7 +69,7 @@ const Sidebar = () => {
                 lg:transform-none lg:static 
                 md:py-[10px] md:text-[27px] xl:text-[30px] xl:py-[15px] 
                 bg-gray-700 text-[25px] text-[#B1B1B1]
-                dark:bg-trueGray-700`}>
+                dark:bg-trueGray-700 dark:border-r-[1px]`}>
                 {isOpen || (
                     <Icon
                         onClick={() => setIsOpen(true)}

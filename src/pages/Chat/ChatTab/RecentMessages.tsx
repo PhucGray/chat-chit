@@ -45,7 +45,7 @@ const RecentMessages: FC<RecentMessagesProps> = ({
                     currentFriend && 'w-[270px]'
                 } h-screen py-[20px] z-10 fixed left-0 top-0 border-r bg-white 
                 md:flex flex-col md:static md:bg-transparent md:w-[270px]
-                dark:border-trueGray-500`}>
+                dark:border-trueGray-500 dark:bg-trueGray-800`}>
                 <div className='flex items-center space-x-2 px-[15px]'>
                     <Icon
                         className='text-gray-500 cursor-pointer transform 
@@ -70,7 +70,8 @@ const RecentMessages: FC<RecentMessagesProps> = ({
                     {conversations && friends ? (
                         conversations.map(({ fieldId, messages, members }) => {
                             if (messages && messages.length > 0) {
-                                const { uid, sentAt, msg } = messages[0];
+                                const { uid, sentAt, msg } =
+                                    messages[messages.length - 1];
 
                                 const isCurrentUser = user?.uid === uid;
 
