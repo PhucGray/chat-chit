@@ -33,15 +33,15 @@ const SignIn = () => {
 
         let isValid = true;
 
-        if (validateEmailMsg) {
-            setEmailError(validateEmailMsg);
-            emailRef.current.focus();
-            isValid = false;
-        }
-
         if (validatePasswordMsg) {
             setPasswordError(validatePasswordMsg);
             passwordRef.current.focus();
+            isValid = false;
+        }
+
+        if (validateEmailMsg) {
+            setEmailError(validateEmailMsg);
+            emailRef.current.focus();
             isValid = false;
         }
         //#endregion
@@ -188,11 +188,13 @@ const SignIn = () => {
                             <p className='error'>{passwordError}</p>
                         </div>
 
-                        <p className='text-right'>
-                            {isVietnames
-                                ? 'Quên mật khẩu ?'
-                                : 'Forgot password ?'}
-                        </p>
+                        <Link to='/forgot-password'>
+                            <p className='text-right hover:underline'>
+                                {isVietnames
+                                    ? 'Quên mật khẩu ?'
+                                    : 'Forgot password ?'}
+                            </p>
+                        </Link>
 
                         <div className='space-y-2'>
                             <button
@@ -201,7 +203,7 @@ const SignIn = () => {
                                 {isVietnames ? 'Đăng nhập' : 'Sign in'}
                             </button>
 
-                            <p className='text-[18px] italic text-gray-500 text-center'>
+                            <p className='italic text-gray-500 text-center'>
                                 {isVietnames ? 'hoặc' : 'or'}
                             </p>
 

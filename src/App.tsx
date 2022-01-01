@@ -2,13 +2,17 @@ import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { useEffect } from 'react';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from './app/hooks';
-import Navbar from './components/Navbar';
 import Loading from './components/Loading';
+import Modal from './components/Modal';
+import Navbar from './components/Navbar';
 import { selectLoading, setLoading } from './features/loading/loadingSlice';
+import { selectModal } from './features/modal/modalSlice';
 import { selectLanguage } from './features/setting/settingSlice';
 import { selectUser, setUser } from './features/user/userSlice';
 import { auth, getUserWithUID } from './firebase';
 import Chat from './pages/Chat';
+import CreateNewPassword from './pages/CreateNewPassword';
+import ForgotPassword from './pages/ForgotPassword';
 import Home from './pages/Home';
 import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
@@ -16,6 +20,7 @@ import { getAuthenticated, setAutheticated } from './utils/storage';
 
 const App = () => {
     const loading = useAppSelector(selectLoading);
+    const modal = useAppSelector(selectModal);
     const user = useAppSelector(selectUser);
     const isVietnames = useAppSelector(selectLanguage) === 'vn';
 
@@ -80,6 +85,11 @@ const App = () => {
                 <Route path='/' element={<Home />} />
                 <Route path='sign-in' element={<SignIn />} />
                 <Route path='sign-up' element={<SignUp />} />
+                <Route path='forgot-password' element={<ForgotPassword />} />
+                <Route
+                    path='create-new-password'
+                    element={<CreateNewPassword />}
+                />
                 <Route path='chat' element={<Chat />} />
             </Routes>
 
@@ -89,6 +99,8 @@ const App = () => {
                     <Loading msg={loading.message} />
                 </>
             )}
+
+            {modal.isModalOpen && <Modal />}
         </>
     );
 };

@@ -6,6 +6,7 @@ import AlertReducer from '../features/alert/alertSlice';
 import TabReducer from '../features/tab/tabSlice';
 import ConversationReducer from '../features/conversation/conversationSlice';
 import SettingReducer from '../features/setting/settingSlice';
+import ModalReducer from '../features/modal/modalSlice';
 
 export const store = configureStore({
     reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
         tab: TabReducer,
         conversation: ConversationReducer,
         setting: SettingReducer,
+        modal: ModalReducer
     },
 });
 

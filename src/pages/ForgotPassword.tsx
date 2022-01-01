@@ -1,0 +1,119 @@
+import { Icon } from '@iconify/react';
+import { sendPasswordResetEmail } from 'firebase/auth';
+import { MutableRefObject, useRef, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../app/hooks';
+import { setModal } from '../features/modal/modalSlice';
+import { selectLanguage } from '../features/setting/settingSlice';
+import { auth } from '../firebase';
+import { SubmitFormType } from '../types';
+import { validateEmail } from '../utils/validateAuth';
+
+const ForgotPassword = () => {
+    const [email, setEmail] = useState('');
+    const [error, setError] = useState('');
+    const [spin, setSpin] = useState(false);
+
+    const emailRef = useRef() as MutableRefObject<HTMLInputElement>;
+
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+
+    const handleResetPassword = async (e: SubmitFormType) => {
+        e.preventDefault();
+
+        const validateEmailMsg = validateEmail(email);
+
+        if (validateEmailMsg) {
+            setError(validateEmailMsg);
+        } else {
+            try {
+                setSpin(true);
+
+                await sendPasswordResetEmail(auth, email, {
+                    url: 'http://localhost:3000/forgot-password',
+                });
+
+                localStorage.setItem('resetPassword', 'true');
+
+                dispatch(
+                    setModal({
+                        isModalOpen: true,
+                        message: 'Vui lòng kiểm tra email.',
+                    }),
+                );
+
+                navigate('/sign-in');
+            } catch (error) {
+                console.log(error);
+                setError('Email không chính xác');
+            }
+        }
+    };
+
+    const isVietnames = useAppSelector(selectLanguage) === 'vn';
+
+    return (
+        <div className='mt-[20px] lg:mt-[40px] w-max mx-auto text-center'>
+            <p className='text-[35px] font-semibold'>
+                {isVietnames ? 'Đặt lại mật khẩu' : 'Reset password'}
+            </p>
+
+            <form
+                onSubmit={handleResetPassword}
+                className='flex flex-col mt-[30px] space-y-[15px]'>
+                <input
+                    ref={emailRef}
+                    className='input-text py-[10px]'
+                    type='text'
+                    placeholder={
+                        isVietnames ? 'Nhập email' : 'Enter your email'
+                    }
+                    autoFocus
+                    value={email}
+                    onChange={(e) => {
+                        setEmail(e.target.value);
+                        setError('');
+                    }}
+                    onClick={() => setError('')}
+                />
+                <div className='error text-left'>{error}</div>
+
+                <button
+                    disabled={spin}
+                    className='btn py-[10px] flex items-center justify-center gap-2'>
+                    {spin && (
+                        <Icon
+                            className='animate-spin'
+                            icon='icon-park:loading-four'
+                            fontSize={30}
+                        />
+                    )}
+                    <span className='font-semibold'>
+                        {isVietnames ? 'Gửi' : 'Send'}
+                    </span>
+                </button>
+            </form>
+
+            <p className='mt-5 mb-2 italic text-gray-500 text-center'>
+                --- {isVietnames ? 'hoặc' : 'or'} ---
+            </p>
+
+            <div className='flex items-center justify-center gap-2'>
+                <p className='italic text-gray-500 text-center'>
+                    {isVietnames
+                        ? 'Đã có tài khoản ?'
+                        : 'Already have an account ?'}
+                </p>
+
+                <Link to='/sign-in'>
+                    <p className='font-bold text-teal-500 hover:underline'>
+                        {isVietnames ? 'Đăng nhập' : 'Sign in'}
+                    </p>
+                </Link>
+            </div>
+        </div>
+    );
+};
+
+export default ForgotPassword;

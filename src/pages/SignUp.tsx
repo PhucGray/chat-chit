@@ -43,10 +43,10 @@ const SignUp = () => {
 
         let isValid = true;
 
-        if (validateUsernameMsg) {
-            setUsernameError(validateUsernameMsg);
-            usernameRef.current.focus();
+        if (validatePasswordMsg) {
+            setPasswordError(validatePasswordMsg);
             isValid = false;
+            passwordRef.current.focus();
         }
 
         if (validateEmailMsg) {
@@ -55,10 +55,10 @@ const SignUp = () => {
             emailRef.current.focus();
         }
 
-        if (validatePasswordMsg) {
-            setPasswordError(validatePasswordMsg);
+        if (validateUsernameMsg) {
+            setUsernameError(validateUsernameMsg);
+            usernameRef.current.focus();
             isValid = false;
-            passwordRef.current.focus();
         }
 
         const checkEmailExists = query(
@@ -266,7 +266,7 @@ const SignUp = () => {
                                 {isVietnames ? 'Đăng ký' : 'Sign up'}
                             </button>
 
-                            <p className='text-sm lg:text-base italic text-gray-500 text-center'>
+                            <p className=' italic text-gray-500 text-center'>
                                 {isVietnames ? 'hoặc' : 'or'}
                             </p>
 

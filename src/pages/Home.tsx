@@ -118,7 +118,7 @@ const Home = () => {
                                 {isVietnames ? 'Đăng nhập' : 'Sign in'}
                             </button>
 
-                            <p className='text-[18px] italic text-gray-500'>
+                            <p className='italic text-gray-500'>
                                 {isVietnames
                                     ? 'hoặc chưa có tài khoản'
                                     : `or don't have an account`}

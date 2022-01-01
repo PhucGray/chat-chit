@@ -4,7 +4,7 @@
 
 @layer components {
     .btn {
-        @apply bg-teal-500 text-white outline-none ring-2 ring-teal-500 rounded-[10px] hover:bg-teal-700 hover:ring-teal-700 duration-300;
+        @apply bg-teal-500 text-white outline-none ring-2 ring-teal-500 rounded-[10px] hover:bg-teal-700 hover:ring-teal-700 duration-300 disabled:bg-trueGray-400 disabled:ring-trueGray-400 disabled:cursor-not-allowed;
     }
 
     .btn-outlined {
