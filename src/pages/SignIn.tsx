@@ -1,9 +1,10 @@
 import { Icon } from '@iconify/react';
-import { MutableRefObject, useRef, useState } from 'react';
+import { MutableRefObject, useEffect, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link, Navigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import ButtonSignInWithGG from '../components/ButtonSignInWithGG';
+import GroupControl from '../components/GroupControl';
 import { setLoading } from '../features/loading/loadingSlice';
 import { selectLanguage } from '../features/setting/settingSlice';
 import { signIn } from '../firebase';
@@ -23,13 +24,11 @@ const SignIn = () => {
     const passwordRef = useRef() as MutableRefObject<HTMLInputElement>;
 
     const dispatch = useAppDispatch();
+    const isVietnames = useAppSelector(selectLanguage) === 'vn';
 
-    const handleSignInWithEmailAndPassword = async (e: SubmitFormType) => {
-        e.preventDefault();
-
-        //#region validate
-        const validateEmailMsg = validateEmail(email);
-        const validatePasswordMsg = validatePassword(password);
+    const validateFields = async () => {
+        const validateEmailMsg = validateEmail(email, isVietnames);
+        const validatePasswordMsg = validatePassword(password, isVietnames);
 
         let isValid = true;
 
@@ -44,7 +43,14 @@ const SignIn = () => {
             emailRef.current.focus();
             isValid = false;
         }
-        //#endregion
+
+        return isValid;
+    };
+
+    const handleSignInWithEmailAndPassword = async (e: SubmitFormType) => {
+        e.preventDefault();
+
+        const isValid = await validateFields();
 
         if (isValid) {
             dispatch(setLoading({ state: true, message: 'Đang đăng nhập' }));
@@ -58,7 +64,9 @@ const SignIn = () => {
         }
     };
 
-    const isVietnames = useAppSelector(selectLanguage) === 'vn';
+    useEffect(() => {
+        if (emailError || passwordError) validateFields();
+    }, [isVietnames]);
 
     return (
         <>
@@ -118,7 +126,7 @@ const SignIn = () => {
             ) : (
                 <form
                     onSubmit={handleSignInWithEmailAndPassword}
-                    className='flex px-[20px] pt-[20px] lg:pt-[40px] container'>
+                    className='flex items-start px-[20px] pt-[20px] container'>
                     <img
                         className='flex-1 max-w-[50vw] hidden xl:block animate-fallDown'
                         src={SignInImg}
@@ -132,8 +140,10 @@ const SignIn = () => {
                             {isVietnames ? 'Chào mừng trở lại' : 'Welcome back'}
                         </h1>
 
-                        <div className='space-y-2'>
-                            <p className='font-semibold'>Email</p>
+                        <GroupControl
+                            key='Email'
+                            label='Email'
+                            error={emailError}>
                             <input
                                 ref={emailRef}
                                 value={email}
@@ -142,7 +152,9 @@ const SignIn = () => {
                                     setEmailError('');
                                 }}
                                 onClick={() => setEmailError('')}
-                                className='input-text w-full'
+                                className={`input-text w-full ${
+                                    emailError && 'error'
+                                }`}
                                 type='text'
                                 placeholder={
                                     isVietnames
@@ -151,42 +163,42 @@ const SignIn = () => {
                                 }
                                 autoFocus
                             />
-                            <p className='error'>{emailError}</p>
+                        </GroupControl>
 
-                            <p className='font-semibold'>
-                                {isVietnames ? 'Mật khẩu' : 'Password'}
-                            </p>
-                            <div className='relative'>
-                                <input
-                                    ref={passwordRef}
-                                    value={password}
-                                    onChange={(e) => {
-                                        setPassword(e.target.value);
-                                        setPasswordError('');
-                                    }}
-                                    onClick={() => setPasswordError('')}
-                                    className='input-text w-full'
-                                    type={isVisible ? 'text' : 'password'}
-                                    placeholder={
-                                        isVietnames
-                                            ? 'Nhập mật khẩu của bạn'
-                                            : 'Enter your password'
-                                    }
-                                />
+                        <GroupControl
+                            key='Password'
+                            label={isVietnames ? 'Mật khẩu' : 'Password'}
+                            error={passwordError}>
+                            <input
+                                ref={passwordRef}
+                                value={password}
+                                onChange={(e) => {
+                                    setPassword(e.target.value);
+                                    setPasswordError('');
+                                }}
+                                onClick={() => setPasswordError('')}
+                                className={`input-text w-full ${
+                                    passwordError && 'error'
+                                }`}
+                                type={isVisible ? 'text' : 'password'}
+                                placeholder={
+                                    isVietnames
+                                        ? 'Nhập mật khẩu của bạn'
+                                        : 'Enter your password'
+                                }
+                            />
 
-                                <Icon
-                                    icon={
-                                        isVisible
-                                            ? 'gridicons:visible'
-                                            : 'gridicons:not-visible'
-                                    }
-                                    fontSize={23}
-                                    className='absolute right-[10px] top-[25%] cursor-pointer'
-                                    onClick={() => setIsVisible(!isVisible)}
-                                />
-                            </div>
-                            <p className='error'>{passwordError}</p>
-                        </div>
+                            <Icon
+                                icon={
+                                    isVisible
+                                        ? 'gridicons:visible'
+                                        : 'gridicons:not-visible'
+                                }
+                                fontSize={23}
+                                className='absolute right-[10px] top-[25%] cursor-pointer'
+                                onClick={() => setIsVisible(!isVisible)}
+                            />
+                        </GroupControl>
 
                         <Link to='/forgot-password'>
                             <p className='text-right hover:underline'>
@@ -199,7 +211,7 @@ const SignIn = () => {
                         <div className='space-y-2'>
                             <button
                                 type='submit'
-                                className='btn py-[13px] w-full'>
+                                className='btn py-[10px] w-full'>
                                 {isVietnames ? 'Đăng nhập' : 'Sign in'}
                             </button>
 

@@ -1,8 +1,9 @@
 import { Icon } from '@iconify/react';
 import { confirmPasswordReset } from 'firebase/auth';
-import { MutableRefObject, useRef, useState } from 'react';
+import { MutableRefObject, useEffect, useRef, useState } from 'react';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
+import GroupControl from '../components/GroupControl';
 import { setModal } from '../features/modal/modalSlice';
 import { selectLanguage } from '../features/setting/settingSlice';
 import { auth } from '../firebase';
@@ -14,7 +15,9 @@ const CreateNewPassword = () => {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [isConfirmVisible, setIsConfirmVisible] = useState(false);
-    const [error, setError] = useState('');
+    // const [error, setError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
+    const [confirmError, setConfirmError] = useState('');
     const [spin, setSpin] = useState(false);
 
     const passwordRef = useRef() as MutableRefObject<HTMLInputElement>;
@@ -24,35 +27,46 @@ const CreateNewPassword = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
 
-    const handleCreateNewPassword = async (e: SubmitFormType) => {
-        e.preventDefault();
+    const isVietnames = useAppSelector(selectLanguage) === 'vn';
 
+    const validateFields = async () => {
         let isValid = true;
 
-        const validatePasswordMsg = validatePassword(password);
-        const validateConfirmMsg = validatePassword(confirmPassword);
+        const validatePasswordMsg = validatePassword(password, isVietnames);
+        const validateConfirmMsg = validatePassword(
+            confirmPassword,
+            isVietnames,
+        );
 
         if (validateConfirmMsg) {
             isValid = false;
-            setError(validateConfirmMsg);
+            setConfirmError(validateConfirmMsg);
             confirmPasswordRef.current.focus();
         }
 
         if (validatePasswordMsg) {
             isValid = false;
-            setError(validatePasswordMsg);
+            setPasswordError(validatePasswordMsg);
             passwordRef.current.focus();
         }
 
         if (password !== confirmPassword) {
             isValid = false;
 
-            setError(
+            setConfirmError(
                 isVietnames ? 'Mật khẩu không trùng' : 'Password not match',
             );
 
             confirmPasswordRef.current.focus();
         }
+
+        return isValid;
+    };
+
+    const handleCreateNewPassword = async (e: SubmitFormType) => {
+        e.preventDefault();
+
+        const isValid = await validateFields();
 
         if (isValid) {
             const oobCode = new URLSearchParams(location.search).get('oobCode');
@@ -77,7 +91,9 @@ const CreateNewPassword = () => {
         }
     };
 
-    const isVietnames = useAppSelector(selectLanguage) === 'vn';
+    useEffect(() => {
+        if (passwordError || confirmError) validateFields();
+    }, [isVietnames]);
 
     return (
         <>
@@ -90,9 +106,14 @@ const CreateNewPassword = () => {
                     <form
                         onSubmit={handleCreateNewPassword}
                         className='flex flex-col mt-[30px] space-y-[15px]'>
-                        <div className='relative'>
+                        <GroupControl
+                            key='Password'
+                            label=''
+                            error={passwordError}>
                             <input
-                                className='input-text py-[10px]'
+                                className={`input-text py-[10px] ${
+                                    passwordError && 'error'
+                                }`}
                                 ref={passwordRef}
                                 type={isPasswordVisible ? 'text' : 'password'}
                                 placeholder={
@@ -104,9 +125,9 @@ const CreateNewPassword = () => {
                                 value={password}
                                 onChange={(e) => {
                                     setPassword(e.target.value);
-                                    setError('');
+                                    setPasswordError('');
                                 }}
-                                onClick={() => setError('')}
+                                onClick={() => setPasswordError('')}
                             />
 
                             <Icon
@@ -121,12 +142,17 @@ const CreateNewPassword = () => {
                                     setIsPasswordVisible(!isPasswordVisible)
                                 }
                             />
-                        </div>
+                        </GroupControl>
 
-                        <div className='relative'>
+                        <GroupControl
+                            key='Confirm password'
+                            label=''
+                            error={confirmError}>
                             <input
                                 ref={confirmPasswordRef}
-                                className='input-text py-[10px]'
+                                className={`input-text py-[10px] ${
+                                    passwordError && 'error'
+                                }`}
                                 type={isConfirmVisible ? 'text' : 'password'}
                                 placeholder={
                                     isVietnames
@@ -136,9 +162,9 @@ const CreateNewPassword = () => {
                                 value={confirmPassword}
                                 onChange={(e) => {
                                     setConfirmPassword(e.target.value);
-                                    setError('');
+                                    setConfirmError('');
                                 }}
-                                onClick={() => setError('')}
+                                onClick={() => setConfirmError('')}
                             />
 
                             <Icon
@@ -153,9 +179,7 @@ const CreateNewPassword = () => {
                                     setIsConfirmVisible(!isConfirmVisible)
                                 }
                             />
-                        </div>
-
-                        <div className='error text-left'>{error}</div>
+                        </GroupControl>
 
                         <button
                             disabled={spin}

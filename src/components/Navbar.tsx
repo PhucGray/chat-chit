@@ -1,4 +1,3 @@
-import LogoImg from '../images/logo.png';
 import { Link, useLocation } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { selectLanguage, setLanguage } from '../features/setting/settingSlice';
@@ -6,8 +5,8 @@ import { selectLanguage, setLanguage } from '../features/setting/settingSlice';
 const Language = () => {
     const location = useLocation();
     const dispatch = useAppDispatch();
-    const isVietnames = useAppSelector(selectLanguage) === 'vn';
     const isChatPage = location.pathname === '/chat';
+    const isVietnames = useAppSelector(selectLanguage) === 'vn';
 
     return (
         <div
@@ -15,8 +14,11 @@ const Language = () => {
         animate-fallDown'>
             <Link to='/'>
                 <div className='flex items-center'>
-                    <img className='w-[40px]' src={LogoImg} alt='Logo' />
-                    <p className='font-bold text-[18px]'>Chat chit</p>
+                    <p
+                        className='font-bold text-[20px] font-mono'
+                        title={isVietnames ? 'Trang chủ' : 'Home'}>
+                        Chat chit
+                    </p>
                 </div>
             </Link>
 

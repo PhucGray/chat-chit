@@ -50,7 +50,7 @@ const ButtonSignInWithGG = () => {
     const isVietnames = useAppSelector(selectLanguage) === 'vn';
     return (
         <button
-            className='btn-outlined w-full py-[6px] lg:py-[10px] flex items-center justify-center space-x-3'
+            className='btn-outlined w-full py-[8px] flex items-center justify-center space-x-3'
             onClick={handleGoogleClick}
             type='button'>
             <Icon icon='flat-color-icons:google' fontSize={30} />

@@ -73,7 +73,7 @@ const Home = () => {
                 />
             </Helmet>
 
-            <div className='container'>
+            <div className='container pt-[20px]'>
                 <div className='flex px-[20px]'>
                     <div className='flex-1'>
                         <h1

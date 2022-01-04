@@ -1,8 +1,9 @@
 import { Icon } from '@iconify/react';
 import { sendPasswordResetEmail } from 'firebase/auth';
-import { MutableRefObject, useRef, useState } from 'react';
+import { MutableRefObject, useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
+import GroupControl from '../components/GroupControl';
 import { setModal } from '../features/modal/modalSlice';
 import { selectLanguage } from '../features/setting/settingSlice';
 import { auth } from '../firebase';
@@ -19,14 +20,23 @@ const ForgotPassword = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
+    const isVietnames = useAppSelector(selectLanguage) === 'vn';
+
+    const validateFields = async () => {
+        const validateEmailMsg = validateEmail(email, isVietnames);
+        setError(validateEmailMsg);
+
+        if (validateEmailMsg) return false;
+
+        return true;
+    };
+
     const handleResetPassword = async (e: SubmitFormType) => {
         e.preventDefault();
 
-        const validateEmailMsg = validateEmail(email);
+        const isValid = await validateFields();
 
-        if (validateEmailMsg) {
-            setError(validateEmailMsg);
-        } else {
+        if (isValid) {
             try {
                 setSpin(true);
 
@@ -51,7 +61,9 @@ const ForgotPassword = () => {
         }
     };
 
-    const isVietnames = useAppSelector(selectLanguage) === 'vn';
+    useEffect(() => {
+        if (error) validateFields();
+    }, [isVietnames]);
 
     return (
         <div className='mt-[20px] lg:mt-[40px] w-max mx-auto text-center'>
@@ -62,22 +74,23 @@ const ForgotPassword = () => {
             <form
                 onSubmit={handleResetPassword}
                 className='flex flex-col mt-[30px] space-y-[15px]'>
-                <input
-                    ref={emailRef}
-                    className='input-text py-[10px]'
-                    type='text'
-                    placeholder={
-                        isVietnames ? 'Nhập email' : 'Enter your email'
-                    }
-                    autoFocus
-                    value={email}
-                    onChange={(e) => {
-                        setEmail(e.target.value);
-                        setError('');
-                    }}
-                    onClick={() => setError('')}
-                />
-                <div className='error text-left'>{error}</div>
+                <GroupControl key='Email' label='' error={error}>
+                    <input
+                        ref={emailRef}
+                        className={`input-text py-[10px] ${error && 'error'}`}
+                        type='text'
+                        placeholder={
+                            isVietnames ? 'Nhập email' : 'Enter your email'
+                        }
+                        autoFocus
+                        value={email}
+                        onChange={(e) => {
+                            setEmail(e.target.value);
+                            setError('');
+                        }}
+                        onClick={() => setError('')}
+                    />
+                </GroupControl>
 
                 <button
                     disabled={spin}

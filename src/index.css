@@ -24,8 +24,12 @@
     }
 
     .error {
-        @apply pl-[10px] italic text-sm text-red-500;
+        @apply ring-red-600 border-red-600 focus:ring-red-600 focus:border-red-600;
     }
+
+    /* .error {
+        @apply pl-[10px] italic text-sm text-red-500;
+    } */
 
     .select {
         @apply w-[200px] px-[10px] flex items-center space-x-2 border py-[5px] cursor-pointer rounded-[10px] relative hover:border-teal-500;
