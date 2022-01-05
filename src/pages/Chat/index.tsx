@@ -155,7 +155,10 @@ const Chat = () => {
                 />
             </Helmet>
 
-            <div className={`flex ${theme === 'dark' && 'dark'}`}>
+            <div
+                className={`fixed top-0 bottom-0 left-0 right-0 flex ${
+                    theme === 'dark' && 'dark'
+                }`}>
                 <Sidebar />
 
                 <div className='flex-1 bg-gray-100 dark:bg-trueGray-800 dark:text-gray-400'>

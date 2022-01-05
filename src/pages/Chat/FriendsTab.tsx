@@ -34,9 +34,8 @@ const FriendsTab = () => {
     const isVietnames = useAppSelector(selectLanguage) === 'vn';
 
     return (
-        <div className='px-[10px] lg:px-[40px] pt-[20px] pb-[40px] max-h-screen overflow-auto flex flex-col space-y-4'>
+        <div className='px-[10px] lg:px-[40px] h-screen overflow-auto flex flex-col space-y-4'>
             <FriendRequest isVietnames={isVietnames} />
-            {/* <Online isVietnames={isVietnames}/> */}
             <Search isVietnames={isVietnames} />
             <FriendsList isVietnames={isVietnames} />
         </div>
@@ -155,9 +154,11 @@ const FriendRequest = ({ isVietnames }: Props) => {
 
     return (
         <div>
-            <p className='font-semibold text-[23px]'>
-                {isVietnames ? 'Lời mời kết bạn' : 'Friend requests'}
-            </p>
+            {friendRequests && friendRequests.length > 0 && (
+                <p className='font-semibold text-[23px]'>
+                    {isVietnames ? 'Lời mời kết bạn' : 'Friend requests'}
+                </p>
+            )}
 
             {friendRequests &&
                 friendRequests.length > 0 &&
@@ -240,12 +241,12 @@ const FriendsList = ({ isVietnames }: Props) => {
     const dispatch = useAppDispatch();
 
     return (
-        <div className='h-screen'>
+        <>
             <p className='font-semibold text-[23px]'>
                 {isVietnames ? 'Danh sách bạn bè' : 'Friend list'}
             </p>
 
-            <div className='grid gap-x-[50px] gap-y-[20px] ml-[15px] mt-[10px] lg:grid-cols-2 lg:px-[30px]'>
+            <div className='overflow-auto grid gap-x-[50px] gap-y-[20px] ml-[15px] mt-[10px] lg:grid-cols-2 lg:px-[30px]'>
                 {friends &&
                     friends.length > 0 &&
                     friends.map((friend) => {
@@ -277,17 +278,11 @@ const FriendsList = ({ isVietnames }: Props) => {
                                         {displayName}
                                     </p>
                                 </div>
-
-                                <Icon
-                                    className='text-[30px] sm:text-[35px] rounded-full cursor-pointer hover:bg-gray-300
-                                    dark:text-white dark:hover:bg-trueGray-600'
-                                    icon='akar-icons:more-horizontal'
-                                />
                             </div>
                         );
                     })}
             </div>
-        </div>
+        </>
     );
 };
 

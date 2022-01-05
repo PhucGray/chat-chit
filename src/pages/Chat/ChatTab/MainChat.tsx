@@ -41,7 +41,6 @@ const MainChat: FC<MainChatProps> = ({
     const inputRef = useRef() as MutableRefObject<HTMLDivElement>;
     const fileRef = useRef() as MutableRefObject<HTMLInputElement>;
     const conversationRef = useRef() as MutableRefObject<HTMLDivElement>;
-    const conversationEndRef = useRef() as MutableRefObject<HTMLDivElement>;
 
     const [currentConversation, setCurrentConversation] = useState(
         null as RoomType | null,
@@ -140,10 +139,19 @@ const MainChat: FC<MainChatProps> = ({
 
     const isVietnames = useAppSelector(selectLanguage) === 'vn';
 
+    useEffect(() => {
+        if (conversationRef.current && currentConversation?.messages) {
+            conversationRef.current.scrollTo({
+                top: conversationRef.current.scrollHeight,
+            });
+        }
+    }, [currentConversation]);
+
     return (
         <>
             {user && (
-                <div className='h-screen flex-1 flex flex-col justify-between pt-[10px] space-y-2 relative'>
+                <div
+                    className={`flex-1 flex flex-col pt-[10px] space-y-2 relative`}>
                     {currentFriend && (
                         <>
                             <div className='flex items-center justify-between px-[20px]'>
@@ -186,10 +194,10 @@ const MainChat: FC<MainChatProps> = ({
                                 ref={conversationRef}
                                 className='flex-1 overflow-y-auto  space-y-3 p-[20px] rounded-[10px] bg-white
                                     dark:bg-trueGray-700'
-                                onLoad={(e) => {
-                                    e.currentTarget.scrollTop =
-                                        e.currentTarget.scrollHeight;
-                                }}>
+                                onLoad={(e) =>
+                                    (e.currentTarget.scrollTop =
+                                        e.currentTarget.scrollHeight)
+                                }>
                                 {currentConversation &&
                                     currentConversation.messages.map(
                                         ({ messageId, msg, sentAt, uid }) => {
@@ -200,7 +208,7 @@ const MainChat: FC<MainChatProps> = ({
                                                 new Date(),
                                                 'day',
                                             )
-                                                ? moment(sentAt).format('h:m')
+                                                ? moment(sentAt).format('h:mm')
                                                 : moment(sentAt).calendar();
 
                                             return (
@@ -249,8 +257,6 @@ const MainChat: FC<MainChatProps> = ({
                                             );
                                         },
                                     )}
-
-                                <div ref={conversationEndRef} />
                             </div>
 
                             <div
