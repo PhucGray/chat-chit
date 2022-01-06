@@ -1,4 +1,3 @@
-import { Icon } from '@iconify/react';
 import {
     addDoc,
     arrayRemove,
@@ -25,6 +24,8 @@ import {
 import { conversationsCollectionRef, db } from '../../firebase';
 import AvatarImg from '../../images/defaultAvatar.png';
 import { IdentificationType, RoomType, UserType } from '../../types';
+import { BsSearch } from 'react-icons/bs';
+import { RiUserAddFill } from 'react-icons/ri';
 
 interface Props {
     isVietnames: boolean;
@@ -209,10 +210,9 @@ const Search = ({ isVietnames }: Props) => {
     return (
         <div className='flex items-center justify-center space-x-3'>
             <div className='relative'>
-                <Icon
+                <BsSearch
                     className='absolute left-[10px] top-[50%] transform translate-y-[-50%] text-gray-400'
                     fontSize={30}
-                    icon='carbon:search'
                 />
                 <input
                     className='input-text pl-[45px] bg-gray-300 font-semibold text-[18px]
@@ -224,9 +224,8 @@ const Search = ({ isVietnames }: Props) => {
                 />
             </div>
 
-            <Icon
+            <RiUserAddFill
                 className='text-gray-500 cursor-pointer transform hover:scale-[1.2] hover:text-teal-500'
-                icon='whh:addfriend'
                 fontSize={30}
                 onClick={() => {
                     dispatch(setIsFormAddFriendOpen(true));

@@ -55,7 +55,7 @@ const ChatTab = () => {
     }, [user?.fieldId]);
 
     return (
-        <div className='fixed top-0 bottom-0 flex justify-between overflow-auto'>
+        <div className='h-full flex justify-between overflow-auto  '>
             <>
                 <RecentMessages
                     isRecentMessagesOpen={isRecentMessagesOpen}

@@ -1,4 +1,3 @@
-import { Icon } from '@iconify/react';
 import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
 import { MutableRefObject, useEffect, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
@@ -17,6 +16,7 @@ import {
     validatePassword,
     validateUsername,
 } from '../utils/validateAuth';
+import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
 
 const SignUp = () => {
     const [email, setEmail] = useState('');
@@ -266,16 +266,15 @@ const SignUp = () => {
                                 }
                             />
 
-                            <Icon
-                                icon={
-                                    isVisible
-                                        ? 'gridicons:visible'
-                                        : 'gridicons:not-visible'
-                                }
-                                fontSize={23}
-                                className='absolute right-[10px] top-[25%] cursor-pointer'
-                                onClick={() => setIsVisible(!isVisible)}
-                            />
+                            <div
+                                className='text-[23px] absolute right-[10px] top-[25%] cursor-pointer'
+                                onClick={() => setIsVisible(!isVisible)}>
+                                {isVisible ? (
+                                    <MdVisibility />
+                                ) : (
+                                    <MdVisibilityOff />
+                                )}
+                            </div>
                         </GroupControl>
 
                         <div className='space-y-2'>

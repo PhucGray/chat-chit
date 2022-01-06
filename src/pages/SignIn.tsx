@@ -1,4 +1,3 @@
-import { Icon } from '@iconify/react';
 import { MutableRefObject, useEffect, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link, Navigate } from 'react-router-dom';
@@ -11,6 +10,7 @@ import { signIn } from '../firebase';
 import SignInImg from '../images/sign-in.png';
 import { SubmitFormType } from '../types';
 import { validateEmail, validatePassword } from '../utils/validateAuth';
+import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
 
 const SignIn = () => {
     const [email, setEmail] = useState('');
@@ -188,16 +188,15 @@ const SignIn = () => {
                                 }
                             />
 
-                            <Icon
-                                icon={
-                                    isVisible
-                                        ? 'gridicons:visible'
-                                        : 'gridicons:not-visible'
-                                }
-                                fontSize={23}
-                                className='absolute right-[10px] top-[25%] cursor-pointer'
-                                onClick={() => setIsVisible(!isVisible)}
-                            />
+                            <div
+                                className='text-[23px] absolute right-[10px] top-[25%] cursor-pointer'
+                                onClick={() => setIsVisible(!isVisible)}>
+                                {isVisible ? (
+                                    <MdVisibility />
+                                ) : (
+                                    <MdVisibilityOff />
+                                )}
+                            </div>
                         </GroupControl>
 
                         <Link to='/forgot-password'>

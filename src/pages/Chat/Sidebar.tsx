@@ -1,4 +1,3 @@
-import { Icon } from '@iconify/react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
@@ -11,33 +10,40 @@ import { selectCurrentTab, setCurrentTab } from '../../features/tab/tabSlice';
 import { setUser } from '../../features/user/userSlice';
 import { logout } from '../../firebase';
 import { TabType } from '../../types';
+import { BsChatText, BsChatTextFill } from 'react-icons/bs';
+import { HiOutlineUsers, HiUsers } from 'react-icons/hi';
+import { FaRegUserCircle, FaUserCircle } from 'react-icons/fa';
+import { IoSettingsOutline } from 'react-icons/io5';
+import { IoMdSettings } from 'react-icons/io';
+import { CgArrowRightR } from 'react-icons/cg';
+import { MdOutlineLogout } from 'react-icons/md';
 
 type SideBarIconType = {
-    icon: string;
-    activeIcon: string;
+    icon: any;
+    activeIcon: any;
     tab: TabType;
 };
 
 const Sidebar = () => {
     const icons = [
         {
-            icon: 'bi:chat-text',
-            activeIcon: 'bi:chat-text-fill',
+            icon: <BsChatText />,
+            activeIcon: <BsChatTextFill />,
             tab: 'chat',
         },
         {
-            icon: 'teenyicons:users-outline',
-            activeIcon: 'teenyicons:users-solid',
+            icon: <HiOutlineUsers />,
+            activeIcon: <HiUsers />,
             tab: 'friend',
         },
         {
-            icon: 'healthicons:ui-user-profile-outline',
-            activeIcon: 'healthicons:ui-user-profile',
+            icon: <FaRegUserCircle />,
+            activeIcon: <FaUserCircle />,
             tab: 'profile',
         },
         {
-            icon: 'ant-design:setting-outlined',
-            activeIcon: 'ant-design:setting-filled',
+            icon: <IoSettingsOutline />,
+            activeIcon: <IoMdSettings />,
             tab: 'setting',
         },
     ] as SideBarIconType[];
@@ -71,10 +77,9 @@ const Sidebar = () => {
                 bg-gray-700 text-[25px] text-[#B1B1B1]
                 dark:bg-trueGray-700 dark:border-r-[1px]`}>
                 {isOpen || (
-                    <Icon
+                    <CgArrowRightR
                         onClick={() => setIsOpen(true)}
                         className='icon text-[40px] absolute top-[50%] right-0 transform translate-x-[100%] lg:hidden'
-                        icon='bi:arrow-right-square-fill'
                     />
                 )}
 
@@ -93,11 +98,7 @@ const Sidebar = () => {
                                     sessionStorage.setItem('currentTab', tab);
                                     closeSiderbar();
                                 }}>
-                                <Icon
-                                    icon={
-                                        currentTab === tab ? activeIcon : icon
-                                    }
-                                />
+                                {currentTab === tab ? activeIcon : icon}
                             </button>
                         ))}
                 </div>
@@ -125,7 +126,7 @@ const Sidebar = () => {
 
                         navigate('/sign-in', { replace: true });
                     }}>
-                    <Icon icon='carbon:logout' />
+                    <MdOutlineLogout />
                 </button>
             </div>
         </>

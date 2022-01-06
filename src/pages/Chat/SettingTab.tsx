@@ -1,4 +1,3 @@
-import { Icon } from '@iconify/react';
 import { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import {
@@ -7,6 +6,10 @@ import {
     setLanguage,
     setTheme,
 } from '../../features/setting/settingSlice';
+import { IoLanguageOutline } from 'react-icons/io5';
+import { RiArrowDownSLine } from 'react-icons/ri';
+import { AiOutlineCheck } from 'react-icons/ai';
+import { VscColorMode } from 'react-icons/vsc';
 
 const SettingTab = () => {
     const [isLanguageOpen, setIsLanguageOpen] = useState(false);
@@ -27,7 +30,7 @@ const SettingTab = () => {
                 <div className='grid grid-cols-1 place-items-center gap-y-5 px-[40px] text-[25px] sm:grid-cols-2'>
                     <div>
                         <div className='flex items-center space-x-2 mb-2'>
-                            <Icon icon='lucide:languages' />
+                            <IoLanguageOutline />
                             <p>{isVietnames ? 'Ngôn ngữ' : 'Language'}</p>
                         </div>
 
@@ -42,10 +45,11 @@ const SettingTab = () => {
                                 });
                             }}>
                             <p>{isVietnames ? 'Tiếng Việt' : 'English'}</p>
-                            <Icon
+                            {/* <Icon
                                 icon='ic:outline-arrow-drop-down'
                                 fontSize={40}
-                            />
+                            /> */}
+                            <RiArrowDownSLine fontSize={40} />
 
                             {isLanguageOpen && (
                                 <div className='absolute top-full py-[5px] border w-full transform translate-y-2 rounded-[10px] bg-white'>
@@ -59,10 +63,7 @@ const SettingTab = () => {
                                         }}>
                                         Tiếng Việt
                                         {isVietnames && (
-                                            <Icon
-                                                icon='ant-design:check-outlined'
-                                                className='text-teal-500 group-hover:text-white'
-                                            />
+                                            <AiOutlineCheck className='text-teal-500 group-hover:text-white' />
                                         )}
                                     </button>
                                     <button
@@ -75,10 +76,7 @@ const SettingTab = () => {
                                         }}>
                                         English
                                         {!isVietnames && (
-                                            <Icon
-                                                icon='ant-design:check-outlined'
-                                                className='text-teal-500 group-hover:text-white'
-                                            />
+                                            <AiOutlineCheck className='text-teal-500 group-hover:text-white' />
                                         )}
                                     </button>
                                 </div>
@@ -88,7 +86,7 @@ const SettingTab = () => {
 
                     <div>
                         <div className='flex items-center space-x-2 mb-3'>
-                            <Icon icon='fluent:dark-theme-24-regular' />
+                            <VscColorMode />
                             <p>{isVietnames ? 'Giao diện' : 'Theme'}</p>
                         </div>
 
@@ -125,38 +123,6 @@ const SettingTab = () => {
                             </div>
                         </div>
                     </div>
-
-                    {/* <div>
-                        <div className='flex items-center space-x-2 mb-3'>
-                            <Icon icon='clarity:notification-solid' />
-                            <p>Thông báo</p>
-                        </div>
-
-                        <div className='flex space-x-6'>
-                            <div className='flex items-center space-x-2'>
-                                <input
-                                    className='radio'
-                                    type='radio'
-                                    name='notification'
-                                    id='on'
-                                />
-                                <label className='cursor-pointer' htmlFor='on'>
-                                    Mở
-                                </label>
-                            </div>
-                            <div className='flex items-center space-x-2'>
-                                <input
-                                    className='radio'
-                                    type='radio'
-                                    name='notification'
-                                    id='off'
-                                />
-                                <label className='cursor-pointer' htmlFor='off'>
-                                    Tắt
-                                </label>
-                            </div>
-                        </div>
-                    </div> */}
                 </div>
             </div>
         </div>

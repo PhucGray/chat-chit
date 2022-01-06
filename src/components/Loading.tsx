@@ -1,4 +1,4 @@
-import { Icon } from '@iconify/react';
+import { MdPending } from 'react-icons/md';
 
 interface LoadingProps {
     msg?: string;
@@ -7,11 +7,7 @@ interface LoadingProps {
 const Loading = ({ msg }: LoadingProps) => {
     return (
         <div className='fixed-center space-y-2 text-teal-500 z-20'>
-            <Icon
-                className='animate-bounce mx-auto'
-                icon='ic:baseline-pending'
-                fontSize={60}
-            />
+            <MdPending className='animate-bounce mx-auto' fontSize={60} />
 
             <p className='text-[18px] text-center font-semibold'>{msg}</p>
         </div>

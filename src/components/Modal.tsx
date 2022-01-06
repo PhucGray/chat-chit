@@ -1,6 +1,6 @@
-import { Icon } from '@iconify/react';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { selectModal, setModal } from '../features/modal/modalSlice';
+import { AiFillCheckCircle } from 'react-icons/ai';
 
 const Modal = () => {
     const modal = useAppSelector(selectModal);
@@ -18,9 +18,8 @@ const Modal = () => {
 
                     <div className='flex items-stretch gap-1'>
                         <div>
-                            <Icon
+                            <AiFillCheckCircle
                                 className='text-teal-500'
-                                icon='clarity:success-standard-solid'
                                 fontSize={25}
                             />
                         </div>

@@ -1,4 +1,3 @@
-import { Icon } from '@iconify/react';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { MutableRefObject, useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -9,6 +8,7 @@ import { selectLanguage } from '../features/setting/settingSlice';
 import { auth } from '../firebase';
 import { SubmitFormType } from '../types';
 import { validateEmail } from '../utils/validateAuth';
+import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 
 const ForgotPassword = () => {
     const [email, setEmail] = useState('');
@@ -96,9 +96,8 @@ const ForgotPassword = () => {
                     disabled={spin}
                     className='btn py-[10px] flex items-center justify-center gap-2'>
                     {spin && (
-                        <Icon
+                        <AiOutlineLoading3Quarters
                             className='animate-spin'
-                            icon='icon-park:loading-four'
                             fontSize={30}
                         />
                     )}

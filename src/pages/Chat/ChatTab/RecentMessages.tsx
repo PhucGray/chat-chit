@@ -1,4 +1,3 @@
-import { Icon } from '@iconify/react';
 import moment from 'moment';
 import { Dispatch, FC, SetStateAction } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
@@ -11,6 +10,7 @@ import {
     selectUser,
     setCurrentFriend,
 } from '../../../features/user/userSlice';
+import { RiUserAddFill } from 'react-icons/ri';
 
 interface RecentMessagesProps {
     isRecentMessagesOpen: boolean;
@@ -46,18 +46,20 @@ const RecentMessages: FC<RecentMessagesProps> = ({
                 } h-screen py-[20px] z-10 fixed left-0 top-0 border-r bg-white 
                 md:flex flex-col md:static md:bg-transparent md:w-[270px]
                 dark:border-trueGray-500 dark:bg-trueGray-800`}>
-                <div className='flex items-center space-x-2 px-[15px]'>
-                    <Icon
-                        className='text-gray-500 cursor-pointer transform 
+                <div className='flex items-center justify-center space-x-2 px-[15px]'>
+                    <p>{isVietnames ? 'Tìm kiếm bạn bè' : 'Search friends'}</p>
+
+                    <div className='relative text-center'>
+                        <RiUserAddFill
+                            className='text-gray-500 cursor-pointer transform 
                         hover:scale-[1.2] hover:text-teal-500
                         dark:text-trueGray-300'
-                        icon='whh:addfriend'
-                        fontSize={30}
-                        onClick={() => {
-                            dispatch(setIsFormAddFriendOpen(true));
-                        }}
-                    />
-                    <p>{isVietnames ? 'Tìm kiếm bạn bè' : 'Search friends'}</p>
+                            fontSize={30}
+                            onClick={() => {
+                                dispatch(setIsFormAddFriendOpen(true));
+                            }}
+                        />
+                    </div>
                 </div>
 
                 <hr className='my-[20px] dark:border-trueGray-500' />

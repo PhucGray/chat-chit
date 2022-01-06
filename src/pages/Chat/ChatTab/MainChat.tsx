@@ -1,4 +1,3 @@
-import { Icon } from '@iconify/react';
 import Picker from 'emoji-picker-react';
 import { arrayUnion, doc, updateDoc } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
@@ -23,6 +22,10 @@ import {
 import { db, storage } from '../../../firebase';
 import AvatarImg from '../../../images/defaultAvatar.png';
 import { ChangeInputType, MessageType, RoomType } from '../../../types';
+import { TiMessages } from 'react-icons/ti';
+import { BsInfoCircle } from 'react-icons/bs';
+import { RiImageFill } from 'react-icons/ri';
+import { IoHappyOutline, IoSend } from 'react-icons/io5';
 
 interface MainChatProps {
     setIsInfoOpen: Dispatch<SetStateAction<boolean>>;
@@ -151,13 +154,12 @@ const MainChat: FC<MainChatProps> = ({
         <>
             {user && (
                 <div
-                    className={`flex-1 flex flex-col pt-[10px] space-y-2 relative`}>
+                    className={`h-full flex-1 flex flex-col pt-[10px] space-y-2`}>
                     {currentFriend && (
                         <>
                             <div className='flex items-center justify-between px-[20px]'>
-                                <Icon
+                                <TiMessages
                                     className='icon md:hidden'
-                                    icon='carbon:open-panel-left'
                                     fontSize={25}
                                     onClick={(e) => {
                                         e.stopPropagation();
@@ -179,9 +181,8 @@ const MainChat: FC<MainChatProps> = ({
                                     </p>
                                 </div>
 
-                                <Icon
+                                <BsInfoCircle
                                     className='icon xl:hidden'
-                                    icon='entypo:info-with-circle'
                                     fontSize={25}
                                     onClick={(e) => {
                                         e.stopPropagation();
@@ -263,9 +264,8 @@ const MainChat: FC<MainChatProps> = ({
                                 className='min-h-[10%] p-[15px] rounded-[10px] space-x-4
                                     flex items-center justify-between bg-white
                                     dark:bg-trueGray-700'>
-                                <Icon
+                                <RiImageFill
                                     className='icon'
-                                    icon='bx:bxs-image'
                                     fontSize={30}
                                     onClick={() => {
                                         if (fileRef.current)
@@ -302,10 +302,9 @@ const MainChat: FC<MainChatProps> = ({
                                         </>
                                     )}
 
-                                    <Icon
+                                    <IoHappyOutline
                                         onClick={() => setIsPickerOpen(true)}
                                         className='icon'
-                                        icon='akar-icons:face-very-happy'
                                         fontSize={30}
                                     />
                                 </div>
@@ -338,10 +337,7 @@ const MainChat: FC<MainChatProps> = ({
                                     dark:btn-dark'
                                     onClick={handleSendMessage}>
                                     <span>{isVietnames ? 'Gửi' : 'Send'}</span>{' '}
-                                    <Icon
-                                        icon='fluent:send-28-filled'
-                                        fontSize={25}
-                                    />
+                                    <IoSend fontSize={25} />
                                 </button>
                             </div>
                         </>

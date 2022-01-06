@@ -49,7 +49,7 @@ const Chat = () => {
                     setUser({ ...doc.data(), fieldId: doc.id } as UserType),
                 );
         });
-    }, []);
+    }, [user?.fieldId]);
 
     useEffect(() => {
         conversations.length > 0 &&

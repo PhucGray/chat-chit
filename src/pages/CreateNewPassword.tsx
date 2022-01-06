@@ -1,4 +1,3 @@
-import { Icon } from '@iconify/react';
 import { confirmPasswordReset } from 'firebase/auth';
 import { MutableRefObject, useEffect, useRef, useState } from 'react';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
@@ -9,13 +8,14 @@ import { selectLanguage } from '../features/setting/settingSlice';
 import { auth } from '../firebase';
 import { SubmitFormType } from '../types';
 import { validatePassword } from '../utils/validateAuth';
+import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
+import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 
 const CreateNewPassword = () => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [isConfirmVisible, setIsConfirmVisible] = useState(false);
-    // const [error, setError] = useState('');
     const [passwordError, setPasswordError] = useState('');
     const [confirmError, setConfirmError] = useState('');
     const [spin, setSpin] = useState(false);
@@ -130,7 +130,7 @@ const CreateNewPassword = () => {
                                 onClick={() => setPasswordError('')}
                             />
 
-                            <Icon
+                            {/* <Icon
                                 icon={
                                     isPasswordVisible
                                         ? 'gridicons:visible'
@@ -141,7 +141,18 @@ const CreateNewPassword = () => {
                                 onClick={() =>
                                     setIsPasswordVisible(!isPasswordVisible)
                                 }
-                            />
+                            /> */}
+                            <div
+                                className='absolute right-[10px] top-[25%] cursor-pointer text-[23px]'
+                                onClick={() =>
+                                    setIsPasswordVisible(!isPasswordVisible)
+                                }>
+                                {isPasswordVisible ? (
+                                    <MdVisibility />
+                                ) : (
+                                    <MdVisibilityOff />
+                                )}
+                            </div>
                         </GroupControl>
 
                         <GroupControl
@@ -167,27 +178,30 @@ const CreateNewPassword = () => {
                                 onClick={() => setConfirmError('')}
                             />
 
-                            <Icon
-                                icon={
-                                    isConfirmVisible
-                                        ? 'gridicons:visible'
-                                        : 'gridicons:not-visible'
-                                }
-                                fontSize={23}
-                                className='absolute right-[10px] top-[25%] cursor-pointer'
+                            <div
+                                className='absolute right-[10px] top-[25%] cursor-pointer text-[23px]'
                                 onClick={() =>
                                     setIsConfirmVisible(!isConfirmVisible)
-                                }
-                            />
+                                }>
+                                {isConfirmVisible ? (
+                                    <MdVisibility />
+                                ) : (
+                                    <MdVisibilityOff />
+                                )}
+                            </div>
                         </GroupControl>
 
                         <button
                             disabled={spin}
                             className='btn py-[10px] flex items-center justify-center gap-2'>
                             {spin && (
-                                <Icon
+                                // <Icon
+                                //     className='animate-spin'
+                                //     icon='icon-park:loading-four'
+                                //     fontSize={30}
+                                // />
+                                <AiOutlineLoading3Quarters
                                     className='animate-spin'
-                                    icon='icon-park:loading-four'
                                     fontSize={30}
                                 />
                             )}

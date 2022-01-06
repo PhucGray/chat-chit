@@ -1,4 +1,3 @@
-import { Icon } from '@iconify/react';
 import { doc, updateDoc } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import { useAppSelector } from '../../app/hooks';
@@ -8,6 +7,14 @@ import { selectUser } from '../../features/user/userSlice';
 import { db } from '../../firebase';
 import AvatarImg from '../../images/defaultAvatar.png';
 import { SubmitFormType, UserType } from '../../types';
+import { AiOutlineMail, AiOutlinePhone } from 'react-icons/ai';
+import {
+    MdOutlineBadge,
+    MdOutlineMoreHoriz,
+    MdAddCircleOutline,
+} from 'react-icons/md';
+import { RiCake2Line, RiDeleteBin6Line } from 'react-icons/ri';
+import { FaRegEdit } from 'react-icons/fa';
 
 type InfoField = 'phoneNumber' | 'birth' | 'displayName';
 
@@ -16,7 +23,7 @@ interface InfoProps {
     title: string;
     user: UserType | null;
     data: string | '';
-    icon: string;
+    icon: any;
 }
 
 const ProfileTab = () => {
@@ -39,7 +46,7 @@ const ProfileTab = () => {
                     <div className='w-max mx-auto space-y-3'>
                         <div className='flex items-center justify-between'>
                             <div className='flex items-center space-x-3'>
-                                <Icon icon='carbon:email' />
+                                <AiOutlineMail />
                                 <p className='truncate'>{user?.email}</p>
                             </div>
                         </div>
@@ -49,7 +56,7 @@ const ProfileTab = () => {
                             title={isVietnames ? 'tên người dùng' : 'username'}
                             data={user?.displayName || ''}
                             user={user}
-                            icon='si-glyph:badge-name'
+                            icon={<MdOutlineBadge />}
                         />
 
                         <Info
@@ -59,7 +66,7 @@ const ProfileTab = () => {
                             }
                             data={user?.phoneNumber || ''}
                             user={user}
-                            icon='akar-icons:phone'
+                            icon={<AiOutlinePhone />}
                         />
 
                         <Info
@@ -67,7 +74,7 @@ const ProfileTab = () => {
                             title={isVietnames ? 'ngày sinh' : 'day of birth'}
                             data={user?.birth || ''}
                             user={user}
-                            icon='la:birthday-cake'
+                            icon={<RiCake2Line />}
                         />
                     </div>
                 </div>
@@ -147,7 +154,7 @@ const Info = ({ field, title, data, user, icon }: InfoProps) => {
                     {isEdit && (
                         <div className='space-y-2'>
                             <div className='flex items-center space-x-2'>
-                                <Icon icon={icon} />
+                                {icon}
 
                                 {isBirthField && (
                                     <DateTimePicker
@@ -195,7 +202,7 @@ const Info = ({ field, title, data, user, icon }: InfoProps) => {
                     {!isEdit && (
                         <div className='flex items-center justify-between relative group'>
                             <div className='flex items-center space-x-3'>
-                                <Icon icon={icon} />
+                                {icon}
                                 <p className='break-words'>
                                     {value.length > 20
                                         ? value.substring(0, 19).concat('...')
@@ -203,9 +210,8 @@ const Info = ({ field, title, data, user, icon }: InfoProps) => {
                                 </p>
                             </div>
 
-                            <Icon
+                            <MdOutlineMoreHoriz
                                 className='ml-[10px] rounded-full cursor-pointer hover:bg-gray-100 invisible group-hover:visible'
-                                icon='akar-icons:more-horizontal'
                                 fontSize={35}
                                 onClick={() => setIsOptionOpen(true)}
                             />
@@ -224,10 +230,7 @@ const Info = ({ field, title, data, user, icon }: InfoProps) => {
                                                 setPrevValue(value);
                                                 setIsOptionOpen(false);
                                             }}>
-                                            <Icon
-                                                className=' hover:text-teal-500'
-                                                icon='fa-regular:edit'
-                                            />
+                                            <FaRegEdit className=' hover:text-teal-500' />
                                             <p>
                                                 {isVietnames ? 'Sửa' : 'Edit'}
                                             </p>
@@ -240,10 +243,7 @@ const Info = ({ field, title, data, user, icon }: InfoProps) => {
                                                 setHasData(false);
                                                 handleDelete(field);
                                             }}>
-                                            <Icon
-                                                className=' hover:text-teal-500'
-                                                icon='bi:trash'
-                                            />
+                                            <RiDeleteBin6Line className=' hover:text-teal-500' />
                                             <p>
                                                 {isVietnames ? 'Xoá' : 'Delete'}
                                             </p>
@@ -261,7 +261,7 @@ const Info = ({ field, title, data, user, icon }: InfoProps) => {
                     <div
                         onClick={() => setIsAdd(!isAdd)}
                         className='flex items-center space-x-2 text-teal-500 cursor-pointer hover:underline'>
-                        <Icon icon='carbon:add-alt' />
+                        <MdAddCircleOutline />
                         <p>
                             {isVietnames ? 'Thêm' : 'Add'} {title}
                         </p>

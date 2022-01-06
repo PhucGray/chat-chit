@@ -1,9 +1,9 @@
-import { Icon } from '@iconify/react';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '../app/hooks';
 import { selectLanguage } from '../features/setting/settingSlice';
 import HomeImg from '../images/home.png';
+import { IoShieldCheckmarkSharp } from 'react-icons/io5';
 
 const Home = () => {
     const navigate = useNavigate();
@@ -96,15 +96,27 @@ const Home = () => {
                         md:max-w-[30%] lg:max-w-[40%] lg:text-[25px]
                         animate-rtl'>
                             <div className='flex items-center space-x-2'>
-                                <TickIcon />
+                                <IoShieldCheckmarkSharp
+                                    className='text-teal-500'
+                                    fontSize={18}
+                                />
+
                                 <p>{isVietnames ? 'Miễn phí' : 'Free'}</p>
                             </div>
                             <div className='flex items-center space-x-2'>
-                                <TickIcon />
+                                <IoShieldCheckmarkSharp
+                                    className='text-teal-500'
+                                    fontSize={18}
+                                />
+
                                 <p>{isVietnames ? 'Bảo mật' : 'Secure'}</p>
                             </div>
                             <div className='flex items-center space-x-2'>
-                                <TickIcon />
+                                <IoShieldCheckmarkSharp
+                                    className='text-teal-500'
+                                    fontSize={18}
+                                />
+
                                 <p>{isVietnames ? 'Nhanh chóng' : 'Fast'}</p>
                             </div>
                         </div>
@@ -143,9 +155,5 @@ const Home = () => {
         </>
     );
 };
-
-const TickIcon = () => (
-    <Icon fontSize={18} icon='teenyicons:shield-tick-solid' color='#14b8a6' />
-);
 
 export default Home;

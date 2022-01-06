@@ -1,8 +1,8 @@
-import { Icon } from '@iconify/react';
 import { signInWithPopup, UserCredential } from 'firebase/auth';
 import { addDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
+import { setModal } from '../features/modal/modalSlice';
 import { selectLanguage } from '../features/setting/settingSlice';
 import { setUser } from '../features/user/userSlice';
 import {
@@ -13,6 +13,7 @@ import {
 } from '../firebase';
 import { UserType } from '../types';
 import { setAutheticated } from '../utils/storage';
+import { FcGoogle } from 'react-icons/fc';
 
 const ButtonSignInWithGG = () => {
     const dispatch = useAppDispatch();
@@ -42,6 +43,14 @@ const ButtonSignInWithGG = () => {
                 if (!userData) {
                     const newUser = await addDoc(usersCollectionRef, basicInfo);
                     dispatch(setUser({ ...basicInfo, fieldId: newUser.id }));
+                    dispatch(
+                        setModal({
+                            isModalOpen: true,
+                            message: isVietnames
+                                ? 'Chào mừng bạn đến với Chat chit'
+                                : 'Welcome to Chat chit',
+                        }),
+                    );
                 } else dispatch(setUser(userData));
             })
             .catch((err) => console.log(err));
@@ -53,7 +62,7 @@ const ButtonSignInWithGG = () => {
             className='btn-outlined w-full py-[8px] flex items-center justify-center space-x-3'
             onClick={handleGoogleClick}
             type='button'>
-            <Icon icon='flat-color-icons:google' fontSize={30} />
+            <FcGoogle fontSize={30} />
             <p>
                 {isVietnames ? 'Đăng nhập với Google' : 'Sign in with google'}
             </p>

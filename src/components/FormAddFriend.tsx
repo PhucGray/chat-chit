@@ -1,4 +1,3 @@
-import { Icon } from '@iconify/react';
 import {
     arrayUnion,
     collection,
@@ -19,7 +18,8 @@ import { selectUser } from '../features/user/userSlice';
 import { db } from '../firebase';
 import AvatarImg from '../images/defaultAvatar.png';
 import { IdentificationType, SubmitFormType, UserType } from '../types';
-
+import { AiOutlineClose } from 'react-icons/ai';
+import { BsSearch } from 'react-icons/bs';
 const FormAddFriend = () => {
     const isFormAddFriendOpen = useAppSelector(selectIsFormAddFriendOpen);
     const dispatch = useAppDispatch();
@@ -93,9 +93,8 @@ const FormAddFriend = () => {
                                 {isVietnames ? 'Thêm bạn bè' : 'Search friends'}
                             </p>
 
-                            <Icon
+                            <AiOutlineClose
                                 className='icon text-[30px]'
-                                icon='eva:close-fill'
                                 onClick={closeForm}
                             />
                         </div>
@@ -117,7 +116,8 @@ const FormAddFriend = () => {
                             <button
                                 className='btn px-[20px] flex items-center sm:space-x-2'
                                 type='submit'>
-                                <Icon fontSize={25} icon='carbon:search' />
+                                <BsSearch fontSize={25} />
+
                                 <p className='hidden sm:block'>
                                     {isVietnames ? 'Tìm kiếm' : 'Search'}
                                 </p>
