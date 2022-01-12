@@ -24,7 +24,7 @@ import { selectUser, setFriends, setUser } from '../../features/user/userSlice';
 import { db } from '../../firebase';
 import { RoomType, UserType } from '../../types';
 import ChatTab from './ChatTab';
-import FriendsTab from './FriendsTab';
+import FriendsTab from './FriendTab';
 import ProfileTab from './ProfileTab';
 import SettingTab from './SettingTab';
 import Sidebar from './Sidebar';
@@ -42,32 +42,35 @@ const Chat = () => {
 
     // realtime
     useEffect(() => {
-        const fieldId = user?.fieldId || 'random';
-        onSnapshot(doc(db, 'users', fieldId), (doc) => {
-            fieldId !== 'random' &&
+        if (user?.fieldId) {
+            onSnapshot(doc(db, 'users', user.fieldId), (doc) => {
                 dispatch(
                     setUser({ ...doc.data(), fieldId: doc.id } as UserType),
                 );
-        });
+            });
+        }
     }, [user?.fieldId]);
 
     useEffect(() => {
-        conversations.length > 0 &&
+        if (conversations.length > 0) {
             conversations.forEach((conversation) => {
-                onSnapshot(
-                    doc(db, 'conversations', conversation.fieldId || 'random'),
-                    (doc) => {
-                        const conversation = doc.data() as RoomType;
+                if (conversation.fieldId) {
+                    onSnapshot(
+                        doc(db, 'conversations', conversation.fieldId),
+                        (doc) => {
+                            const conversation = doc.data() as RoomType;
 
-                        dispatch(
-                            setSingleConversation({
-                                conversationId: doc.id,
-                                conversationData: conversation,
-                            }),
-                        );
-                    },
-                );
+                            dispatch(
+                                setSingleConversation({
+                                    conversationId: doc.id,
+                                    conversationData: conversation,
+                                }),
+                            );
+                        },
+                    );
+                }
             });
+        }
     }, [conversations.length]);
 
     //

@@ -320,7 +320,11 @@ const MainChat: FC<MainChatProps> = ({
                                     onKeyUp={(e) => {
                                         if (e.key === 'Enter') {
                                             e.preventDefault();
-                                            handleSendMessage();
+
+                                            if (
+                                                e.currentTarget.innerText.trim()
+                                            )
+                                                handleSendMessage();
                                         } else {
                                         }
                                     }}></div>

@@ -12,36 +12,15 @@ import {
     where,
 } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { setIsFormAddFriendOpen } from '../../features/formAddFriend/formAddFriendSlice';
-import { selectLanguage } from '../../features/setting/settingSlice';
-import { setCurrentTab } from '../../features/tab/tabSlice';
-import {
-    selectFriends,
-    selectUser,
-    setCurrentFriend,
-} from '../../features/user/userSlice';
-import { conversationsCollectionRef, db } from '../../firebase';
-import AvatarImg from '../../images/defaultAvatar.png';
-import { IdentificationType, RoomType, UserType } from '../../types';
-import { BsSearch } from 'react-icons/bs';
-import { RiUserAddFill } from 'react-icons/ri';
+import { useAppSelector } from '../../../app/hooks';
+import { selectUser } from '../../../features/user/userSlice';
+import { conversationsCollectionRef, db } from '../../../firebase';
+import { IdentificationType, RoomType, UserType } from '../../../types';
+import AvatarImg from '../../../images/defaultAvatar.png';
 
 interface Props {
     isVietnames: boolean;
 }
-
-const FriendsTab = () => {
-    const isVietnames = useAppSelector(selectLanguage) === 'vn';
-
-    return (
-        <div className='px-[10px] lg:px-[40px] h-screen overflow-auto flex flex-col space-y-4'>
-            <FriendRequest isVietnames={isVietnames} />
-            <Search isVietnames={isVietnames} />
-            <FriendsList isVietnames={isVietnames} />
-        </div>
-    );
-};
 
 const FriendRequest = ({ isVietnames }: Props) => {
     const user = useAppSelector(selectUser);
@@ -205,84 +184,4 @@ const FriendRequest = ({ isVietnames }: Props) => {
     );
 };
 
-const Search = ({ isVietnames }: Props) => {
-    const dispatch = useAppDispatch();
-    return (
-        <div className='flex items-center justify-center space-x-3'>
-            <div className='relative'>
-                <BsSearch
-                    className='absolute left-[10px] top-[50%] transform translate-y-[-50%] text-gray-400'
-                    fontSize={30}
-                />
-                <input
-                    className='input-text pl-[45px] bg-gray-300 font-semibold text-[18px]
-                    dark:text-trueGray-600 dark:bg-trueGray-300'
-                    type='text'
-                    placeholder={
-                        isVietnames ? 'Tìm kiếm bạn' : 'Search friends'
-                    }
-                />
-            </div>
-
-            <RiUserAddFill
-                className='text-gray-500 cursor-pointer transform hover:scale-[1.2] hover:text-teal-500'
-                fontSize={30}
-                onClick={() => {
-                    dispatch(setIsFormAddFriendOpen(true));
-                }}
-            />
-        </div>
-    );
-};
-
-const FriendsList = ({ isVietnames }: Props) => {
-    const friends = useAppSelector(selectFriends);
-    const dispatch = useAppDispatch();
-
-    return (
-        <>
-            <p className='font-semibold text-[23px]'>
-                {isVietnames ? 'Danh sách bạn bè' : 'Friend list'}
-            </p>
-
-            <div className='overflow-auto grid gap-x-[50px] gap-y-[20px] ml-[15px] mt-[10px] lg:grid-cols-2 lg:px-[30px]'>
-                {friends &&
-                    friends.length > 0 &&
-                    friends.map((friend) => {
-                        const { uid, displayName, photoURL } = friend;
-
-                        return (
-                            <div
-                                key={uid}
-                                className='flex items-center justify-between 
-                                px-[20px] py-[10px] rounded-[10px] cursor-pointer hover:shadow
-                                bg-white
-                                dark:bg-trueGray-600 dark:hover:bg-trueGray-700'
-                                onClick={() => {
-                                    dispatch(setCurrentTab('chat'));
-                                    dispatch(setCurrentFriend(friend));
-
-                                    sessionStorage.setItem(
-                                        'currentTab',
-                                        'chat',
-                                    );
-                                }}>
-                                <div className='flex items-center space-x-4'>
-                                    <img
-                                        className='h-[60px] w-[60px] sm:h-[75px] sm:w-[75px] rounded-[10px] border'
-                                        src={photoURL || AvatarImg}
-                                        alt='Home'
-                                    />
-                                    <p className='font-semibold text-[18px] sm:text-[22px]'>
-                                        {displayName}
-                                    </p>
-                                </div>
-                            </div>
-                        );
-                    })}
-            </div>
-        </>
-    );
-};
-
-export default FriendsTab;
+export default FriendRequest;

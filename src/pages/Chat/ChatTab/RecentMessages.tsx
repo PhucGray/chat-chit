@@ -1,5 +1,6 @@
 import moment from 'moment';
 import { Dispatch, FC, SetStateAction } from 'react';
+import { RiUserAddFill } from 'react-icons/ri';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { selectConversations } from '../../../features/conversation/conversationSlice';
 import { setIsFormAddFriendOpen } from '../../../features/formAddFriend/formAddFriendSlice';
@@ -10,7 +11,6 @@ import {
     selectUser,
     setCurrentFriend,
 } from '../../../features/user/userSlice';
-import { RiUserAddFill } from 'react-icons/ri';
 
 interface RecentMessagesProps {
     isRecentMessagesOpen: boolean;
@@ -70,60 +70,79 @@ const RecentMessages: FC<RecentMessagesProps> = ({
 
                 <div className='flex-1 overflow-auto'>
                     {conversations && friends ? (
-                        conversations.map(({ fieldId, messages, members }) => {
-                            if (messages && messages.length > 0) {
-                                const { uid, sentAt, msg } =
-                                    messages[messages.length - 1];
+                        conversations
+                            .slice()
+                            .sort((a, b) => {
+                                const dateA = new Date(
+                                    a.messages[a.messages.length - 1].sentAt,
+                                ).getTime();
+                                const dateB = new Date(
+                                    b.messages[b.messages.length - 1].sentAt,
+                                ).getTime();
 
-                                const isCurrentUser = user?.uid === uid;
+                                return dateB - dateA;
+                            })
+                            .map(({ fieldId, messages, members }) => {
+                                if (messages && messages.length > 0) {
+                                    const { uid, sentAt, msg } =
+                                        messages[messages.length - 1];
 
-                                const friendId = members.filter(
-                                    (id) => id !== user?.uid,
-                                )[0];
+                                    const isCurrentUser = user?.uid === uid;
 
-                                const friend = friends.filter(
-                                    (friend) => friend.uid === friendId,
-                                )[0];
+                                    const friendId = members.filter(
+                                        (id) => id !== user?.uid,
+                                    )[0];
 
-                                let content = '';
+                                    const friend = friends.filter(
+                                        (friend) => friend.uid === friendId,
+                                    )[0];
 
-                                if (msg.type === 'text') content = msg.content;
+                                    let content = '';
 
-                                if (msg.type === 'image')
-                                    content = `--${
-                                        isVietnames ? 'Ảnh' : 'Picture'
-                                    }--`;
-                                return (
-                                    <div
-                                        key={fieldId}
-                                        onClick={() => {
-                                            dispatch(setCurrentFriend(friend));
-                                        }}>
+                                    if (msg.type === 'text')
+                                        content = msg.content;
+
+                                    if (msg.type === 'image')
+                                        content = `--${
+                                            isVietnames ? 'Ảnh' : 'Picture'
+                                        }--`;
+                                    return (
                                         <div
-                                            className='w-full overflow-hidden px-[10px] py-[10px] 
+                                            key={fieldId}
+                                            onClick={() => {
+                                                dispatch(
+                                                    setCurrentFriend(friend),
+                                                );
+                                            }}>
+                                            <div
+                                                className='w-full overflow-hidden px-[10px] py-[10px] 
                                         bg-white border-b-[1px] cursor-pointer hover:bg-teal-50
                                         dark:bg-trueGray-600 dark:text-gray-100 dark:hover:bg-trueGray-500 dark:border-trueGray-500'>
-                                            <p className='font-semibold text-[18px]'>
-                                                {friend?.displayName}
-                                            </p>
+                                                <p className='font-semibold text-[18px]'>
+                                                    {friend?.displayName}
+                                                </p>
 
-                                            <p className='text-sm text-gray-400 truncate'>
-                                                {isCurrentUser && 'Bạn: '}
-                                                {content}
-                                            </p>
+                                                <p className='text-sm text-gray-400 truncate'>
+                                                    {isCurrentUser && 'Bạn: '}
+                                                    {content}
+                                                </p>
 
-                                            <p>
-                                                {moment(sentAt)
-                                                    .fromNow()
-                                                    .toString()}
-                                            </p>
+                                                <p>
+                                                    {moment(
+                                                        messages[
+                                                            messages.length - 1
+                                                        ].sentAt,
+                                                    )
+                                                        .fromNow()
+                                                        .toString()}
+                                                </p>
+                                            </div>
                                         </div>
-                                    </div>
-                                );
-                            }
+                                    );
+                                }
 
-                            return <></>;
-                        })
+                                return <></>;
+                            })
                     ) : (
                         <div className='text-center'>
                             {isVietnames
